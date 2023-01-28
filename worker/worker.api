@@ -1,0 +1,65 @@
+service worker-api {
+	// Version
+	//  returns the version of api
+	@handler Version
+	get /version returns (VersionResponse)
+	
+	// RunContainer creates and starts a container
+	@handler RunContainer
+	post /container/run(RunContainerRequest) returns (RunContainerResponse)
+	// RemoveContainer removes the container
+	@handler RemoveContainer
+	post /container/remove(RemoveContainerRequest) returns (RemoveContainerResponse)
+	// StopContainer stops any running process that is part of the container
+	@handler StopContainer
+	post /container/stop(StopContainerRequest) returns (StopContainerResponse)
+	// StartContainer starts the container
+	@handler StartContainer
+	post /container/start(StartContainerRequest) returns(StartContainerResponse)
+	// ContainerStatus returns the status of the container
+	@handler ContainerStatus
+	get /container/status(ContainerStatusRequest) returns (ContainerStatusResponse)
+	// ListContainer returns a list of containers
+	@handler ListContainers
+	get /container/list(ListContainersRequest) returns (ListContainersResponse)
+
+	// ExecSync runs a command in a container.
+	@handler Exec
+	post /container/exec(ExecRequest) returns (ExecResponse)
+    // Attach prepares a streaming endpoint to attach to a running container
+	@handler Attach
+	post /container/attach(AttachRequest) returns (AttachResponse)
+}
+
+type ContainerConfig {
+	Todo string `json:"todo"`
+}
+
+type ContainerSelector {
+	ID string `json:"id"`
+}
+
+type VersionResponse {
+	// worker-api version
+	Version string `json:"version"`
+}
+
+type RunContainerRequest {
+	// the config of container will create and run
+	Config ContainerConfig `json:"config"`
+}
+
+type RunContainerResponse {
+	// the container id
+	ID string `json:"id"`
+}
+
+type StopContainerRequest {
+	// the container id
+	ID string `json:"id"`
+}
+
+type StopContainerResponse {
+	Selector ContainerSelector `json:"selector"`
+}
+
