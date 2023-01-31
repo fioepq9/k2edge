@@ -18,14 +18,8 @@ service master-api{
     @handler ApplyJob
     post /apply(DeleteJobRequest) returns (DeleteJobResponse)
 
-    @handler HistoryJob
-    get /rollout/history(HistoryJobRequest) returns (HistoryJobResponse)
-
-    @handler UndoJob
-    post /rollout/undo(UndoJobRequest) returns (UndoJobResponse)
-
     @handler LogsJob
-    post /logs(LogsJob) returns (LogsJob)
+    post /logs(LogsJobRequest) returns (LogsJobResponse)
 }
 
 type CreateJobRequest {

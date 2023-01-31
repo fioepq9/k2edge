@@ -18,11 +18,6 @@ service master-api{
     @handler ApplyToken
     post /apply(DeleteTokenRequest) returns (DeleteTokenResponse)
 
-    @handler HistoryToken
-    get /rollout/history(HistoryTokenRequest) returns (HistoryTokenResponse)
-
-    @handler UndoToken
-    post /rollout/undo(UndoTokenRequest) returns (UndoTokenResponse)
 }
 
 type CreateTokenRequest {

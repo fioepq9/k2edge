@@ -114,14 +114,6 @@ type LogsContainerResponse {
     Todo string `json:"todo"`
 }
 
-type LogsContainerRequest {
-    Todo string `json:"todo"`
-}
-
-type LogsContainerResponse {
-    Todo string `json:"todo"`
-}
-
 type ContainerTopRequest {
 	Selector Metadata `json:"selector"`
 }

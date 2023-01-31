@@ -1,6 +1,10 @@
 import (
-	"cronjob.api"
-	"namespace.api"
 	"cluster.api"
+	"container.api"
+	"cronjob.api"
+	"deployment.api"
+	"job.api"
+	"namespace.api"
 	"node.api"
+	"token.api"
 )

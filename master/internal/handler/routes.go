@@ -13,6 +13,68 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				Method:  http.MethodGet,
+				Path:    "/info",
+				Handler: ClusterInfoHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/cluster"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/create",
+				Handler: CreateContainerHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/get",
+				Handler: GetContainerHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/delete",
+				Handler: DeleteContainerHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/run",
+				Handler: RunContainerHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/apply",
+				Handler: ApplyContainerHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/attach",
+				Handler: AttachContainerHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/exec",
+				Handler: ExecContainerHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/logs",
+				Handler: LogsContainerHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/top",
+				Handler: ContainerTopHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/container"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
 				Method:  http.MethodPost,
 				Path:    "/create",
 				Handler: CreateCronJobHandler(serverCtx),
@@ -56,6 +118,93 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/create",
+				Handler: CreateDeploymentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/get",
+				Handler: GetDeploymentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/delete",
+				Handler: DeleteDeploymentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/apply",
+				Handler: ApplyDeploymentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/rollout/history",
+				Handler: HistoryDeploymentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/rollout/undo",
+				Handler: UndoDeploymentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/scale",
+				Handler: ScaleHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/attach",
+				Handler: AttachDeploymentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/exec",
+				Handler: ExecDeploymentHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/logs",
+				Handler: LogsDeploymentHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/deployment"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/create",
+				Handler: CreateJobHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/get",
+				Handler: GetJobHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/delete",
+				Handler: DeleteJobHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/apply",
+				Handler: ApplyJobHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/logs",
+				Handler: LogsJobHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/job"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/create",
 				Handler: CreateNamespaceHandler(serverCtx),
 			},
 			{
@@ -75,17 +224,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/namespace"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/info",
-				Handler: ClusterInfoHandler(serverCtx),
-			},
-		},
-		rest.WithPrefix("/cluster"),
 	)
 
 	server.AddRoutes(
@@ -112,5 +250,31 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/node"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/create",
+				Handler: CreateTokenHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/get",
+				Handler: GetTokenHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/delete",
+				Handler: DeleteTokenHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/apply",
+				Handler: ApplyTokenHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/token"),
 	)
 }
