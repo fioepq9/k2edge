@@ -1,3 +1,7 @@
+import (
+	"cronjob.api"
+)
+
 service master-api {
 	@handler Get
 	get /get(GetRequest) returns (GetResponse)

@@ -1,0 +1,103 @@
+import (
+	"global.api"
+)
+
+type VersionResponse {
+	// worker-api version
+	Version string `json:"version"`
+}
+
+service worker-api {
+	// Version returns the version of api
+	@handler Version
+	get /version returns (VersionResponse)
+}
+
+type RunContainerRequest {
+	// the config of container will create and run
+	Config ContainerConfig `json:"config"`
+}
+type RunContainerResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type RemoveContainerRequest {
+	Selector ContainerMetadata `json:"selector"`
+}
+type RemoveContainerResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type StopContainerRequest {
+	Selector ContainerMetadata `json:"selector"`
+}
+type StopContainerResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type StartContainerRequest {
+	Selector ContainerMetadata `json:"selector"`
+}
+type StartContainerResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type ContainerStatusRequest {
+	Selector ContainerMetadata `json:"selector"`
+}
+type ContainerStatusResponse {
+	Container Container `json:"container"`
+}
+
+type ListContainersRequest {
+	Todo string `json:"todo"`
+}
+type ListContainersResponse {
+	Containers []Container `json:"containers"`
+}
+
+type ExecRequest {
+	Selector ContainerMetadata `json:"selector"`
+	Command  Command           `json:"command"`
+}
+type ExecResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type AttachRequest {
+	Selector ContainerMetadata `json:"selector"`
+}
+type AttachResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+@server(
+	middleware: AuthMiddleware
+)
+service worker-api {
+	// RunContainer creates and starts a container
+	@handler RunContainer
+	post /container/run(RunContainerRequest) returns (RunContainerResponse)
+	// RemoveContainer removes the container
+	@handler RemoveContainer
+	post /container/remove(RemoveContainerRequest) returns (RemoveContainerResponse)
+	// StopContainer stops any running process that is part of the container
+	@handler StopContainer
+	post /container/stop(StopContainerRequest) returns (StopContainerResponse)
+	// StartContainer starts the container
+	@handler StartContainer
+	post /container/start(StartContainerRequest) returns(StartContainerResponse)
+	// ContainerStatus returns the status of the container
+	@handler ContainerStatus
+	get /container/status(ContainerStatusRequest) returns (ContainerStatusResponse)
+	// ListContainer returns a list of containers
+	@handler ListContainers
+	get /container/list(ListContainersRequest) returns (ListContainersResponse)
+	
+	// ExecSync runs a command in a container.
+	@handler Exec
+	post /container/exec(ExecRequest) returns (ExecResponse)
+	// Attach prepares a streaming endpoint to attach to a running container
+	@handler Attach
+	post /container/attach(AttachRequest) returns (AttachResponse)
+}

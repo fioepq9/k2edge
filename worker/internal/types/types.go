@@ -10,21 +10,89 @@ type RunContainerRequest struct {
 }
 
 type RunContainerResponse struct {
-	ID string `json:"id"`
+	Error Error `json:"error,omitempty"`
+}
+
+type RemoveContainerRequest struct {
+	Selector ContainerMetadata `json:"selector"`
+}
+
+type RemoveContainerResponse struct {
+	Error Error `json:"error,omitempty"`
 }
 
 type StopContainerRequest struct {
-	ID string `json:"id"`
+	Selector ContainerMetadata `json:"selector"`
 }
 
 type StopContainerResponse struct {
-	Selector ContainerSelector `json:"selector"`
+	Error Error `json:"error,omitempty"`
+}
+
+type StartContainerRequest struct {
+	Selector ContainerMetadata `json:"selector"`
+}
+
+type StartContainerResponse struct {
+	Error Error `json:"error,omitempty"`
+}
+
+type ContainerStatusRequest struct {
+	Selector ContainerMetadata `json:"selector"`
+}
+
+type ContainerStatusResponse struct {
+	Container Container `json:"container"`
+}
+
+type ListContainersRequest struct {
+	Todo string `json:"todo"`
+}
+
+type ListContainersResponse struct {
+	Containers []Container `json:"containers"`
+}
+
+type ExecRequest struct {
+	Selector ContainerMetadata `json:"selector"`
+	Command  Command           `json:"command"`
+}
+
+type ExecResponse struct {
+	Error Error `json:"error,omitempty"`
+}
+
+type AttachRequest struct {
+	Selector ContainerMetadata `json:"selector"`
+}
+
+type AttachResponse struct {
+	Error Error `json:"error,omitempty"`
 }
 
 type ContainerConfig struct {
 	Todo string `json:"todo"`
 }
 
-type ContainerSelector struct {
-	ID string `json:"id"`
+type ContainerStatus struct {
+	Todo string `json:"todo"`
+}
+
+type ContainerMetadata struct {
+	Namespace string `json:"namespace"`
+	Name      string `json:"name"`
+}
+
+type Container struct {
+	Metadata ContainerMetadata `json:"metadata"`
+	Config   ContainerConfig   `json:"config"`
+	Status   ContainerStatus   `json:"status"`
+}
+
+type Command struct {
+	Todo string `json:"todo"`
+}
+
+type Error struct {
+	Todo string `json:"todo"`
 }

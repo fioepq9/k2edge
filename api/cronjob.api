@@ -1,0 +1,16 @@
+@server(
+    prefix: cronjob
+)
+service master-api {
+    @handler GetCronjob
+    get /get(GetCronjobRequest) returns (GetCronjobResponse)
+}
+
+type GetCronjobRequest {
+    a string `json:"a"`
+}
+
+type GetCronjobResponse {
+    a string `json:"a"`
+}
+

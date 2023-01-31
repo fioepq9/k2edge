@@ -19,4 +19,15 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/get",
+				Handler: GetCronjobHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/cronjob"),
+	)
 }

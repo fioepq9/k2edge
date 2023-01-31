@@ -14,3 +14,11 @@ type GetRequest struct {
 type GetResponse struct {
 	Status interface{} `json:"status"`
 }
+
+type GetCronjobRequest struct {
+	A string `json:"a"`
+}
+
+type GetCronjobResponse struct {
+	A string `json:"a"`
+}

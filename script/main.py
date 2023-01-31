@@ -15,9 +15,9 @@ def updateAPI(name: str = "worker-api"):
     # process
     import subprocess
     if name == "worker-api":
-        r: subprocess.CompletedProcess = subprocess.run("goctl api go -api ./worker/worker.api -dir ./worker -style goZero")
+        r: subprocess.CompletedProcess = subprocess.run("goctl api go -api ./api/worker.api -dir ./worker -style goZero")
     elif name == "master-api":
-        r: subprocess.CompletedProcess = subprocess.run("goctl api go -api ./master/master.api -dir ./master -style goZero")
+        r: subprocess.CompletedProcess = subprocess.run("goctl api go -api ./api/master.api -dir ./master -style goZero")
     else:
         print("unsupported arguments:", name)
 
