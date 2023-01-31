@@ -1,16 +1,52 @@
-@server(
+import (
+    "global.api"
+)
+
+@server (
     prefix: cronjob
 )
-service master-api {
+service master-api{
+    @handler CreateCronjob
+    post /create(CreateCronjobRequest) returns (CreateCronjobResponse)
+
     @handler GetCronjob
     get /get(GetCronjobRequest) returns (GetCronjobResponse)
+
+    @handler DeleteCronjob
+    post /delete(DeleteCronjobRequest) returns (DeleteCronjobResponse)
+
+    @handler ApplyCronjob
+    post /apply(DeleteCronjobRequest) returns (DeleteCronjobResponse)
+}
+
+type CreateCronjobRequest {
+    Todo string `json:"todo"`
+}
+
+type CreateCronjobResponse {
+    Error Error `json:"error,omitempty"`
 }
 
 type GetCronjobRequest {
-    a string `json:"a"`
+    Todo string `json:"todo"`
 }
 
 type GetCronjobResponse {
-    a string `json:"a"`
+    Response Metadata `json:"response"`
 }
 
+type DeleteCronjobRequest {
+    Todo string `json:"todo"`
+}
+
+type DeleteCronjobResponse {
+    Error Error `json:"error,omitempty"`
+}
+
+type ApplyCronjobRequest {
+    Todo string `json:"todo"`
+}
+
+type ApplyCronjobResponse {
+    Error Error `json:"error,omitempty"`
+}
