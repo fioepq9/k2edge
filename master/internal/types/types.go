@@ -110,3 +110,7 @@ type DeleteNamespaceRequest struct {
 type DeleteNamespaceResponse struct {
 	Error Error `json:"error,omitempty"`
 }
+
+type ClusterInfoResponse struct {
+	Todo string `json:"todo"`
+}
