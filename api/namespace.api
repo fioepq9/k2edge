@@ -12,11 +12,11 @@ service master-api{
     @handler GetNamespace
     get /get(GetNamespaceRequest) returns (GetNamespaceResponse)
 
+    @handler ListNamespaces
+    get /list(ListNamespacesRequest) returns (ListNamespacesResponse)
+
     @handler DeleteNamespace
     post /delete(DeleteNamespaceRequest) returns (DeleteNamespaceResponse)
-
-    @handler ApplyNamespace
-    post /apply(DeleteNamespaceRequest) returns (DeleteNamespaceResponse)
 }
 
 type CreateNamespaceRequest {
@@ -33,6 +33,14 @@ type GetNamespaceRequest {
 
 type GetNamespaceResponse {
     Namespace Namespace `json:"namespace"`
+}
+
+type ListNamespacesRequest {
+    Todo string `json:"todo"`
+}
+
+type ListNamespacesResponse {
+    Namespaces []Namespace `json:"namespaces"`
 }
 
 type DeleteNamespaceRequest {

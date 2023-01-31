@@ -95,6 +95,14 @@ type GetNamespaceResponse struct {
 	Namespace Namespace `json:"namespace"`
 }
 
+type ListNamespacesRequest struct {
+	Todo string `json:"todo"`
+}
+
+type ListNamespacesResponse struct {
+	Namespaces []Namespace `json:"namespaces"`
+}
+
 type DeleteNamespaceRequest struct {
 	Todo string `json:"todo"`
 }

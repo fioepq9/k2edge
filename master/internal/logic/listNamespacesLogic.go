@@ -9,21 +9,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type ApplyNamespaceLogic struct {
+type ListNamespacesLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewApplyNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ApplyNamespaceLogic {
-	return &ApplyNamespaceLogic{
+func NewListNamespacesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListNamespacesLogic {
+	return &ListNamespacesLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *ApplyNamespaceLogic) ApplyNamespace(req *types.DeleteNamespaceRequest) (resp *types.DeleteNamespaceResponse, err error) {
+func (l *ListNamespacesLogic) ListNamespaces(req *types.ListNamespacesRequest) (resp *types.ListNamespacesResponse, err error) {
 	// todo: add your logic here and delete this line
 
 	return

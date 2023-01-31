@@ -9,16 +9,16 @@ import (
 	"k2edge/master/internal/types"
 )
 
-func ApplyNamespaceHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func ListNamespacesHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.DeleteNamespaceRequest
+		var req types.ListNamespacesRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := logic.NewApplyNamespaceLogic(r.Context(), svcCtx)
-		resp, err := l.ApplyNamespace(&req)
+		l := logic.NewListNamespacesLogic(r.Context(), svcCtx)
+		resp, err := l.ListNamespaces(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
