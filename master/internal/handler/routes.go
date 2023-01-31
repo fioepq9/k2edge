@@ -19,24 +19,50 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/create",
-				Handler: CreateCronjobHandler(serverCtx),
+				Handler: CreateCronJobHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/get",
-				Handler: GetCronjobHandler(serverCtx),
+				Handler: GetCronJobHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/delete",
-				Handler: DeleteCronjobHandler(serverCtx),
+				Handler: DeleteCronJobHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/apply",
-				Handler: ApplyCronjobHandler(serverCtx),
+				Handler: ApplyCronJobHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/cronjob"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/create",
+				Handler: CreateNamespaceHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/get",
+				Handler: GetNamespaceHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/delete",
+				Handler: DeleteNamespaceHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/apply",
+				Handler: ApplyNamespaceHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/namespace"),
 	)
 }

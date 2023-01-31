@@ -1,0 +1,52 @@
+import (
+    "global.api"
+)
+
+@server (
+    prefix: namespace
+)
+service master-api{
+    @handler CreateNamespace
+    post /create(CreateNamespaceRequest) returns (CreateNamespaceResponse)
+
+    @handler GetNamespace
+    get /get(GetNamespaceRequest) returns (GetNamespaceResponse)
+
+    @handler DeleteNamespace
+    post /delete(DeleteNamespaceRequest) returns (DeleteNamespaceResponse)
+
+    @handler ApplyNamespace
+    post /apply(DeleteNamespaceRequest) returns (DeleteNamespaceResponse)
+}
+
+type CreateNamespaceRequest {
+    Todo string `json:"todo"`
+}
+
+type CreateNamespaceResponse {
+    Error Error `json:"error,omitempty"`
+}
+
+type GetNamespaceRequest {
+    Todo string `json:"todo"`
+}
+
+type GetNamespaceResponse {
+    Namespace Namespace `json:"namespace"`
+}
+
+type DeleteNamespaceRequest {
+    Todo string `json:"todo"`
+}
+
+type DeleteNamespaceResponse {
+    Error Error `json:"error,omitempty"`
+}
+
+type ApplyNamespaceRequest {
+    Todo string `json:"todo"`
+}
+
+type ApplyNamespaceResponse {
+    Error Error `json:"error,omitempty"`
+}

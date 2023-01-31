@@ -6,47 +6,47 @@ import (
     prefix: cronjob
 )
 service master-api{
-    @handler CreateCronjob
-    post /create(CreateCronjobRequest) returns (CreateCronjobResponse)
+    @handler CreateCronJob
+    post /create(CreateCronJobRequest) returns (CreateCronJobResponse)
 
-    @handler GetCronjob
-    get /get(GetCronjobRequest) returns (GetCronjobResponse)
+    @handler GetCronJob
+    get /get(GetCronJobRequest) returns (GetCronJobResponse)
 
-    @handler DeleteCronjob
-    post /delete(DeleteCronjobRequest) returns (DeleteCronjobResponse)
+    @handler DeleteCronJob
+    post /delete(DeleteCronJobRequest) returns (DeleteCronJobResponse)
 
-    @handler ApplyCronjob
-    post /apply(DeleteCronjobRequest) returns (DeleteCronjobResponse)
+    @handler ApplyCronJob
+    post /apply(DeleteCronJobRequest) returns (DeleteCronJobResponse)
 }
 
-type CreateCronjobRequest {
+type CreateCronJobRequest {
     Todo string `json:"todo"`
 }
 
-type CreateCronjobResponse {
+type CreateCronJobResponse {
     Error Error `json:"error,omitempty"`
 }
 
-type GetCronjobRequest {
+type GetCronJobRequest {
     Todo string `json:"todo"`
 }
 
-type GetCronjobResponse {
+type GetCronJobResponse {
     CronJob CronJob `json:"cronjob"`
 }
 
-type DeleteCronjobRequest {
+type DeleteCronJobRequest {
     Todo string `json:"todo"`
 }
 
-type DeleteCronjobResponse {
+type DeleteCronJobResponse {
     Error Error `json:"error,omitempty"`
 }
 
-type ApplyCronjobRequest {
+type ApplyCronJobRequest {
     Todo string `json:"todo"`
 }
 
-type ApplyCronjobResponse {
+type ApplyCronJobResponse {
     Error Error `json:"error,omitempty"`
 }

@@ -22,28 +22,28 @@ type RunContainerResponse {
 }
 
 type RemoveContainerRequest {
-	Selector ContainerMetadata `json:"selector"`
+	Selector Metadata `json:"selector"`
 }
 type RemoveContainerResponse {
 	Error Error `json:"error,omitempty"`
 }
 
 type StopContainerRequest {
-	Selector ContainerMetadata `json:"selector"`
+	Selector Metadata `json:"selector"`
 }
 type StopContainerResponse {
 	Error Error `json:"error,omitempty"`
 }
 
 type StartContainerRequest {
-	Selector ContainerMetadata `json:"selector"`
+	Selector Metadata `json:"selector"`
 }
 type StartContainerResponse {
 	Error Error `json:"error,omitempty"`
 }
 
 type ContainerStatusRequest {
-	Selector ContainerMetadata `json:"selector"`
+	Selector Metadata `json:"selector"`
 }
 type ContainerStatusResponse {
 	Container Container `json:"container"`
@@ -57,15 +57,15 @@ type ListContainersResponse {
 }
 
 type ExecRequest {
-	Selector ContainerMetadata `json:"selector"`
-	Command  Command           `json:"command"`
+	Selector Metadata `json:"selector"`
+	Command  Command  `json:"command"`
 }
 type ExecResponse {
 	Error Error `json:"error,omitempty"`
 }
 
 type AttachRequest {
-	Selector ContainerMetadata `json:"selector"`
+	Selector Metadata `json:"selector"`
 }
 type AttachResponse {
 	Error Error `json:"error,omitempty"`

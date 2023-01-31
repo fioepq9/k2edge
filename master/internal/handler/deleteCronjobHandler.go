@@ -9,16 +9,16 @@ import (
 	"k2edge/master/internal/types"
 )
 
-func DeleteCronjobHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func DeleteCronJobHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.DeleteCronjobRequest
+		var req types.DeleteCronJobRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := logic.NewDeleteCronjobLogic(r.Context(), svcCtx)
-		resp, err := l.DeleteCronjob(&req)
+		l := logic.NewDeleteCronJobLogic(r.Context(), svcCtx)
+		resp, err := l.DeleteCronJob(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

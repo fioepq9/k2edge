@@ -9,21 +9,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type CreateCronJobLogic struct {
+type DeleteNamespaceLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewCreateCronJobLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateCronJobLogic {
-	return &CreateCronJobLogic{
+func NewDeleteNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteNamespaceLogic {
+	return &DeleteNamespaceLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *CreateCronJobLogic) CreateCronJob(req *types.CreateCronJobRequest) (resp *types.CreateCronJobResponse, err error) {
+func (l *DeleteNamespaceLogic) DeleteNamespace(req *types.DeleteNamespaceRequest) (resp *types.DeleteNamespaceResponse, err error) {
 	// todo: add your logic here and delete this line
 
 	return

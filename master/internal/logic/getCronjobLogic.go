@@ -9,21 +9,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetCronjobLogic struct {
+type GetCronJobLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetCronjobLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCronjobLogic {
-	return &GetCronjobLogic{
+func NewGetCronJobLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetCronJobLogic {
+	return &GetCronJobLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GetCronjobLogic) GetCronjob(req *types.GetCronjobRequest) (resp *types.GetCronjobResponse, err error) {
+func (l *GetCronJobLogic) GetCronJob(req *types.GetCronJobRequest) (resp *types.GetCronJobResponse, err error) {
 	// todo: add your logic here and delete this line
 
 	return

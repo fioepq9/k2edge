@@ -9,16 +9,16 @@ import (
 	"k2edge/master/internal/types"
 )
 
-func GetCronJobHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func DeleteNamespaceHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.GetCronJobRequest
+		var req types.DeleteNamespaceRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := logic.NewGetCronJobLogic(r.Context(), svcCtx)
-		resp, err := l.GetCronJob(&req)
+		l := logic.NewDeleteNamespaceLogic(r.Context(), svcCtx)
+		resp, err := l.DeleteNamespace(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
