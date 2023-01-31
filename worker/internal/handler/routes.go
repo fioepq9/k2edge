@@ -17,16 +17,54 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/version",
 				Handler: VersionHandler(serverCtx),
 			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/container/run",
-				Handler: RunContainerHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/container/stop",
-				Handler: StopContainerHandler(serverCtx),
-			},
 		},
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/container/run",
+					Handler: RunContainerHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/container/remove",
+					Handler: RemoveContainerHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/container/stop",
+					Handler: StopContainerHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/container/start",
+					Handler: StartContainerHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/container/status",
+					Handler: ContainerStatusHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/container/list",
+					Handler: ListContainersHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/container/exec",
+					Handler: ExecHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/container/attach",
+					Handler: AttachHandler(serverCtx),
+				},
+			}...,
+		),
 	)
 }

@@ -34,3 +34,11 @@ type Metadata struct {
 type Error struct {
 	Todo string `json:"todo"`
 }
+
+type GetCronjobRequest struct {
+	A string `json:"a"`
+}
+
+type GetCronjobResponse struct {
+	A string `json:"a"`
+}
