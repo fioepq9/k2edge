@@ -1,0 +1,9 @@
+type Metadata {
+	Namespace string `json:"namespace"`
+	Kind      string `json:"kind"`
+	Name      string `json:"name"`
+}
+
+type Error {
+    Todo string `json:"todo"`
+} 

@@ -1,18 +1,7 @@
+import (
+	"cronjob.api"
+)
+
 service master-api {
-	@handler Get
-	get /get(GetRequest) returns (GetResponse)
-}
-
-type Metadata {
-	Namespace string `json:"namespace"`
-	Kind      string `json:"kind"`
-	Name      string `json:"name"`
-}
-
-type GetRequest {
-	Selector Metadata `json:"selector"`
-}
-
-type GetResponse {
-	Status interface{} `json:"status"`
+	
 }
