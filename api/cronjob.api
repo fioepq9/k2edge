@@ -32,7 +32,7 @@ type GetCronjobRequest {
 }
 
 type GetCronjobResponse {
-    Response Metadata `json:"response"`
+    CronJob CronJob `json:"cronjob"`
 }
 
 type DeleteCronjobRequest {
