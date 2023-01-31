@@ -36,6 +36,48 @@ type CronJob {
     Status CronJobStatus `json:"status"`
 }
 
+type DeploymentConfig {
+	Todo string `json:"todo"`
+}
+
+type DeploymentStatus {
+	Todo string `json:"todo"`
+}
+
+type Deployment {
+	Metadata Metadata `json:"metadata"`
+    Config DeploymentConfig `json:"config"`
+    Status DeploymentStatus `json:"status"`
+}
+
+type JobConfig {
+	Todo string `json:"todo"`
+}
+
+type JobStatus {
+	Todo string `json:"todo"`
+}
+
+type Job {
+	Metadata Metadata `json:"metadata"`
+    Config JobConfig `json:"config"`
+    Status JobStatus `json:"status"`
+}
+
+type TokenConfig {
+	Todo string `json:"todo"`
+}
+
+type TokenStatus {
+	Todo string `json:"todo"`
+}
+
+type Token {
+	Metadata Metadata `json:"metadata"`
+    Config TokenConfig `json:"config"`
+    Status TokenStatus `json:"status"`
+}
+
 type Command {
     Todo string `json:"todo"`
 }

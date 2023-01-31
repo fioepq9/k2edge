@@ -1,0 +1,58 @@
+import (
+    "global.api"
+)
+
+@server (
+    prefix: token
+)
+service master-api{
+    @handler CreateToken
+    post /create(CreateTokenRequest) returns (CreateTokenResponse)
+
+    @handler GetToken
+    get /get(GetTokenRequest) returns (GetTokenResponse)
+
+    @handler DeleteToken
+    post /delete(DeleteTokenRequest) returns (DeleteTokenResponse)
+
+    @handler ApplyToken
+    post /apply(DeleteTokenRequest) returns (DeleteTokenResponse)
+
+    @handler HistoryToken
+    get /rollout/history(HistoryTokenRequest) returns (HistoryTokenResponse)
+
+    @handler UndoToken
+    post /rollout/undo(UndoTokenRequest) returns (UndoTokenResponse)
+}
+
+type CreateTokenRequest {
+    Todo string `json:"todo"`
+}
+
+type CreateTokenResponse {
+    Error Error `json:"error,omitempty"`
+}
+
+type GetTokenRequest {
+    Todo string `json:"todo"`
+}
+
+type GetTokenResponse {
+    Token Token `json:"token"`
+}
+
+type DeleteTokenRequest {
+    Todo string `json:"todo"`
+}
+
+type DeleteTokenResponse {
+    Error Error `json:"error,omitempty"`
+}
+
+type ApplyTokenRequest {
+    Todo string `json:"todo"`
+}
+
+type ApplyTokenResponse {
+    Error Error `json:"error,omitempty"`
+}

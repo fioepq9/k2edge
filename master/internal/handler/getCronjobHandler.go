@@ -9,16 +9,16 @@ import (
 	"k2edge/master/internal/types"
 )
 
-func GetCronjobHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetCronJobHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.GetCronjobRequest
+		var req types.GetCronJobRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := logic.NewGetCronjobLogic(r.Context(), svcCtx)
-		resp, err := l.GetCronjob(&req)
+		l := logic.NewGetCronJobLogic(r.Context(), svcCtx)
+		resp, err := l.GetCronJob(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

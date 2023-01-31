@@ -19,22 +19,37 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/create",
-				Handler: CreateCronjobHandler(serverCtx),
+				Handler: CreateCronJobHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/get",
-				Handler: GetCronjobHandler(serverCtx),
+				Handler: GetCronJobHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/delete",
-				Handler: DeleteCronjobHandler(serverCtx),
+				Handler: DeleteCronJobHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/apply",
-				Handler: ApplyCronjobHandler(serverCtx),
+				Handler: ApplyCronJobHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/rollout/history",
+				Handler: HistoryCronJobHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/rollout/undo",
+				Handler: UndoCronJobHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/logs",
+				Handler: LogsCronJobHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/cronjob"),

@@ -6,47 +6,80 @@ import (
     prefix: cronjob
 )
 service master-api{
-    @handler CreateCronjob
-    post /create(CreateCronjobRequest) returns (CreateCronjobResponse)
+    @handler CreateCronJob
+    post /create(CreateCronJobRequest) returns (CreateCronJobResponse)
 
-    @handler GetCronjob
-    get /get(GetCronjobRequest) returns (GetCronjobResponse)
+    @handler GetCronJob
+    get /get(GetCronJobRequest) returns (GetCronJobResponse)
 
-    @handler DeleteCronjob
-    post /delete(DeleteCronjobRequest) returns (DeleteCronjobResponse)
+    @handler DeleteCronJob
+    post /delete(DeleteCronJobRequest) returns (DeleteCronJobResponse)
 
-    @handler ApplyCronjob
-    post /apply(DeleteCronjobRequest) returns (DeleteCronjobResponse)
+    @handler ApplyCronJob
+    post /apply(ApplyCronJobRequest) returns (ApplyCronJobResponse)
+
+    @handler HistoryCronJob
+    get /rollout/history(HistoryCronJobRequest) returns (HistoryCronJobResponse)
+
+    @handler UndoCronJob
+    post /rollout/undo(UndoCronJobRequest) returns (UndoCronJobResponse)
+
+    @handler LogsCronJob
+    post /logs(LogsCronJobRequest) returns (LogsCronJobResponse)
 }
 
-type CreateCronjobRequest {
+type CreateCronJobRequest {
     Todo string `json:"todo"`
 }
 
-type CreateCronjobResponse {
+type CreateCronJobResponse {
     Error Error `json:"error,omitempty"`
 }
 
-type GetCronjobRequest {
+type GetCronJobRequest {
     Todo string `json:"todo"`
 }
 
-type GetCronjobResponse {
+type GetCronJobResponse {
     CronJob CronJob `json:"cronjob"`
 }
 
-type DeleteCronjobRequest {
+type DeleteCronJobRequest {
     Todo string `json:"todo"`
 }
 
-type DeleteCronjobResponse {
+type DeleteCronJobResponse {
     Error Error `json:"error,omitempty"`
 }
 
-type ApplyCronjobRequest {
+type ApplyCronJobRequest {
     Todo string `json:"todo"`
 }
 
-type ApplyCronjobResponse {
+type ApplyCronJobResponse {
     Error Error `json:"error,omitempty"`
+}
+
+type HistoryCronJobRequest {
+    Todo string `json:"todo"`
+}
+
+type HistoryCronJobResponse {
+    CronJob CronJob `json:"cronjob"`
+}
+
+type UndoCronJobRequest {
+    Todo string `json:"todo"`
+}
+
+type UndoCronJobResponse {
+    Error Error `json:"error,omitempty"`
+}
+
+type LogsCronJobRequest {
+    Todo string `json:"todo"`
+}
+
+type LogsCronJobResponse {
+    Todo string `json:"todo"`
 }

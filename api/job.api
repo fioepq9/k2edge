@@ -1,0 +1,61 @@
+import (
+    "global.api"
+)
+
+@server (
+    prefix: job
+)
+service master-api{
+    @handler CreateJob
+    post /create(CreateJobRequest) returns (CreateJobResponse)
+
+    @handler GetJob
+    get /get(GetJobRequest) returns (GetJobResponse)
+
+    @handler DeleteJob
+    post /delete(DeleteJobRequest) returns (DeleteJobResponse)
+
+    @handler ApplyJob
+    post /apply(DeleteJobRequest) returns (DeleteJobResponse)
+
+    @handler HistoryJob
+    get /rollout/history(HistoryJobRequest) returns (HistoryJobResponse)
+
+    @handler UndoJob
+    post /rollout/undo(UndoJobRequest) returns (UndoJobResponse)
+
+    @handler LogsJob
+    post /logs(LogsJob) returns (LogsJob)
+}
+
+type CreateJobRequest {
+    Todo string `json:"todo"`
+}
+
+type CreateJobResponse {
+    Error Error `json:"error,omitempty"`
+}
+
+type GetJobRequest {
+    Todo string `json:"todo"`
+}
+
+type GetJobResponse {
+    Job Job `json:"job"`
+}
+
+type DeleteJobRequest {
+    Todo string `json:"todo"`
+}
+
+type DeleteJobResponse {
+    Error Error `json:"error,omitempty"`
+}
+
+type LogsJobRequest {
+    Todo string `json:"todo"`
+}
+
+type LogsJobResponse {
+    Todo string `json:"todo"`
+}
