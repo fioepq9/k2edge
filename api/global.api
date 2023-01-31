@@ -81,3 +81,7 @@ type Token {
 type Command {
     Todo string `json:"todo"`
 }
+
+type Namespace {
+	Name string `json:"name"`
+}

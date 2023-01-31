@@ -14,7 +14,7 @@ type RunContainerResponse struct {
 }
 
 type RemoveContainerRequest struct {
-	Selector ContainerMetadata `json:"selector"`
+	Selector Metadata `json:"selector"`
 }
 
 type RemoveContainerResponse struct {
@@ -22,7 +22,7 @@ type RemoveContainerResponse struct {
 }
 
 type StopContainerRequest struct {
-	Selector ContainerMetadata `json:"selector"`
+	Selector Metadata `json:"selector"`
 }
 
 type StopContainerResponse struct {
@@ -30,7 +30,7 @@ type StopContainerResponse struct {
 }
 
 type StartContainerRequest struct {
-	Selector ContainerMetadata `json:"selector"`
+	Selector Metadata `json:"selector"`
 }
 
 type StartContainerResponse struct {
@@ -38,7 +38,7 @@ type StartContainerResponse struct {
 }
 
 type ContainerStatusRequest struct {
-	Selector ContainerMetadata `json:"selector"`
+	Selector Metadata `json:"selector"`
 }
 
 type ContainerStatusResponse struct {
@@ -54,8 +54,8 @@ type ListContainersResponse struct {
 }
 
 type ExecRequest struct {
-	Selector ContainerMetadata `json:"selector"`
-	Command  Command           `json:"command"`
+	Selector Metadata `json:"selector"`
+	Command  Command  `json:"command"`
 }
 
 type ExecResponse struct {
@@ -63,11 +63,21 @@ type ExecResponse struct {
 }
 
 type AttachRequest struct {
-	Selector ContainerMetadata `json:"selector"`
+	Selector Metadata `json:"selector"`
 }
 
 type AttachResponse struct {
 	Error Error `json:"error,omitempty"`
+}
+
+type Metadata struct {
+	Namespace string `json:"namespace"`
+	Kind      string `json:"kind"`
+	Name      string `json:"name"`
+}
+
+type Error struct {
+	Todo string `json:"todo"`
 }
 
 type ContainerConfig struct {
@@ -78,21 +88,30 @@ type ContainerStatus struct {
 	Todo string `json:"todo"`
 }
 
-type ContainerMetadata struct {
-	Namespace string `json:"namespace"`
-	Name      string `json:"name"`
+type Container struct {
+	Metadata Metadata        `json:"metadata"`
+	Config   ContainerConfig `json:"config"`
+	Status   ContainerStatus `json:"status"`
 }
 
-type Container struct {
-	Metadata ContainerMetadata `json:"metadata"`
-	Config   ContainerConfig   `json:"config"`
-	Status   ContainerStatus   `json:"status"`
+type CronJobConfig struct {
+	Todo string `json:"todo"`
+}
+
+type CronJobStatus struct {
+	Todo string `json:"todo"`
+}
+
+type CronJob struct {
+	Metadata Metadata      `json:"metadata"`
+	Config   CronJobConfig `json:"config"`
+	Status   CronJobStatus `json:"status"`
 }
 
 type Command struct {
 	Todo string `json:"todo"`
 }
 
-type Error struct {
-	Todo string `json:"todo"`
+type Namespace struct {
+	Name string `json:"name"`
 }

@@ -1,0 +1,15 @@
+import (
+    "global.api"
+)
+
+@server(
+    prefix: cluster
+)
+service master-api{
+    @handler ClusterInfo
+    get /info returns (ClusterInfoResponse)
+}
+
+type ClusterInfoResponse {
+    Todo string `json:"todo"`
+}

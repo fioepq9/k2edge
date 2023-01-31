@@ -1,7 +1,6 @@
 import (
 	"cronjob.api"
+	"namespace.api"
+	"cluster.api"
+	"node.api"
 )
-
-service master-api {
-	
-}

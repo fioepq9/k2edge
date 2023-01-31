@@ -29,6 +29,9 @@ service master-api{
 
     @handler LogsContainer
     post /logs(LogsContainerRequest) returns (LogsContainerResponse)
+
+    @handler ContainerTop
+    get /top(ContainerTopRequest) returns (ContainerTopResponse)
 }
 
 type CreateContainerRequest {
@@ -109,4 +112,20 @@ type LogsContainerRequest {
 
 type LogsContainerResponse {
     Todo string `json:"todo"`
+}
+
+type LogsContainerRequest {
+    Todo string `json:"todo"`
+}
+
+type LogsContainerResponse {
+    Todo string `json:"todo"`
+}
+
+type ContainerTopRequest {
+	Selector Metadata `json:"selector"`
+}
+
+type ContainerTopResponse {
+	Error Error `json:"error,omitempty"`
 }

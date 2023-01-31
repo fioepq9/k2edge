@@ -11,10 +11,6 @@ import (
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
-		[]rest.Route{},
-	)
-
-	server.AddRoutes(
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
@@ -53,5 +49,68 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/cronjob"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/create",
+				Handler: CreateNamespaceHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/get",
+				Handler: GetNamespaceHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: ListNamespacesHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/delete",
+				Handler: DeleteNamespaceHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/namespace"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/info",
+				Handler: ClusterInfoHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/cluster"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/top",
+				Handler: NodeTopHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/cordon",
+				Handler: CordonHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/uncordon",
+				Handler: UncordonHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/drain",
+				Handler: DrainHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/node"),
 	)
 }

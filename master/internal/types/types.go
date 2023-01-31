@@ -140,3 +140,75 @@ type Token struct {
 type Command struct {
 	Todo string `json:"todo"`
 }
+
+type Namespace struct {
+	Name string `json:"name"`
+}
+
+type CreateNamespaceRequest struct {
+	Todo string `json:"todo"`
+}
+
+type CreateNamespaceResponse struct {
+	Error Error `json:"error,omitempty"`
+}
+
+type GetNamespaceRequest struct {
+	Todo string `json:"todo"`
+}
+
+type GetNamespaceResponse struct {
+	Namespace Namespace `json:"namespace"`
+}
+
+type ListNamespacesRequest struct {
+	Todo string `json:"todo"`
+}
+
+type ListNamespacesResponse struct {
+	Namespaces []Namespace `json:"namespaces"`
+}
+
+type DeleteNamespaceRequest struct {
+	Todo string `json:"todo"`
+}
+
+type DeleteNamespaceResponse struct {
+	Error Error `json:"error,omitempty"`
+}
+
+type ClusterInfoResponse struct {
+	Todo string `json:"todo"`
+}
+
+type NodeTopRequest struct {
+	Selector Metadata `json:"selector"`
+}
+
+type NodeTopResponse struct {
+	Error Error `json:"error,omitempty"`
+}
+
+type CordonRequest struct {
+	Selector Metadata `json:"selector"`
+}
+
+type CordonResponse struct {
+	Error Error `json:"error,omitempty"`
+}
+
+type UncordonRequest struct {
+	Selector Metadata `json:"selector"`
+}
+
+type UncordonResponse struct {
+	Error Error `json:"error,omitempty"`
+}
+
+type DrainRequest struct {
+	Selector Metadata `json:"selector"`
+}
+
+type DrainResponse struct {
+	Error Error `json:"error,omitempty"`
+}
