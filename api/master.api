@@ -1,44 +1,6 @@
 import (
-	"global.api"
 	"cronjob.api"
 	"namespace.api"
 	"cluster.api"
+	"node.api"
 )
-
-service master-api{
-	// Cordon mark node as unschedulable
-	@handler Cordon
-	post /cordon(CordonRequest) returns (CordonResponse)
-	
-	// Uncordon mark node as schedulable
-	@handler Uncordon
-	post /uncordon(UncordonRequest) returns (UncordonResponse)
-	
-	// Drain remove all containers in the node and mark it as unschedulable
-	@handler Drain
-	post /drain(DrainRequest) returns (DrainResponse)
-}
-
-type CordonRequest {
-	Selector Metadata `json:"selector"`
-}
-
-type CordonResponse {
-	Error Error `json:"error,omitempty"`
-}
-
-type UncordonRequest {
-	Selector Metadata `json:"selector"`
-}
-
-type UncordonResponse {
-	Error Error `json:"error,omitempty"`
-}
-
-type DrainRequest {
-	Selector Metadata `json:"selector"`
-}
-
-type DrainResponse {
-	Error Error `json:"error,omitempty"`
-}

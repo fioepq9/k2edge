@@ -14,26 +14,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/cordon",
-				Handler: CordonHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/uncordon",
-				Handler: UncordonHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/drain",
-				Handler: DrainHandler(serverCtx),
-			},
-		},
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
 				Path:    "/create",
 				Handler: CreateCronJobHandler(serverCtx),
 			},
@@ -91,5 +71,31 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/cluster"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/top",
+				Handler: NodeTopHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/cordon",
+				Handler: CordonHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/uncordon",
+				Handler: UncordonHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/drain",
+				Handler: DrainHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/node"),
 	)
 }
