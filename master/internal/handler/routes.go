@@ -29,18 +29,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/delete",
-				Handler: DeleteHandler(serverCtx),
+				Handler: DeleteCronjobHandler(serverCtx),
 			},
-		},
-		rest.WithPrefix("/cronjob"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
 			{
-				Method:  http.MethodGet,
-				Path:    "/get",
-				Handler: GetCronjobHandler(serverCtx),
+				Method:  http.MethodPost,
+				Path:    "/apply",
+				Handler: ApplyCronjobHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/cronjob"),
