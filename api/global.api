@@ -1,3 +1,13 @@
+type Metadata {
+	Namespace string `json:"namespace"`
+	Kind      string `json:"kind"`
+	Name      string `json:"name"`
+}
+
+type Error {
+    Todo string `json:"todo"`
+}
+
 type ContainerConfig {
 	Todo string `json:"todo"`
 }
@@ -6,27 +16,26 @@ type ContainerStatus {
 	Todo string `json:"todo"`
 }
 
-type ContainerMetadata {
-	Namespace string `json:"namespace"`
-	Name      string `json:"name"`
-}
-
 type Container {
-    Metadata ContainerMetadata `json:"metadata"`
+    Metadata Metadata `json:"metadata"`
     Config ContainerConfig `json:"config"`
     Status ContainerStatus `json:"status"`
 }
 
+type CronJobConfig {
+	Todo string `json:"todo"`
+}
+
+type CronJobStatus {
+	Todo string `json:"todo"`
+}
+
+type CronJob {
+	Metadata Metadata `json:"metadata"`
+    Config CronJobConfig `json:"config"`
+    Status CronJobStatus `json:"status"`
+}
+
 type Command {
     Todo string `json:"todo"`
-}
-
-type Error {
-    Todo string `json:"todo"`
-}
-
-type Metadata {
-	Namespace string `json:"namespace"`
-	Kind      string `json:"kind"`
-	Name      string `json:"name"`
 }

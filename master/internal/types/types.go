@@ -14,7 +14,7 @@ type GetCronjobRequest struct {
 }
 
 type GetCronjobResponse struct {
-	Response Metadata `json:"response"`
+	CronJob CronJob `json:"cronjob"`
 }
 
 type DeleteCronjobRequest struct {
@@ -33,6 +33,16 @@ type ApplyCronjobResponse struct {
 	Error Error `json:"error,omitempty"`
 }
 
+type Metadata struct {
+	Namespace string `json:"namespace"`
+	Kind      string `json:"kind"`
+	Name      string `json:"name"`
+}
+
+type Error struct {
+	Todo string `json:"todo"`
+}
+
 type ContainerConfig struct {
 	Todo string `json:"todo"`
 }
@@ -41,27 +51,26 @@ type ContainerStatus struct {
 	Todo string `json:"todo"`
 }
 
-type ContainerMetadata struct {
-	Namespace string `json:"namespace"`
-	Name      string `json:"name"`
+type Container struct {
+	Metadata Metadata        `json:"metadata"`
+	Config   ContainerConfig `json:"config"`
+	Status   ContainerStatus `json:"status"`
 }
 
-type Container struct {
-	Metadata ContainerMetadata `json:"metadata"`
-	Config   ContainerConfig   `json:"config"`
-	Status   ContainerStatus   `json:"status"`
+type CronJobConfig struct {
+	Todo string `json:"todo"`
+}
+
+type CronJobStatus struct {
+	Todo string `json:"todo"`
+}
+
+type CronJob struct {
+	Metadata Metadata      `json:"metadata"`
+	Config   CronJobConfig `json:"config"`
+	Status   CronJobStatus `json:"status"`
 }
 
 type Command struct {
 	Todo string `json:"todo"`
-}
-
-type Error struct {
-	Todo string `json:"todo"`
-}
-
-type Metadata struct {
-	Namespace string `json:"namespace"`
-	Kind      string `json:"kind"`
-	Name      string `json:"name"`
 }
