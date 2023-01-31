@@ -50,11 +50,3 @@ type DeleteNamespaceRequest {
 type DeleteNamespaceResponse {
     Error Error `json:"error,omitempty"`
 }
-
-type ApplyNamespaceRequest {
-    Todo string `json:"todo"`
-}
-
-type ApplyNamespaceResponse {
-    Error Error `json:"error,omitempty"`
-}
