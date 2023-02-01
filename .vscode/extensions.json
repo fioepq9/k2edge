@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "xiaoxin-technology.goctl",
+        "jinliming2.vscode-go-template",
         "golang.go",
         "eamodio.gitlens",
         "ms-python.python"
