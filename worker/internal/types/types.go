@@ -46,7 +46,12 @@ type ContainerStatusResponse struct {
 }
 
 type ListContainersRequest struct {
-	Todo string `json:"todo"`
+	Size   bool   `query:"size"`
+	All    bool   `query:"all"`
+	Latest bool   `query:"latest"`
+	Since  string `query:"since"`
+	Before string `query:"before"`
+	Limit  int    `query:"limit"`
 }
 
 type ListContainersResponse struct {
@@ -106,6 +111,48 @@ type CronJob struct {
 	Metadata Metadata      `json:"metadata"`
 	Config   CronJobConfig `json:"config"`
 	Status   CronJobStatus `json:"status"`
+}
+
+type DeploymentConfig struct {
+	Todo string `json:"todo"`
+}
+
+type DeploymentStatus struct {
+	Todo string `json:"todo"`
+}
+
+type Deployment struct {
+	Metadata Metadata         `json:"metadata"`
+	Config   DeploymentConfig `json:"config"`
+	Status   DeploymentStatus `json:"status"`
+}
+
+type JobConfig struct {
+	Todo string `json:"todo"`
+}
+
+type JobStatus struct {
+	Todo string `json:"todo"`
+}
+
+type Job struct {
+	Metadata Metadata  `json:"metadata"`
+	Config   JobConfig `json:"config"`
+	Status   JobStatus `json:"status"`
+}
+
+type TokenConfig struct {
+	Todo string `json:"todo"`
+}
+
+type TokenStatus struct {
+	Todo string `json:"todo"`
+}
+
+type Token struct {
+	Metadata Metadata    `json:"metadata"`
+	Config   TokenConfig `json:"config"`
+	Status   TokenStatus `json:"status"`
 }
 
 type Command struct {

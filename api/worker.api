@@ -1,16 +1,22 @@
 import (
 	"global.api"
 )
+info(
+	title: "worker api"
+	desc: "worker api"
+)
+
+service worker-api {
+	@doc(
+		summary: "the version of api"
+	)
+	@handler Version
+	get /version returns (VersionResponse)
+}
 
 type VersionResponse {
 	// worker-api version
 	Version string `json:"version"`
-}
-
-service worker-api {
-	// Version returns the version of api
-	@handler Version
-	get /version returns (VersionResponse)
 }
 
 type RunContainerRequest {
@@ -50,7 +56,12 @@ type ContainerStatusResponse {
 }
 
 type ListContainersRequest {
-	Todo string `json:"todo"`
+	Size   bool   `query:"size"`
+	All    bool   `query:"all"`
+	Latest bool   `query:"latest"`
+	Since  string `query:"since"`
+	Before string `query:"before"`
+	Limit  int    `query:"limit"`
 }
 type ListContainersResponse {
 	Containers []Container `json:"containers"`
@@ -75,29 +86,45 @@ type AttachResponse {
 	middleware: AuthMiddleware
 )
 service worker-api {
-	// RunContainer creates and starts a container
+	@doc(
+		summary: "creates and starts a container"
+	)
 	@handler RunContainer
 	post /container/run(RunContainerRequest) returns (RunContainerResponse)
-	// RemoveContainer removes the container
+	@doc(
+		summary: "removes the container"
+	)
 	@handler RemoveContainer
 	post /container/remove(RemoveContainerRequest) returns (RemoveContainerResponse)
-	// StopContainer stops any running process that is part of the container
+	@doc(
+		summary: "stops any running process that is part of the container"
+	)
 	@handler StopContainer
 	post /container/stop(StopContainerRequest) returns (StopContainerResponse)
-	// StartContainer starts the container
+	@doc(
+		summary: "starts the container"
+	)
 	@handler StartContainer
 	post /container/start(StartContainerRequest) returns(StartContainerResponse)
-	// ContainerStatus returns the status of the container
+	@doc(
+		summary: "the status of the container"
+	)
 	@handler ContainerStatus
 	get /container/status(ContainerStatusRequest) returns (ContainerStatusResponse)
-	// ListContainer returns a list of containers
+	@doc(
+		summary: "a list of containers"
+	)
 	@handler ListContainers
 	get /container/list(ListContainersRequest) returns (ListContainersResponse)
 	
-	// ExecSync runs a command in a container.
+	@doc(
+		summary: "runs a command in a container."
+	)
 	@handler Exec
 	post /container/exec(ExecRequest) returns (ExecResponse)
-	// Attach prepares a streaming endpoint to attach to a running container
+	@doc(
+		summary: "prepares a streaming endpoint to attach to a running container"
+	)
 	@handler Attach
 	post /container/attach(AttachRequest) returns (AttachResponse)
 }

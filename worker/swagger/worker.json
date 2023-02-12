@@ -1,0 +1,820 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "worker api",
+    "description": "worker api",
+    "version": ""
+  },
+  "host": "127.0.0.1:8080",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/container/attach": {
+      "post": {
+        "summary": "prepares a streaming endpoint to attach to a running container",
+        "operationId": "Attach",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AttachResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AttachRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "worker-api"
+        ]
+      }
+    },
+    "/container/exec": {
+      "post": {
+        "summary": "runs a command in a container.",
+        "operationId": "Exec",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ExecResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ExecRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "worker-api"
+        ]
+      }
+    },
+    "/container/list": {
+      "get": {
+        "summary": "a list of containers",
+        "operationId": "ListContainers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ListContainersResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "size",
+            "in": "query",
+            "required": true,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "all",
+            "in": "query",
+            "required": true,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "latest",
+            "in": "query",
+            "required": true,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "worker-api"
+        ]
+      }
+    },
+    "/container/remove": {
+      "post": {
+        "summary": "removes the container",
+        "operationId": "RemoveContainer",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RemoveContainerResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RemoveContainerRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "worker-api"
+        ]
+      }
+    },
+    "/container/run": {
+      "post": {
+        "summary": "creates and starts a container",
+        "operationId": "RunContainer",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RunContainerResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RunContainerRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "worker-api"
+        ]
+      }
+    },
+    "/container/start": {
+      "post": {
+        "summary": "starts the container",
+        "operationId": "StartContainer",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/StartContainerResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/StartContainerRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "worker-api"
+        ]
+      }
+    },
+    "/container/status": {
+      "get": {
+        "summary": "the status of the container",
+        "operationId": "ContainerStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ContainerStatusResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "selector",
+            "in": "query",
+            "required": true,
+            "type": "invalid",
+            "format": "UNKNOWN"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "worker-api"
+        ]
+      }
+    },
+    "/container/stop": {
+      "post": {
+        "summary": "stops any running process that is part of the container",
+        "operationId": "StopContainer",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/StopContainerResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/StopContainerRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "worker-api"
+        ]
+      }
+    },
+    "/version": {
+      "get": {
+        "summary": "the version of api",
+        "operationId": "Version",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/VersionResponse"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "worker-api"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AttachRequest": {
+      "type": "object",
+      "properties": {
+        "selector": {
+          "$ref": "#/definitions/Metadata"
+        }
+      },
+      "title": "AttachRequest",
+      "required": [
+        "selector"
+      ]
+    },
+    "AttachResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "title": "AttachResponse",
+      "required": [
+        "error"
+      ]
+    },
+    "Command": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "type": "string"
+        }
+      },
+      "title": "Command",
+      "required": [
+        "todo"
+      ]
+    },
+    "Container": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "config": {
+          "$ref": "#/definitions/ContainerConfig"
+        },
+        "status": {
+          "$ref": "#/definitions/ContainerStatus"
+        }
+      },
+      "title": "Container",
+      "required": [
+        "metadata",
+        "config",
+        "status"
+      ]
+    },
+    "ContainerConfig": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "type": "string"
+        }
+      },
+      "title": "ContainerConfig",
+      "required": [
+        "todo"
+      ]
+    },
+    "ContainerStatus": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "type": "string"
+        }
+      },
+      "title": "ContainerStatus",
+      "required": [
+        "todo"
+      ]
+    },
+    "ContainerStatusRequest": {
+      "type": "object",
+      "properties": {
+        "selector": {
+          "$ref": "#/definitions/Metadata"
+        }
+      },
+      "title": "ContainerStatusRequest",
+      "required": [
+        "selector"
+      ]
+    },
+    "ContainerStatusResponse": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "$ref": "#/definitions/Container"
+        }
+      },
+      "title": "ContainerStatusResponse",
+      "required": [
+        "container"
+      ]
+    },
+    "CronJob": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "config": {
+          "$ref": "#/definitions/CronJobConfig"
+        },
+        "status": {
+          "$ref": "#/definitions/CronJobStatus"
+        }
+      },
+      "title": "CronJob",
+      "required": [
+        "metadata",
+        "config",
+        "status"
+      ]
+    },
+    "CronJobConfig": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "type": "string"
+        }
+      },
+      "title": "CronJobConfig",
+      "required": [
+        "todo"
+      ]
+    },
+    "CronJobStatus": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "type": "string"
+        }
+      },
+      "title": "CronJobStatus",
+      "required": [
+        "todo"
+      ]
+    },
+    "Deployment": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "config": {
+          "$ref": "#/definitions/DeploymentConfig"
+        },
+        "status": {
+          "$ref": "#/definitions/DeploymentStatus"
+        }
+      },
+      "title": "Deployment",
+      "required": [
+        "metadata",
+        "config",
+        "status"
+      ]
+    },
+    "DeploymentConfig": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "type": "string"
+        }
+      },
+      "title": "DeploymentConfig",
+      "required": [
+        "todo"
+      ]
+    },
+    "DeploymentStatus": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "type": "string"
+        }
+      },
+      "title": "DeploymentStatus",
+      "required": [
+        "todo"
+      ]
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "type": "string"
+        }
+      },
+      "title": "Error",
+      "required": [
+        "todo"
+      ]
+    },
+    "ExecRequest": {
+      "type": "object",
+      "properties": {
+        "selector": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "command": {
+          "$ref": "#/definitions/Command"
+        }
+      },
+      "title": "ExecRequest",
+      "required": [
+        "selector",
+        "command"
+      ]
+    },
+    "ExecResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "title": "ExecResponse",
+      "required": [
+        "error"
+      ]
+    },
+    "Job": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "config": {
+          "$ref": "#/definitions/JobConfig"
+        },
+        "status": {
+          "$ref": "#/definitions/JobStatus"
+        }
+      },
+      "title": "Job",
+      "required": [
+        "metadata",
+        "config",
+        "status"
+      ]
+    },
+    "JobConfig": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "type": "string"
+        }
+      },
+      "title": "JobConfig",
+      "required": [
+        "todo"
+      ]
+    },
+    "JobStatus": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "type": "string"
+        }
+      },
+      "title": "JobStatus",
+      "required": [
+        "todo"
+      ]
+    },
+    "ListContainersRequest": {
+      "type": "object",
+      "properties": {
+        "Size": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "All": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "Latest": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "Since": {
+          "type": "string"
+        },
+        "Before": {
+          "type": "string"
+        },
+        "Limit": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "ListContainersRequest",
+      "required": [
+        "size",
+        "all",
+        "latest",
+        "since",
+        "before",
+        "limit"
+      ]
+    },
+    "ListContainersResponse": {
+      "type": "object",
+      "properties": {
+        "containers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Container"
+          }
+        }
+      },
+      "title": "ListContainersResponse",
+      "required": [
+        "containers"
+      ]
+    },
+    "Metadata": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "Metadata",
+      "required": [
+        "namespace",
+        "kind",
+        "name"
+      ]
+    },
+    "Namespace": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "Namespace",
+      "required": [
+        "name"
+      ]
+    },
+    "RemoveContainerRequest": {
+      "type": "object",
+      "properties": {
+        "selector": {
+          "$ref": "#/definitions/Metadata"
+        }
+      },
+      "title": "RemoveContainerRequest",
+      "required": [
+        "selector"
+      ]
+    },
+    "RemoveContainerResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "title": "RemoveContainerResponse",
+      "required": [
+        "error"
+      ]
+    },
+    "RunContainerRequest": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/ContainerConfig"
+        }
+      },
+      "title": "RunContainerRequest",
+      "required": [
+        "config"
+      ]
+    },
+    "RunContainerResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "title": "RunContainerResponse",
+      "required": [
+        "error"
+      ]
+    },
+    "StartContainerRequest": {
+      "type": "object",
+      "properties": {
+        "selector": {
+          "$ref": "#/definitions/Metadata"
+        }
+      },
+      "title": "StartContainerRequest",
+      "required": [
+        "selector"
+      ]
+    },
+    "StartContainerResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "title": "StartContainerResponse",
+      "required": [
+        "error"
+      ]
+    },
+    "StopContainerRequest": {
+      "type": "object",
+      "properties": {
+        "selector": {
+          "$ref": "#/definitions/Metadata"
+        }
+      },
+      "title": "StopContainerRequest",
+      "required": [
+        "selector"
+      ]
+    },
+    "StopContainerResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "title": "StopContainerResponse",
+      "required": [
+        "error"
+      ]
+    },
+    "Token": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "config": {
+          "$ref": "#/definitions/TokenConfig"
+        },
+        "status": {
+          "$ref": "#/definitions/TokenStatus"
+        }
+      },
+      "title": "Token",
+      "required": [
+        "metadata",
+        "config",
+        "status"
+      ]
+    },
+    "TokenConfig": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "type": "string"
+        }
+      },
+      "title": "TokenConfig",
+      "required": [
+        "todo"
+      ]
+    },
+    "TokenStatus": {
+      "type": "object",
+      "properties": {
+        "todo": {
+          "type": "string"
+        }
+      },
+      "title": "TokenStatus",
+      "required": [
+        "todo"
+      ]
+    },
+    "VersionResponse": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        }
+      },
+      "title": "VersionResponse",
+      "required": [
+        "version"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "apiKey": []
+    }
+  ]
+}

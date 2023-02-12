@@ -22,3 +22,6 @@ pip install "typer[all]"
 # gitmoji-cli 安裝
 # https://github.com/carloscuesta/gitmoji#using-gitmoji-cli
 npm i -g gitmoji-cli
+
+# swagger
+go install github.com/zeromicro/goctl-swagger@latest
