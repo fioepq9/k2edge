@@ -3,10 +3,11 @@ package handler
 import (
 	"net/http"
 
-	"github.com/zeromicro/go-zero/rest/httpx"
 	"k2edge/master/internal/logic"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
+
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func ApplyJobHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -19,10 +20,14 @@ func ApplyJobHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := logic.NewApplyJobLogic(r.Context(), svcCtx)
 		resp, err := l.ApplyJob(&req)
+		var body types.Response
 		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			body.Code = -1
+			body.Msg = err.Error()
 		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
+			body.Msg = "success"
+			body.Data = resp
 		}
+		httpx.OkJsonCtx(r.Context(), w, body)
 	}
 }

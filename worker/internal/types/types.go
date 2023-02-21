@@ -46,16 +46,16 @@ type ContainerStatusResponse struct {
 }
 
 type ListContainersRequest struct {
-	Size   bool   `query:"size"`
-	All    bool   `query:"all"`
-	Latest bool   `query:"latest"`
-	Since  string `query:"since"`
-	Before string `query:"before"`
-	Limit  int    `query:"limit"`
+	Size   bool   `form:"size,optional"`
+	All    bool   `form:"all,optional"`
+	Latest bool   `form:"latest,optional"`
+	Since  string `form:"since,optional"`
+	Before string `form:"before,optional"`
+	Limit  int    `form:"limit,optional"`
 }
 
 type ListContainersResponse struct {
-	Containers []Container `json:"containers"`
+	Containers interface{} `json:"containers"`
 }
 
 type ExecRequest struct {
@@ -161,4 +161,10 @@ type Command struct {
 
 type Namespace struct {
 	Name string `json:"name"`
+}
+
+type Response struct {
+	Code int         `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data,omitempty"`
 }

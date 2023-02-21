@@ -41,9 +41,9 @@ def updateSwagger(name: str = "worker-api", port: int = 8080):
 @app.command()
 def runSwagger(name: str = "worker-api", port: int = 8083):
     if name == "worker-api":
-        RunCommand(f"docker run --rm -p {port}:8080 -e SWAGGER_JSON=/app/worker.json -v $PWD/worker/swagger:/app swaggerapi/swagger-ui")
+        RunCommand(f"docker run --rm -d -p {port}:8080 -e SWAGGER_JSON=/app/worker.json -v $PWD/worker/swagger:/app swaggerapi/swagger-ui")
     elif name == "master-api":
-        RunCommand(f"docker run --rm -p {port}:8080 -e SWAGGER_JSON=/app/master.json -v $PWD/master/swagger:/app swaggerapi/swagger-ui")
+        RunCommand(f"docker run --rm -d -p {port}:8080 -e SWAGGER_JSON=/app/master.json -v $PWD/master/swagger:/app swaggerapi/swagger-ui")
     else:
         print("unsupported arguments:", name)
 

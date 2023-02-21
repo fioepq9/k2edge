@@ -20,7 +20,11 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 
-	server := rest.MustNewServer(c.RestConf)
+	opts := make([]rest.RunOption, 0)
+	if c.Mode == "dev" {
+		opts = append(opts, rest.WithCors("*"))
+	}
+	server := rest.MustNewServer(c.RestConf, opts...)
 	defer server.Stop()
 
 	ctx := svc.NewServiceContext(c)

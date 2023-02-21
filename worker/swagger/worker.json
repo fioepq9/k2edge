@@ -5,7 +5,7 @@
     "description": "worker api",
     "version": ""
   },
-  "host": "127.0.0.1:8080",
+  "host": "127.0.0.1:8888",
   "schemes": [
     "http",
     "https"
@@ -89,40 +89,40 @@
           {
             "name": "size",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "boolean",
             "format": "boolean"
           },
           {
             "name": "all",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "boolean",
             "format": "boolean"
           },
           {
             "name": "latest",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "boolean",
             "format": "boolean"
           },
           {
             "name": "since",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
             "name": "before",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
             "name": "limit",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "integer",
             "format": "int32"
           }
@@ -571,47 +571,36 @@
     "ListContainersRequest": {
       "type": "object",
       "properties": {
-        "Size": {
+        "size": {
           "type": "boolean",
           "format": "boolean"
         },
-        "All": {
+        "all": {
           "type": "boolean",
           "format": "boolean"
         },
-        "Latest": {
+        "latest": {
           "type": "boolean",
           "format": "boolean"
         },
-        "Since": {
+        "since": {
           "type": "string"
         },
-        "Before": {
+        "before": {
           "type": "string"
         },
-        "Limit": {
+        "limit": {
           "type": "integer",
           "format": "int32"
         }
       },
-      "title": "ListContainersRequest",
-      "required": [
-        "size",
-        "all",
-        "latest",
-        "since",
-        "before",
-        "limit"
-      ]
+      "title": "ListContainersRequest"
     },
     "ListContainersResponse": {
       "type": "object",
       "properties": {
         "containers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Container"
-          }
+          "type": "object"
         }
       },
       "title": "ListContainersResponse",

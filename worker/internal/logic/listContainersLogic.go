@@ -25,8 +25,7 @@ func NewListContainersLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Li
 }
 
 func (l *ListContainersLogic) ListContainers(req *types.ListContainersRequest) (resp *types.ListContainersResponse, err error) {
-	// todo: add your logic here and delete this line
-	dockerContainers, err := l.svcCtx.DockerClient.ContainerList(context.Background(), dockerTypes.ContainerListOptions{
+	containers, err := l.svcCtx.DockerClient.ContainerList(context.Background(), dockerTypes.ContainerListOptions{
 		Size:   req.Size,
 		All:    req.All,
 		Latest: req.Latest,
@@ -35,17 +34,9 @@ func (l *ListContainersLogic) ListContainers(req *types.ListContainersRequest) (
 		Limit:  req.Limit,
 	})
 	if err != nil {
-		return
+		return nil, err
 	}
-	// todo: find metadata use id and node-id
-	//
-
-	containers := make([]types.Container, len(dockerContainers))
-	for i := range containers {
-		containers[i] = types.NewContainer(
-			types.ContainerBuildOptions.FromDocker(dockerContainers[i]),
-			types.ContainerBuildOptions.WithNamespace("todo"),
-		)
-	}
-	return
+	resp = new(types.ListContainersResponse)
+	resp.Containers = containers
+	return resp, nil
 }
