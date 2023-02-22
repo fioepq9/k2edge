@@ -1,85 +1,85 @@
 import (
-    "global.api"
+	"global.api"
 )
 
 @server (
-    prefix: cronjob
+	prefix: cronjob
 )
 service master-api{
-    @handler CreateCronJob
-    post /create(CreateCronJobRequest) returns (CreateCronJobResponse)
-
-    @handler GetCronJob
-    get /get(GetCronJobRequest) returns (GetCronJobResponse)
-
-    @handler DeleteCronJob
-    post /delete(DeleteCronJobRequest) returns (DeleteCronJobResponse)
-
-    @handler ApplyCronJob
-    post /apply(ApplyCronJobRequest) returns (ApplyCronJobResponse)
-
-    @handler HistoryCronJob
-    get /rollout/history(HistoryCronJobRequest) returns (HistoryCronJobResponse)
-
-    @handler UndoCronJob
-    post /rollout/undo(UndoCronJobRequest) returns (UndoCronJobResponse)
-
-    @handler LogsCronJob
-    post /logs(LogsCronJobRequest) returns (LogsCronJobResponse)
+	@handler CreateCronJob
+	post /create(CreateCronJobRequest) returns (CreateCronJobResponse)
+	
+	@handler GetCronJob
+	get /get(GetCronJobRequest) returns (GetCronJobResponse)
+	
+	@handler DeleteCronJob
+	post /delete(DeleteCronJobRequest) returns (DeleteCronJobResponse)
+	
+	@handler ApplyCronJob
+	post /apply(ApplyCronJobRequest) returns (ApplyCronJobResponse)
+	
+	@handler HistoryCronJob
+	get /rollout/history(HistoryCronJobRequest) returns (HistoryCronJobResponse)
+	
+	@handler UndoCronJob
+	post /rollout/undo(UndoCronJobRequest) returns (UndoCronJobResponse)
+	
+	@handler LogsCronJob
+	post /logs(LogsCronJobRequest) returns (LogsCronJobResponse)
 }
 
 type CreateCronJobRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type CreateCronJobResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type GetCronJobRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type GetCronJobResponse {
-    CronJob CronJob `json:"cronjob"`
+	CronJob CronJob `json:"cronjob"`
 }
 
 type DeleteCronJobRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type DeleteCronJobResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type ApplyCronJobRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type ApplyCronJobResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type HistoryCronJobRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type HistoryCronJobResponse {
-    CronJob CronJob `json:"cronjob"`
+	CronJob CronJob `json:"cronjob"`
 }
 
 type UndoCronJobRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type UndoCronJobResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type LogsCronJobRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type LogsCronJobResponse {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }

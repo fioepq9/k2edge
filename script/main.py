@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import typer
 from rich import print
 import subprocess
@@ -8,35 +9,27 @@ def Alert():
 def Ok():
     print("\n:beers: [bold green]Finish! The script run success.[/bold green]\n")
 
-def RunCommand(cmd: str):
+def RunCommand(cmd: str) -> int:
     r: subprocess.CompletedProcess = subprocess.run(cmd, shell=True)
-    # check result
-    if r.returncode != 0:
-        Alert()
-    else:
-        Ok()
+    return r.returncode
 
 
 app = typer.Typer()
 
 @app.command()
-def updateAPI(name: str = "worker-api"):
-    if name == "worker-api":
-        RunCommand("goctl api go -api ./api/worker.api -dir ./worker -style goZero --home ./template")
-    elif name == "master-api":
-        RunCommand("goctl api go -api ./api/master.api -dir ./master -style goZero --home ./template")
-    else:
-        print("unsupported arguments:", name)
+def updateAPI(w: bool = True, m: bool = True):
+    code = RunCommand("goctl api format --dir ./api")
+    if code != 0:
+        Alert()
+        return
+    if w: RunCommand("goctl api go -api ./api/worker.api -dir ./worker -style goZero --home ./template")
+    if m: RunCommand("goctl api go -api ./api/master.api -dir ./master -style goZero --home ./template")
 
 
 @app.command()
-def updateSwagger(name: str = "worker-api", port: int = 8080):
-    if name == "worker-api":
-        RunCommand(f"goctl api plugin -plugin goctl-swagger='swagger -filename worker.json --host 127.0.0.1:{port}' -api ./api/worker.api -dir ./worker/swagger")
-    elif name == "master-api":
-        RunCommand(f"goctl api plugin -plugin goctl-swagger='swagger -filename master.json --host 127.0.0.1:{port}' -api ./api/master.api -dir ./master/swagger")
-    else:
-        print("unsupported arguments:", name)
+def updateSwagger(w: bool = True, m: bool = True, port: int = 8080):
+    if w: RunCommand(f"goctl api plugin -plugin goctl-swagger='swagger -filename worker.json --host 127.0.0.1:{port}' -api ./api/worker.api -dir ./worker/swagger")
+    if m: RunCommand(f"goctl api plugin -plugin goctl-swagger='swagger -filename master.json --host 127.0.0.1:{port}' -api ./api/master.api -dir ./master/swagger")
 
 @app.command()
 def runSwagger(name: str = "worker-api", port: int = 8083):

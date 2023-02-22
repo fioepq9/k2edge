@@ -1,117 +1,117 @@
 import (
-    "global.api"
+	"global.api"
 )
 
 @server (
-    prefix: container
+	prefix: container
 )
 service master-api{
-    @handler CreateContainer
-    post /create(CreateContainerRequest) returns (CreateContainerResponse)
-
-    @handler GetContainer
-    get /get(GetContainerRequest) returns (GetContainerResponse)
-
-    @handler DeleteContainer
-    post /delete(DeleteContainerRequest) returns (DeleteContainerResponse)
-
-    @handler RunContainer
-    post /run(RunContainerRequest) returns (RunContainerResponse)
-
-    @handler ApplyContainer
-    post /apply(ApplyContainerRequest) returns (ApplyContainerResponse)
-
-    @handler AttachContainer
-    post /attach(AttachContainerRequest) returns (AttachContainerResponse)
-
-    @handler ExecContainer
-    post /exec(ExecContainerRequest) returns (ExecContainerResponse)
-
-    @handler LogsContainer
-    post /logs(LogsContainerRequest) returns (LogsContainerResponse)
-
-    @handler ContainerTop
-    get /top(ContainerTopRequest) returns (ContainerTopResponse)
+	@handler CreateContainer
+	post /create(CreateContainerRequest) returns (CreateContainerResponse)
+	
+	@handler GetContainer
+	get /get(GetContainerRequest) returns (GetContainerResponse)
+	
+	@handler DeleteContainer
+	post /delete(DeleteContainerRequest) returns (DeleteContainerResponse)
+	
+	@handler RunContainer
+	post /run(RunContainerRequest) returns (RunContainerResponse)
+	
+	@handler ApplyContainer
+	post /apply(ApplyContainerRequest) returns (ApplyContainerResponse)
+	
+	@handler AttachContainer
+	post /attach(AttachContainerRequest) returns (AttachContainerResponse)
+	
+	@handler ExecContainer
+	post /exec(ExecContainerRequest) returns (ExecContainerResponse)
+	
+	@handler LogsContainer
+	post /logs(LogsContainerRequest) returns (LogsContainerResponse)
+	
+	@handler ContainerTop
+	get /top(ContainerTopRequest) returns (ContainerTopResponse)
 }
 
 type CreateContainerRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type CreateContainerResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type GetContainerRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type GetContainerResponse {
-    Container Container `json:"container"`
+	Container Container `json:"container"`
 }
 
 type DeleteContainerRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type DeleteContainerResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type RunContainerRequest {
-    Container Container `json:"container"`
+	Container Container `json:"container"`
 }
 
 type RunContainerResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type ApplyContainerRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type ApplyContainerResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type HistoryContainerRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type HistoryContainerResponse {
-    Container Container `json:"container"`
+	Container Container `json:"container"`
 }
 
 type UndoContainerRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type UndoContainerResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type AttachContainerRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type AttachContainerResponse {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type ExecContainerRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type ExecContainerResponse {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type LogsContainerRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type LogsContainerResponse {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type ContainerTopRequest {

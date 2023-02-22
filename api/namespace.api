@@ -1,52 +1,52 @@
 import (
-    "global.api"
+	"global.api"
 )
 
 @server (
-    prefix: namespace
+	prefix: namespace
 )
 service master-api{
-    @handler CreateNamespace
-    post /create(CreateNamespaceRequest) returns (CreateNamespaceResponse)
-
-    @handler GetNamespace
-    get /get(GetNamespaceRequest) returns (GetNamespaceResponse)
-
-    @handler ListNamespaces
-    get /list(ListNamespacesRequest) returns (ListNamespacesResponse)
-
-    @handler DeleteNamespace
-    post /delete(DeleteNamespaceRequest) returns (DeleteNamespaceResponse)
+	@handler CreateNamespace
+	post /create(CreateNamespaceRequest) returns (CreateNamespaceResponse)
+	
+	@handler GetNamespace
+	get /get(GetNamespaceRequest) returns (GetNamespaceResponse)
+	
+	@handler ListNamespaces
+	get /list(ListNamespacesRequest) returns (ListNamespacesResponse)
+	
+	@handler DeleteNamespace
+	post /delete(DeleteNamespaceRequest) returns (DeleteNamespaceResponse)
 }
 
 type CreateNamespaceRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type CreateNamespaceResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type GetNamespaceRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type GetNamespaceResponse {
-    Namespace Namespace `json:"namespace"`
+	Namespace Namespace `json:"namespace"`
 }
 
 type ListNamespacesRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type ListNamespacesResponse {
-    Namespaces []Namespace `json:"namespaces"`
+	Namespaces []Namespace `json:"namespaces"`
 }
 
 type DeleteNamespaceRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type DeleteNamespaceResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }

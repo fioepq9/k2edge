@@ -1,118 +1,118 @@
 import (
-    "global.api"
+	"global.api"
 )
 
 @server (
-    prefix: deployment
+	prefix: deployment
 )
 service master-api {
-    @handler CreateDeployment
-    post /create(CreateDeploymentRequest) returns (CreateDeploymentResponse)
-
-    @handler GetDeployment
-    get /get(GetDeploymentRequest) returns (GetDeploymentResponse)
-
-    @handler DeleteDeployment
-    post /delete(DeleteDeploymentRequest) returns (DeleteDeploymentResponse)
-
-    @handler ApplyDeployment
-    post /apply(ApplyDeploymentRequest) returns (ApplyDeploymentResponse)
-
-    @handler HistoryDeployment
-    get /rollout/history(HistoryDeploymentRequest) returns (HistoryDeploymentResponse)
-
-    @handler UndoDeployment
-    post /rollout/undo(UndoDeploymentRequest) returns (UndoDeploymentResponse)
-
-    @handler Scale
-    post /scale(ScaleRequest) returns (ScaleResponse)
-
-    @handler AttachDeployment
-    post /attach(AttachDeploymentRequest) returns (AttachDeploymentResponse)
-
-    @handler ExecDeployment
-    post /exec(ExecDeploymentRequest) returns (ExecDeploymentResponse)
-
-    @handler LogsDeployment
-    post /logs(LogsDeploymentRequest) returns (LogsDeploymentResponse)
+	@handler CreateDeployment
+	post /create(CreateDeploymentRequest) returns (CreateDeploymentResponse)
+	
+	@handler GetDeployment
+	get /get(GetDeploymentRequest) returns (GetDeploymentResponse)
+	
+	@handler DeleteDeployment
+	post /delete(DeleteDeploymentRequest) returns (DeleteDeploymentResponse)
+	
+	@handler ApplyDeployment
+	post /apply(ApplyDeploymentRequest) returns (ApplyDeploymentResponse)
+	
+	@handler HistoryDeployment
+	get /rollout/history(HistoryDeploymentRequest) returns (HistoryDeploymentResponse)
+	
+	@handler UndoDeployment
+	post /rollout/undo(UndoDeploymentRequest) returns (UndoDeploymentResponse)
+	
+	@handler Scale
+	post /scale(ScaleRequest) returns (ScaleResponse)
+	
+	@handler AttachDeployment
+	post /attach(AttachDeploymentRequest) returns (AttachDeploymentResponse)
+	
+	@handler ExecDeployment
+	post /exec(ExecDeploymentRequest) returns (ExecDeploymentResponse)
+	
+	@handler LogsDeployment
+	post /logs(LogsDeploymentRequest) returns (LogsDeploymentResponse)
 }
 
 type CreateDeploymentRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type CreateDeploymentResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type GetDeploymentRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type GetDeploymentResponse {
-    Deployment Deployment `json:"deployment"`
+	Deployment Deployment `json:"deployment"`
 }
 
 type DeleteDeploymentRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type DeleteDeploymentResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type ApplyDeploymentRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type ApplyDeploymentResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type HistoryDeploymentRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type HistoryDeploymentResponse {
-    Deployment Deployment `json:"deployment"`
+	Deployment Deployment `json:"deployment"`
 }
 
 type UndoDeploymentRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type UndoDeploymentResponse {
-    Error Error `json:"error,omitempty"`
+	Error Error `json:"error,omitempty"`
 }
 
 type ScaleRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type ScaleResponse {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type AttachDeploymentRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type AttachDeploymentResponse {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type ExecDeploymentRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type ExecDeploymentResponse {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type LogsDeploymentRequest {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type LogsDeploymentResponse {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }

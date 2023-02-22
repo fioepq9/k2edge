@@ -1,12 +1,15 @@
+import(
+	"global.api"
+)
 @server(
-    prefix: node
+	prefix: node
 )
 
 service master-api{
-    // NodeTop run command top
-    @handler NodeTop
-    get /top(NodeTopRequest) returns (NodeTopResponse)
-
+	// NodeTop run command top
+	@handler NodeTop
+	get /top(NodeTopRequest) returns (NodeTopResponse)
+	
 	// Cordon mark node as unschedulable
 	@handler Cordon
 	post /cordon(CordonRequest) returns (CordonResponse)

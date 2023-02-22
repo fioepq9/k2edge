@@ -5,7 +5,7 @@ type Metadata {
 }
 
 type Error {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type ContainerConfig {
@@ -17,9 +17,9 @@ type ContainerStatus {
 }
 
 type Container {
-    Metadata Metadata `json:"metadata"`
-    Config ContainerConfig `json:"config"`
-    Status ContainerStatus `json:"status"`
+	Metadata Metadata        `json:"metadata"`
+	Config   ContainerConfig `json:"config"`
+	Status   ContainerStatus `json:"status"`
 }
 
 type CronJobConfig {
@@ -31,9 +31,9 @@ type CronJobStatus {
 }
 
 type CronJob {
-	Metadata Metadata `json:"metadata"`
-    Config CronJobConfig `json:"config"`
-    Status CronJobStatus `json:"status"`
+	Metadata Metadata      `json:"metadata"`
+	Config   CronJobConfig `json:"config"`
+	Status   CronJobStatus `json:"status"`
 }
 
 type DeploymentConfig {
@@ -45,9 +45,9 @@ type DeploymentStatus {
 }
 
 type Deployment {
-	Metadata Metadata `json:"metadata"`
-    Config DeploymentConfig `json:"config"`
-    Status DeploymentStatus `json:"status"`
+	Metadata Metadata         `json:"metadata"`
+	Config   DeploymentConfig `json:"config"`
+	Status   DeploymentStatus `json:"status"`
 }
 
 type JobConfig {
@@ -59,9 +59,9 @@ type JobStatus {
 }
 
 type Job {
-	Metadata Metadata `json:"metadata"`
-    Config JobConfig `json:"config"`
-    Status JobStatus `json:"status"`
+	Metadata Metadata  `json:"metadata"`
+	Config   JobConfig `json:"config"`
+	Status   JobStatus `json:"status"`
 }
 
 type TokenConfig {
@@ -73,13 +73,13 @@ type TokenStatus {
 }
 
 type Token {
-	Metadata Metadata `json:"metadata"`
-    Config TokenConfig `json:"config"`
-    Status TokenStatus `json:"status"`
+	Metadata Metadata    `json:"metadata"`
+	Config   TokenConfig `json:"config"`
+	Status   TokenStatus `json:"status"`
 }
 
 type Command {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
 
 type Namespace {

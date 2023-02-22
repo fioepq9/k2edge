@@ -1,15 +1,15 @@
 import (
-    "global.api"
+	"global.api"
 )
 
 @server(
-    prefix: cluster
+	prefix: cluster
 )
 service master-api{
-    @handler ClusterInfo
-    get /info returns (ClusterInfoResponse)
+	@handler ClusterInfo
+	get /info returns (ClusterInfoResponse)
 }
 
 type ClusterInfoResponse {
-    Todo string `json:"todo"`
+	Todo string `json:"todo"`
 }
