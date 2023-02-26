@@ -23,8 +23,8 @@ func NewRunContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RunC
 	}
 }
 
-func (l *RunContainerLogic) RunContainer(req *types.RunContainerRequest) (resp *types.RunContainerResponse, err error) {
+func (l *RunContainerLogic) RunContainer(req *types.RunContainerRequest) error {
 	// todo: add your logic here and delete this line
 
-	return
+	return nil
 }

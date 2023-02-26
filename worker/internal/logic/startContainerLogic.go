@@ -23,8 +23,8 @@ func NewStartContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *St
 	}
 }
 
-func (l *StartContainerLogic) StartContainer(req *types.StartContainerRequest) (resp *types.StartContainerResponse, err error) {
+func (l *StartContainerLogic) StartContainer(req *types.StartContainerRequest) error {
 	// todo: add your logic here and delete this line
 
-	return
+	return nil
 }

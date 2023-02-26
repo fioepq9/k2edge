@@ -23,8 +23,8 @@ func NewStopContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Sto
 	}
 }
 
-func (l *StopContainerLogic) StopContainer(req *types.StopContainerRequest) (resp *types.StopContainerResponse, err error) {
+func (l *StopContainerLogic) StopContainer(req *types.StopContainerRequest) error {
 	// todo: add your logic here and delete this line
 
-	return
+	return nil
 }

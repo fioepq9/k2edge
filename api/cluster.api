@@ -1,7 +1,3 @@
-import (
-	"global.api"
-)
-
 @server(
 	prefix: cluster
 )

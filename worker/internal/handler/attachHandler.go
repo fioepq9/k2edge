@@ -19,14 +19,14 @@ func AttachHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := logic.NewAttachLogic(r.Context(), svcCtx)
-		resp, err := l.Attach(&req)
+		err := l.Attach(&req)
 		var body types.Response
 		if err != nil {
 			body.Code = -1
 			body.Msg = err.Error()
 		} else {
 			body.Msg = "success"
-			body.Data = resp
+
 		}
 		httpx.OkJsonCtx(r.Context(), w, body)
 	}

@@ -6,43 +6,34 @@ type VersionResponse struct {
 }
 
 type RunContainerRequest struct {
-	Config ContainerConfig `json:"config"`
-}
-
-type RunContainerResponse struct {
-	Error Error `json:"error,omitempty"`
+	ContainerName string          `json:"container_name"`
+	Config        ContainerConfig `json:"config"`
 }
 
 type RemoveContainerRequest struct {
-	Selector Metadata `json:"selector"`
-}
-
-type RemoveContainerResponse struct {
-	Error Error `json:"error,omitempty"`
+	ID            string `json:"id"`
+	RemoveVolumes bool   `json:"remove_volumnes,optional"`
+	RemoveLinks   bool   `json:"remove_links,optional"`
+	Force         bool   `json:"force"`
 }
 
 type StopContainerRequest struct {
-	Selector Metadata `json:"selector"`
-}
-
-type StopContainerResponse struct {
-	Error Error `json:"error,omitempty"`
+	ID      string `json:"id"`
+	Timeout int64  `json:"timeout,optional"`
 }
 
 type StartContainerRequest struct {
-	Selector Metadata `json:"selector"`
-}
-
-type StartContainerResponse struct {
-	Error Error `json:"error,omitempty"`
+	ID            string `json:"id"`
+	CheckpointID  string `json:"checkpoint_id,optional"`
+	CheckpointDir string `json:"checkpoint_dir,optional"`
 }
 
 type ContainerStatusRequest struct {
-	Selector Metadata `json:"selector"`
+	ID string `json:"id"`
 }
 
 type ContainerStatusResponse struct {
-	Container Container `json:"container"`
+	Status string `json:"status"`
 }
 
 type ListContainersRequest struct {
@@ -59,20 +50,36 @@ type ListContainersResponse struct {
 }
 
 type ExecRequest struct {
-	Selector Metadata `json:"selector"`
-	Command  Command  `json:"command"`
+	Container string     `json:"container"`
+	Config    ExecConfig `json:"config,optional"`
 }
 
-type ExecResponse struct {
-	Error Error `json:"error,omitempty"`
+type ExecConfig struct {
+	User         string   `json:"user"`          // User that will run the command
+	Privileged   bool     `json:"privileged"`    // Is the container in privileged mode
+	Tty          bool     `json:"tty"`           // Attach standard streams to a tty.
+	AttachStdin  bool     `json:"attach_stdin"`  // Attach the standard input, makes possible user interaction
+	AttachStderr bool     `json:"attach_stderr"` // Attach the standard error
+	AttachStdout bool     `json:"attach_stdout"` // Attach the standard output
+	Detach       bool     `json:"detach"`        // Execute in detach mode
+	DetachKeys   string   `json:"detach_keys"`   // Escape keys for detach
+	Env          []string `json:"env"`           // Environment variables
+	WorkingDir   string   `json:"working_dir"`   // Working directory
+	Cmd          []string `json:"cmd"`           // Execution commands and args
 }
 
 type AttachRequest struct {
-	Selector Metadata `json:"selector"`
+	Container string       `json:"container"`
+	Config    AttachConfig `json:"config,optional"`
 }
 
-type AttachResponse struct {
-	Error Error `json:"error,omitempty"`
+type AttachConfig struct {
+	Stream     bool   `json:"stream"`
+	Stdin      bool   `json:"stdin"`
+	Stdout     bool   `json:"stdout"`
+	Stderr     bool   `json:"stderr"`
+	DetachKeys string `json:"detach_keys"`
+	Logs       bool   `json:"logs"`
 }
 
 type Metadata struct {
@@ -85,8 +92,40 @@ type Error struct {
 	Todo string `json:"todo"`
 }
 
+type HealthConfig struct {
+	Test        []string `json:"test"`
+	Interval    int64    `json:"interval"`              // Interval is the time to wait between checks.
+	Timeout     int64    `json:"timeout"`               // Timeout is the time to wait before considering the check to have hung.
+	StartPeriod int64    `json:"start_period,optional"` // The start period for the container to initialize before the retries starts to count down.
+	Retries     int      `json:"retries,optional"`
+}
+
 type ContainerConfig struct {
-	Todo string `json:"todo"`
+	Hostname        string            `json:"hostname,optional"`         // Hostname
+	Domainname      string            `json:"domainname,optional"`       // Domainname
+	User            string            `json:"user,optional"`             // User that will run the command(s) inside the container, also support user:group
+	AttachStdin     bool              `json:"attach_stdin,optional"`     // Attach the standard input, makes possible user interaction
+	AttachStdout    bool              `json:"attach_stdout,optional"`    // Attach the standard output
+	AttachStderr    bool              `json:"attach_stderr,optional"`    // Attach the standard error
+	ExposedPorts    []string          `json:"exposed_ports,optional"`    // List of exposed ports
+	Tty             bool              `json:"tty,optional"`              // Attach standard streams to a tty, including stdin if it is not closed.
+	OpenStdin       bool              `json:"open_stdin,optional"`       // Open stdin
+	StdinOnce       bool              `json:"stdin_once,optional"`       // If true, close stdin after the 1 attached client disconnects.
+	Env             []string          `json:"env,optional"`              // List of environment variable to set in the container
+	Cmd             []string          `json:"cmd,optional"`              // Command to run when starting the container
+	Healthcheck     *HealthConfig     `json:"healthcheck,optional"`      // Healthcheck describes how to check the container is healthy
+	ArgsEscaped     bool              `json:"args_escaped,optional"`     // True if command is already escaped (meaning treat as a command line) (Windows specific).
+	Image           string            `json:"image"`                     // Name of the image as it was passed by the operator (e.g. could be symbolic)
+	Volumes         []string          `json:"volumes,optional"`          // List of volumes (mounts) used for the container
+	WorkingDir      string            `json:"working_dir,optional"`      // Current directory (PWD) in the command will be launched
+	Entrypoint      []string          `json:"entrypoint,optional"`       // Entrypoint to run when starting the container
+	NetworkDisabled bool              `json:"network_disabled,optional"` // Is network disabled
+	MacAddress      string            `json:"mac_address,optional"`      // Mac Address of the container
+	OnBuild         []string          `json:"on_build,optional"`         // ONBUILD metadata that were defined on the image Dockerfile
+	Labels          map[string]string `json:"labels,optional"`           // List of labels set to this container
+	StopSignal      string            `json:"stop_signal,optional"`      // Signal to stop a container
+	StopTimeout     int               `json:"stop_timeout,optional"`     // Timeout (in seconds) to stop a container
+	Shell           []string          `json:"shell,optional"`            // Shell for shell-form of RUN, CMD, ENTRYPOINT
 }
 
 type ContainerStatus struct {

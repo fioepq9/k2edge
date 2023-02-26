@@ -23,8 +23,8 @@ func NewExecLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ExecLogic {
 	}
 }
 
-func (l *ExecLogic) Exec(req *types.ExecRequest) (resp *types.ExecResponse, err error) {
+func (l *ExecLogic) Exec(req *types.ExecRequest) error {
 	// todo: add your logic here and delete this line
 
-	return
+	return nil
 }

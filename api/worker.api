@@ -20,39 +20,34 @@ type VersionResponse {
 }
 
 type RunContainerRequest {
+	ContainerName string `json:"container_name"`
 	// the config of container will create and run
 	Config ContainerConfig `json:"config"`
 }
-type RunContainerResponse {
-	Error Error `json:"error,omitempty"`
-}
 
 type RemoveContainerRequest {
-	Selector Metadata `json:"selector"`
-}
-type RemoveContainerResponse {
-	Error Error `json:"error,omitempty"`
+	ID            string `json:"id"`
+	RemoveVolumes bool   `json:"remove_volumnes,optional"`
+	RemoveLinks   bool   `json:"remove_links,optional"`
+	Force         bool   `json:"force"`
 }
 
 type StopContainerRequest {
-	Selector Metadata `json:"selector"`
-}
-type StopContainerResponse {
-	Error Error `json:"error,omitempty"`
+	ID      string `json:"id"`
+	Timeout int64  `json:"timeout,optional"`
 }
 
 type StartContainerRequest {
-	Selector Metadata `json:"selector"`
-}
-type StartContainerResponse {
-	Error Error `json:"error,omitempty"`
+	ID            string `json:"id"`
+	CheckpointID  string `json:"checkpoint_id,optional"`
+	CheckpointDir string `json:"checkpoint_dir,optional"`
 }
 
 type ContainerStatusRequest {
-	Selector Metadata `json:"selector"`
+	ID string `json:"id"`
 }
 type ContainerStatusResponse {
-	Container Container `json:"container"`
+	Status string `json:"status"`
 }
 
 type ListContainersRequest {
@@ -68,18 +63,34 @@ type ListContainersResponse {
 }
 
 type ExecRequest {
-	Selector Metadata `json:"selector"`
-	Command  Command  `json:"command"`
+	Container string     `json:"container"`
+	Config    ExecConfig `json:"config,optional"`
 }
-type ExecResponse {
-	Error Error `json:"error,omitempty"`
+type ExecConfig {
+	User         string   `json:"user"`          // User that will run the command
+	Privileged   bool     `json:"privileged"`    // Is the container in privileged mode
+	Tty          bool     `json:"tty"`           // Attach standard streams to a tty.
+	AttachStdin  bool     `json:"attach_stdin"`  // Attach the standard input, makes possible user interaction
+	AttachStderr bool     `json:"attach_stderr"` // Attach the standard error
+	AttachStdout bool     `json:"attach_stdout"` // Attach the standard output
+	Detach       bool     `json:"detach"`        // Execute in detach mode
+	DetachKeys   string   `json:"detach_keys"`   // Escape keys for detach
+	Env          []string `json:"env"`           // Environment variables
+	WorkingDir   string   `json:"working_dir"`   // Working directory
+	Cmd          []string `json:"cmd"`           // Execution commands and args
 }
 
 type AttachRequest {
-	Selector Metadata `json:"selector"`
+	Container string       `json:"container"`
+	Config    AttachConfig `json:"config,optional"`
 }
-type AttachResponse {
-	Error Error `json:"error,omitempty"`
+type AttachConfig {
+	Stream     bool   `json:"stream"`
+	Stdin      bool   `json:"stdin"`
+	Stdout     bool   `json:"stdout"`
+	Stderr     bool   `json:"stderr"`
+	DetachKeys string `json:"detach_keys"`
+	Logs       bool   `json:"logs"`
 }
 
 @server(
@@ -90,22 +101,22 @@ service worker-api {
 		summary: "creates and starts a container"
 	)
 	@handler RunContainer
-	post /container/run(RunContainerRequest) returns (RunContainerResponse)
+	post /container/run(RunContainerRequest)
 	@doc(
 		summary: "removes the container"
 	)
 	@handler RemoveContainer
-	post /container/remove(RemoveContainerRequest) returns (RemoveContainerResponse)
+	post /container/remove(RemoveContainerRequest)
 	@doc(
 		summary: "stops any running process that is part of the container"
 	)
 	@handler StopContainer
-	post /container/stop(StopContainerRequest) returns (StopContainerResponse)
+	post /container/stop(StopContainerRequest)
 	@doc(
 		summary: "starts the container"
 	)
 	@handler StartContainer
-	post /container/start(StartContainerRequest) returns(StartContainerResponse)
+	post /container/start(StartContainerRequest)
 	@doc(
 		summary: "the status of the container"
 	)
@@ -121,10 +132,10 @@ service worker-api {
 		summary: "runs a command in a container."
 	)
 	@handler Exec
-	post /container/exec(ExecRequest) returns (ExecResponse)
+	post /container/exec(ExecRequest)
 	@doc(
 		summary: "prepares a streaming endpoint to attach to a running container"
 	)
 	@handler Attach
-	post /container/attach(AttachRequest) returns (AttachResponse)
+	post /container/attach(AttachRequest)
 }

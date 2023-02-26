@@ -23,8 +23,8 @@ func NewAttachLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AttachLogi
 	}
 }
 
-func (l *AttachLogic) Attach(req *types.AttachRequest) (resp *types.AttachResponse, err error) {
+func (l *AttachLogic) Attach(req *types.AttachRequest) error {
 	// todo: add your logic here and delete this line
 
-	return
+	return nil
 }

@@ -19,14 +19,14 @@ func StartContainerHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := logic.NewStartContainerLogic(r.Context(), svcCtx)
-		resp, err := l.StartContainer(&req)
+		err := l.StartContainer(&req)
 		var body types.Response
 		if err != nil {
 			body.Code = -1
 			body.Msg = err.Error()
 		} else {
 			body.Msg = "success"
-			body.Data = resp
+
 		}
 		httpx.OkJsonCtx(r.Context(), w, body)
 	}
