@@ -3,9 +3,11 @@ module k2edge
 go 1.19
 
 require (
+	github.com/antihax/optional v1.0.0
 	github.com/docker/docker v20.10.23+incompatible
 	github.com/docker/go-connections v0.4.0
 	github.com/zeromicro/go-zero v1.4.4
+	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783
 	gorm.io/driver/postgres v1.4.1
 	gorm.io/gen v0.3.21
 	gorm.io/gorm v1.24.5
@@ -73,6 +75,7 @@ require (
 	golang.org/x/sys v0.1.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/tools v0.1.12 // indirect
+	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20221111202108-142d8a6fa32e // indirect
 	google.golang.org/grpc v1.50.1 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
