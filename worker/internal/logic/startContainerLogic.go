@@ -4,8 +4,9 @@ import (
 	"context"
 
 	"k2edge/worker/internal/svc"
-	"k2edge/worker/internal/types"
+	typesInternal "k2edge/worker/internal/types"
 
+	"github.com/docker/docker/api/types"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -23,8 +24,9 @@ func NewStartContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *St
 	}
 }
 
-func (l *StartContainerLogic) StartContainer(req *types.StartContainerRequest) error {
-	// todo: add your logic here and delete this line
-
-	return nil
+func (l *StartContainerLogic) StartContainer(req *typesInternal.StartContainerRequest) error {
+	return l.svcCtx.DockerClient.ContainerStart(l.ctx, req.ID, types.ContainerStartOptions{
+		CheckpointID:  req.CheckpointID,
+		CheckpointDir: req.CheckpointDir,
+	})
 }

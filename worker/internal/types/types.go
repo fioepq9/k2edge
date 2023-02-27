@@ -101,31 +101,31 @@ type HealthConfig struct {
 }
 
 type ContainerConfig struct {
-	Hostname        string            `json:"hostname,optional"`         // Hostname
-	Domainname      string            `json:"domainname,optional"`       // Domainname
-	User            string            `json:"user,optional"`             // User that will run the command(s) inside the container, also support user:group
-	AttachStdin     bool              `json:"attach_stdin,optional"`     // Attach the standard input, makes possible user interaction
-	AttachStdout    bool              `json:"attach_stdout,optional"`    // Attach the standard output
-	AttachStderr    bool              `json:"attach_stderr,optional"`    // Attach the standard error
-	ExposedPorts    []string          `json:"exposed_ports,optional"`    // List of exposed ports
-	Tty             bool              `json:"tty,optional"`              // Attach standard streams to a tty, including stdin if it is not closed.
-	OpenStdin       bool              `json:"open_stdin,optional"`       // Open stdin
-	StdinOnce       bool              `json:"stdin_once,optional"`       // If true, close stdin after the 1 attached client disconnects.
-	Env             []string          `json:"env,optional"`              // List of environment variable to set in the container
-	Cmd             []string          `json:"cmd,optional"`              // Command to run when starting the container
-	Healthcheck     *HealthConfig     `json:"healthcheck,optional"`      // Healthcheck describes how to check the container is healthy
-	ArgsEscaped     bool              `json:"args_escaped,optional"`     // True if command is already escaped (meaning treat as a command line) (Windows specific).
-	Image           string            `json:"image"`                     // Name of the image as it was passed by the operator (e.g. could be symbolic)
-	Volumes         []string          `json:"volumes,optional"`          // List of volumes (mounts) used for the container
-	WorkingDir      string            `json:"working_dir,optional"`      // Current directory (PWD) in the command will be launched
-	Entrypoint      []string          `json:"entrypoint,optional"`       // Entrypoint to run when starting the container
-	NetworkDisabled bool              `json:"network_disabled,optional"` // Is network disabled
-	MacAddress      string            `json:"mac_address,optional"`      // Mac Address of the container
-	OnBuild         []string          `json:"on_build,optional"`         // ONBUILD metadata that were defined on the image Dockerfile
-	Labels          map[string]string `json:"labels,optional"`           // List of labels set to this container
-	StopSignal      string            `json:"stop_signal,optional"`      // Signal to stop a container
-	StopTimeout     int               `json:"stop_timeout,optional"`     // Timeout (in seconds) to stop a container
-	Shell           []string          `json:"shell,optional"`            // Shell for shell-form of RUN, CMD, ENTRYPOINT
+	Hostname        string        `json:"hostname,optional"`         // Hostname
+	Domainname      string        `json:"domainname,optional"`       // Domainname
+	User            string        `json:"user,optional"`             // User that will run the command(s) inside the container, also support user:group
+	AttachStdin     bool          `json:"attach_stdin,optional"`     // Attach the standard input, makes possible user interaction
+	AttachStdout    bool          `json:"attach_stdout,optional"`    // Attach the standard output
+	AttachStderr    bool          `json:"attach_stderr,optional"`    // Attach the standard error
+	ExposedPorts    []string      `json:"exposed_ports,optional"`    // List of exposed ports
+	Tty             bool          `json:"tty,optional"`              // Attach standard streams to a tty, including stdin if it is not closed.
+	OpenStdin       bool          `json:"open_stdin,optional"`       // Open stdin
+	StdinOnce       bool          `json:"stdin_once,optional"`       // If true, close stdin after the 1 attached client disconnects.
+	Env             []string      `json:"env,optional"`              // List of environment variable to set in the container
+	Cmd             []string      `json:"cmd,optional"`              // Command to run when starting the container
+	Healthcheck     *HealthConfig `json:"healthcheck,optional"`      // Healthcheck describes how to check the container is healthy
+	ArgsEscaped     bool          `json:"args_escaped,optional"`     // True if command is already escaped (meaning treat as a command line) (Windows specific).
+	Image           string        `json:"image"`                     // Name of the image as it was passed by the operator (e.g. could be symbolic)
+	Volumes         []string      `json:"volumes,optional"`          // List of volumes (mounts) used for the container
+	WorkingDir      string        `json:"working_dir,optional"`      // Current directory (PWD) in the command will be launched
+	Entrypoint      []string      `json:"entrypoint,optional"`       // Entrypoint to run when starting the container
+	NetworkDisabled bool          `json:"network_disabled,optional"` // Is network disabled
+	MacAddress      string        `json:"mac_address,optional"`      // Mac Address of the container
+	OnBuild         []string      `json:"on_build,optional"`         // ONBUILD metadata that were defined on the image Dockerfile
+	Labels          interface{}   `json:"labels,optional"`           // List of labels set to this container
+	StopSignal      string        `json:"stop_signal,optional"`      // Signal to stop a container
+	StopTimeout     int           `json:"stop_timeout,optional"`     // Timeout (in seconds) to stop a container
+	Shell           []string      `json:"shell,optional"`            // Shell for shell-form of RUN, CMD, ENTRYPOINT
 }
 
 type ContainerStatus struct {
@@ -200,10 +200,4 @@ type Command struct {
 
 type Namespace struct {
 	Name string `json:"name"`
-}
-
-type Response struct {
-	Code int         `json:"code"`
-	Msg  string      `json:"msg"`
-	Data interface{} `json:"data,omitempty"`
 }

@@ -4,7 +4,9 @@ import (
 	"context"
 
 	"k2edge/worker/internal/svc"
-	"k2edge/worker/internal/types"
+	typesInternal "k2edge/worker/internal/types"
+
+	"github.com/docker/docker/api/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,8 +25,18 @@ func NewAttachLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AttachLogi
 	}
 }
 
-func (l *AttachLogic) Attach(req *types.AttachRequest) error {
-	// todo: add your logic here and delete this line
-
+func (l *AttachLogic) Attach(req *typesInternal.AttachRequest) error {
+	_, err := l.svcCtx.DockerClient.ContainerAttach(l.ctx, req.Container, types.ContainerAttachOptions{
+		Stream:     req.Config.Stream,
+		Stdin:      req.Config.Stdin,
+		Stdout:     req.Config.Stdout,
+		Stderr:     req.Config.Stderr,
+		DetachKeys: req.Config.DetachKeys,
+		Logs:       req.Config.Logs,
+	})
+	if err != nil {
+		return err
+	}
+	// todo: websocket
 	return nil
 }

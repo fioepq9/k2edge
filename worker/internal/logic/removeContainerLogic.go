@@ -4,8 +4,9 @@ import (
 	"context"
 
 	"k2edge/worker/internal/svc"
-	"k2edge/worker/internal/types"
+	typesInternal "k2edge/worker/internal/types"
 
+	"github.com/docker/docker/api/types"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -23,7 +24,10 @@ func NewRemoveContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *R
 	}
 }
 
-func (l *RemoveContainerLogic) RemoveContainer(req *types.RemoveContainerRequest) error {
-	// todo: add your logic here and delete this line
-	return nil
+func (l *RemoveContainerLogic) RemoveContainer(req *typesInternal.RemoveContainerRequest) error {
+	return l.svcCtx.DockerClient.ContainerRemove(l.ctx, req.ID, types.ContainerRemoveOptions{
+		RemoveVolumes: req.RemoveVolumes,
+		RemoveLinks:   req.RemoveLinks,
+		Force:         req.Force,
+	})
 }
