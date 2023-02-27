@@ -44,10 +44,10 @@ type StartContainerRequest {
 }
 
 type ContainerStatusRequest {
-	ID string `json:"id"`
+	ID string `form:"id"`
 }
 type ContainerStatusResponse {
-	Status string `json:"status"`
+	Status interface{} `json:"status"`
 }
 
 type ListContainersRequest {

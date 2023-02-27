@@ -27,16 +27,16 @@ def updateAPI(w: bool = True, m: bool = True):
 
 
 @app.command()
-def updateSwagger(w: bool = True, m: bool = True, port: int = 8080):
+def updateSwagger(w: bool = True, m: bool = True, port: int = 8888):
     if w: RunCommand(f"goctl api plugin -plugin goctl-swagger='swagger -filename worker.json --host 127.0.0.1:{port}' -api ./api/worker.api -dir ./worker/swagger")
     if m: RunCommand(f"goctl api plugin -plugin goctl-swagger='swagger -filename master.json --host 127.0.0.1:{port}' -api ./api/master.api -dir ./master/swagger")
 
 @app.command()
 def runSwagger(name: str = "worker-api", port: int = 8083):
     if name == "worker-api":
-        RunCommand(f"docker run --rm -d -p {port}:8080 -e SWAGGER_JSON=/app/worker.json -v $PWD/worker/swagger:/app swaggerapi/swagger-ui")
+        RunCommand(f"docker run --rm --privileged -d -p {port}:8080 -e SWAGGER_JSON=/app/worker.json -v $PWD/worker/swagger:/app swaggerapi/swagger-ui")
     elif name == "master-api":
-        RunCommand(f"docker run --rm -d -p {port}:8080 -e SWAGGER_JSON=/app/master.json -v $PWD/master/swagger:/app swaggerapi/swagger-ui")
+        RunCommand(f"docker run --rm --privileged -d -p {port}:8080 -e SWAGGER_JSON=/app/master.json -v $PWD/master/swagger:/app swaggerapi/swagger-ui")
     else:
         print("unsupported arguments:", name)
 

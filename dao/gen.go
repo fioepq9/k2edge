@@ -17,23 +17,23 @@ import (
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:        db,
-		Container: newContainer(db, opts...),
+		db:            db,
+		NamesapceInfo: newNamesapceInfo(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	Container container
+	NamesapceInfo namesapceInfo
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:        db,
-		Container: q.Container.clone(db),
+		db:            db,
+		NamesapceInfo: q.NamesapceInfo.clone(db),
 	}
 }
 
@@ -47,18 +47,18 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:        db,
-		Container: q.Container.replaceDB(db),
+		db:            db,
+		NamesapceInfo: q.NamesapceInfo.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	Container IContainerDo
+	NamesapceInfo INamesapceInfoDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		Container: q.Container.WithContext(ctx),
+		NamesapceInfo: q.NamesapceInfo.WithContext(ctx),
 	}
 }
 

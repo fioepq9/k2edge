@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"encoding/json"
 	"io"
 
 	"k2edge/worker/internal/svc"
@@ -35,6 +36,8 @@ func (l *ContainerStatusLogic) ContainerStatus(req *types.ContainerStatusRequest
 		return nil, err
 	}
 	resp = new(types.ContainerStatusResponse)
-	resp.Status = string(s)
+	data := make(map[string]interface{})
+	json.Unmarshal(s, &data)
+	resp.Status = data
 	return resp, nil
 }

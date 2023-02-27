@@ -8,6 +8,7 @@ require (
 	github.com/docker/go-connections v0.4.0
 	github.com/zeromicro/go-zero v1.4.4
 	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783
+	gorm.io/driver/mysql v1.4.7
 	gorm.io/driver/postgres v1.4.1
 	gorm.io/gen v0.3.21
 	gorm.io/gorm v1.24.5
@@ -81,7 +82,6 @@ require (
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/datatypes v1.0.7 // indirect
-	gorm.io/driver/mysql v1.4.7 // indirect
 	gorm.io/hints v1.1.0 // indirect
 	gotest.tools/v3 v3.4.0 // indirect
 )

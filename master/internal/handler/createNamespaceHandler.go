@@ -19,14 +19,14 @@ func CreateNamespaceHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := logic.NewCreateNamespaceLogic(r.Context(), svcCtx)
-		resp, err := l.CreateNamespace(&req)
+		err := l.CreateNamespace(&req)
 		var body types.Response
 		if err != nil {
 			body.Code = -1
 			body.Msg = err.Error()
 		} else {
 			body.Msg = "success"
-			body.Data = resp
+
 		}
 		httpx.OkJsonCtx(r.Context(), w, body)
 	}

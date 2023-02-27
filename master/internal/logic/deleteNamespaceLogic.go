@@ -23,8 +23,8 @@ func NewDeleteNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *D
 	}
 }
 
-func (l *DeleteNamespaceLogic) DeleteNamespace(req *types.DeleteNamespaceRequest) (resp *types.DeleteNamespaceResponse, err error) {
+func (l *DeleteNamespaceLogic) DeleteNamespace(req *types.DeleteNamespaceRequest) error {
 	// todo: add your logic here and delete this line
 
-	return
+	return nil
 }

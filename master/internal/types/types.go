@@ -385,10 +385,6 @@ type CreateNamespaceRequest struct {
 	Todo string `json:"todo"`
 }
 
-type CreateNamespaceResponse struct {
-	Error Error `json:"error,omitempty"`
-}
-
 type GetNamespaceRequest struct {
 	Todo string `json:"todo"`
 }
@@ -407,10 +403,6 @@ type ListNamespacesResponse struct {
 
 type DeleteNamespaceRequest struct {
 	Todo string `json:"todo"`
-}
-
-type DeleteNamespaceResponse struct {
-	Error Error `json:"error,omitempty"`
 }
 
 type NodeTopRequest struct {

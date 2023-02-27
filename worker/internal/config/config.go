@@ -4,7 +4,6 @@ import "github.com/zeromicro/go-zero/rest"
 
 type Config struct {
 	rest.RestConf
-	Mode       string         `json:"Mode"`
 	Postgresql PostgresqlConf `json:"Postgresql"`
 }
 

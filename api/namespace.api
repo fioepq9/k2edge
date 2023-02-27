@@ -12,41 +12,48 @@ service master-api{
 	@handler GetNamespace
 	get /get(GetNamespaceRequest) returns (GetNamespaceResponse)
 	
-	@handler ListNamespaces
-	get /list(ListNamespacesRequest) returns (ListNamespacesResponse)
-	
+	@handler ListNamespace
+	get /list returns (ListNamespaceResponse)
+
 	@handler DeleteNamespace
-	post /delete(DeleteNamespaceRequest) returns (DeleteNamespaceResponse)
+	post /delete(DeleteNamespaceRequest)
+}
+
+// kubectl create namespace <insert-namespace-name-here> OR kubectl create -f ./my-namespace.yaml
+type CreateNamespaceRequest {
+	Name 		string `json:"name"`
+	Labels 		string `json:"labels"`
+	Annotations string `json:"annotations"`
 }
 
 type CreateNamespaceRequest {
-	Todo string `json:"todo"`
-}
-
-type CreateNamespaceResponse {
-	Error Error `json:"error,omitempty"`
+// kubectl describe namespaces <name>
 }
 
 type GetNamespaceRequest {
-	Todo string `json:"todo"`
+	Name string `json:"name"`
 }
 
 type GetNamespaceResponse {
-	Namespace Namespace `json:"namespace"`
+	Name 		string `json:"name"`
+	Labels 		string `json:"labels"`
+	Annotations string `json:"annotations`
+	Status 		string `json:status`
+	Age 		string `json:time`
 }
 
-type ListNamespacesRequest {
-	Todo string `json:"todo"`
-}
-
+// kubectl get namespaces
 type ListNamespacesResponse {
 	Namespaces []Namespace `json:"namespaces"`
 }
 
-type DeleteNamespaceRequest {
-	Todo string `json:"todo"`
+type Namespace {
+	Name 	string 	`json:"name"`
+	Status 	string 	`json:"status"`
+	Age 	string 	`json:"time"`
 }
 
-type DeleteNamespaceResponse {
-	Error Error `json:"error,omitempty"`
+// kubectl delete namespaces <insert-some-namespace-name>
+type DeleteNamespaceRequest {
+	Name string `json:"name"`
 }

@@ -23,8 +23,8 @@ func NewCreateNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 	}
 }
 
-func (l *CreateNamespaceLogic) CreateNamespace(req *types.CreateNamespaceRequest) (resp *types.CreateNamespaceResponse, err error) {
+func (l *CreateNamespaceLogic) CreateNamespace(req *types.CreateNamespaceRequest) error {
 	// todo: add your logic here and delete this line
-
-	return
+	
+	return nil
 }

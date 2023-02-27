@@ -2,10 +2,9 @@ package handler
 
 import (
 	"net/http"
-
+	"k2edge/master/internal/types"
 	"k2edge/master/internal/logic"
 	"k2edge/master/internal/svc"
-	"k2edge/master/internal/types"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
 )

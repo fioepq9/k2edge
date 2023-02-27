@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gen"
 	"gorm.io/gorm"
 )
@@ -28,7 +28,7 @@ func NewDSN(username, password, host string, port int, db string) DSN {
 
 func (d DSN) MySQL() string {
 	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=true&loc=Local",
+		"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=true&loc=Local&timeout=30s",
 		d.username,
 		d.password,
 		d.host,
@@ -58,7 +58,7 @@ func main() {
 	})
 
 	// Initialize a *gorm.DB instance
-	db, err := gorm.Open(postgres.Open(NewDSN("k2edge", "1234567890", "localhost", 5432, "k2edge").Postgresql()), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(NewDSN("root", "1234567890", "outlg.xyz", 3306, "k2edge").MySQL()), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}

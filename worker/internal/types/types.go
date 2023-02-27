@@ -29,11 +29,11 @@ type StartContainerRequest struct {
 }
 
 type ContainerStatusRequest struct {
-	ID string `json:"id"`
+	ID string `form:"id"`
 }
 
 type ContainerStatusResponse struct {
-	Status string `json:"status"`
+	Status interface{} `json:"status"`
 }
 
 type ListContainersRequest struct {
