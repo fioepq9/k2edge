@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"io"
 
 	"k2edge/worker/internal/svc"
 	"k2edge/worker/internal/types"
@@ -24,7 +25,16 @@ func NewContainerStatusLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 }
 
 func (l *ContainerStatusLogic) ContainerStatus(req *types.ContainerStatusRequest) (resp *types.ContainerStatusResponse, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	res, err := l.svcCtx.DockerClient.ContainerStats(l.ctx, req.ID, false)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+	s, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+	resp = new(types.ContainerStatusResponse)
+	resp.Status = string(s)
+	return resp, nil
 }

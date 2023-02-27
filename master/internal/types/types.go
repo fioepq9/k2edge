@@ -5,126 +5,6 @@ type ClusterInfoResponse struct {
 	Todo string `json:"todo"`
 }
 
-type Metadata struct {
-	Namespace string `json:"namespace"`
-	Kind      string `json:"kind"`
-	Name      string `json:"name"`
-}
-
-type Error struct {
-	Todo string `json:"todo"`
-}
-
-type HealthConfig struct {
-	Test        []string `json:"test"`
-	Interval    int64    `json:"interval"`              // Interval is the time to wait between checks.
-	Timeout     int64    `json:"timeout"`               // Timeout is the time to wait before considering the check to have hung.
-	StartPeriod int64    `json:"start_period,optional"` // The start period for the container to initialize before the retries starts to count down.
-	Retries     int      `json:"retries,optional"`
-}
-
-type ContainerConfig struct {
-	Hostname        string            `json:"hostname,optional"`         // Hostname
-	Domainname      string            `json:"domainname,optional"`       // Domainname
-	User            string            `json:"user,optional"`             // User that will run the command(s) inside the container, also support user:group
-	AttachStdin     bool              `json:"attach_stdin,optional"`     // Attach the standard input, makes possible user interaction
-	AttachStdout    bool              `json:"attach_stdout,optional"`    // Attach the standard output
-	AttachStderr    bool              `json:"attach_stderr,optional"`    // Attach the standard error
-	ExposedPorts    []string          `json:"exposed_ports,optional"`    // List of exposed ports
-	Tty             bool              `json:"tty,optional"`              // Attach standard streams to a tty, including stdin if it is not closed.
-	OpenStdin       bool              `json:"open_stdin,optional"`       // Open stdin
-	StdinOnce       bool              `json:"stdin_once,optional"`       // If true, close stdin after the 1 attached client disconnects.
-	Env             []string          `json:"env,optional"`              // List of environment variable to set in the container
-	Cmd             []string          `json:"cmd,optional"`              // Command to run when starting the container
-	Healthcheck     *HealthConfig     `json:"healthcheck,optional"`      // Healthcheck describes how to check the container is healthy
-	ArgsEscaped     bool              `json:"args_escaped,optional"`     // True if command is already escaped (meaning treat as a command line) (Windows specific).
-	Image           string            `json:"image"`                     // Name of the image as it was passed by the operator (e.g. could be symbolic)
-	Volumes         []string          `json:"volumes,optional"`          // List of volumes (mounts) used for the container
-	WorkingDir      string            `json:"working_dir,optional"`      // Current directory (PWD) in the command will be launched
-	Entrypoint      []string          `json:"entrypoint,optional"`       // Entrypoint to run when starting the container
-	NetworkDisabled bool              `json:"network_disabled,optional"` // Is network disabled
-	MacAddress      string            `json:"mac_address,optional"`      // Mac Address of the container
-	OnBuild         []string          `json:"on_build,optional"`         // ONBUILD metadata that were defined on the image Dockerfile
-	Labels          map[string]string `json:"labels,optional"`           // List of labels set to this container
-	StopSignal      string            `json:"stop_signal,optional"`      // Signal to stop a container
-	StopTimeout     int               `json:"stop_timeout,optional"`     // Timeout (in seconds) to stop a container
-	Shell           []string          `json:"shell,optional"`            // Shell for shell-form of RUN, CMD, ENTRYPOINT
-}
-
-type ContainerStatus struct {
-	Todo string `json:"todo"`
-}
-
-type Container struct {
-	Metadata Metadata        `json:"metadata"`
-	Config   ContainerConfig `json:"config"`
-	Status   ContainerStatus `json:"status"`
-}
-
-type CronJobConfig struct {
-	Todo string `json:"todo"`
-}
-
-type CronJobStatus struct {
-	Todo string `json:"todo"`
-}
-
-type CronJob struct {
-	Metadata Metadata      `json:"metadata"`
-	Config   CronJobConfig `json:"config"`
-	Status   CronJobStatus `json:"status"`
-}
-
-type DeploymentConfig struct {
-	Todo string `json:"todo"`
-}
-
-type DeploymentStatus struct {
-	Todo string `json:"todo"`
-}
-
-type Deployment struct {
-	Metadata Metadata         `json:"metadata"`
-	Config   DeploymentConfig `json:"config"`
-	Status   DeploymentStatus `json:"status"`
-}
-
-type JobConfig struct {
-	Todo string `json:"todo"`
-}
-
-type JobStatus struct {
-	Todo string `json:"todo"`
-}
-
-type Job struct {
-	Metadata Metadata  `json:"metadata"`
-	Config   JobConfig `json:"config"`
-	Status   JobStatus `json:"status"`
-}
-
-type TokenConfig struct {
-	Todo string `json:"todo"`
-}
-
-type TokenStatus struct {
-	Todo string `json:"todo"`
-}
-
-type Token struct {
-	Metadata Metadata    `json:"metadata"`
-	Config   TokenConfig `json:"config"`
-	Status   TokenStatus `json:"status"`
-}
-
-type Command struct {
-	Todo string `json:"todo"`
-}
-
-type Namespace struct {
-	Name string `json:"name"`
-}
-
 type CreateContainerRequest struct {
 	Todo string `json:"todo"`
 }
@@ -211,6 +91,126 @@ type ContainerTopRequest struct {
 
 type ContainerTopResponse struct {
 	Error Error `json:"error,omitempty"`
+}
+
+type Metadata struct {
+	Namespace string `json:"namespace"`
+	Kind      string `json:"kind"`
+	Name      string `json:"name"`
+}
+
+type Error struct {
+	Todo string `json:"todo"`
+}
+
+type HealthConfig struct {
+	Test        []string `json:"test"`
+	Interval    int64    `json:"interval"`              // Interval is the time to wait between checks.
+	Timeout     int64    `json:"timeout"`               // Timeout is the time to wait before considering the check to have hung.
+	StartPeriod int64    `json:"start_period,optional"` // The start period for the container to initialize before the retries starts to count down.
+	Retries     int      `json:"retries,optional"`
+}
+
+type ContainerConfig struct {
+	Hostname        string        `json:"hostname,optional"`         // Hostname
+	Domainname      string        `json:"domainname,optional"`       // Domainname
+	User            string        `json:"user,optional"`             // User that will run the command(s) inside the container, also support user:group
+	AttachStdin     bool          `json:"attach_stdin,optional"`     // Attach the standard input, makes possible user interaction
+	AttachStdout    bool          `json:"attach_stdout,optional"`    // Attach the standard output
+	AttachStderr    bool          `json:"attach_stderr,optional"`    // Attach the standard error
+	ExposedPorts    []string      `json:"exposed_ports,optional"`    // List of exposed ports
+	Tty             bool          `json:"tty,optional"`              // Attach standard streams to a tty, including stdin if it is not closed.
+	OpenStdin       bool          `json:"open_stdin,optional"`       // Open stdin
+	StdinOnce       bool          `json:"stdin_once,optional"`       // If true, close stdin after the 1 attached client disconnects.
+	Env             []string      `json:"env,optional"`              // List of environment variable to set in the container
+	Cmd             []string      `json:"cmd,optional"`              // Command to run when starting the container
+	Healthcheck     *HealthConfig `json:"healthcheck,optional"`      // Healthcheck describes how to check the container is healthy
+	ArgsEscaped     bool          `json:"args_escaped,optional"`     // True if command is already escaped (meaning treat as a command line) (Windows specific).
+	Image           string        `json:"image"`                     // Name of the image as it was passed by the operator (e.g. could be symbolic)
+	Volumes         []string      `json:"volumes,optional"`          // List of volumes (mounts) used for the container
+	WorkingDir      string        `json:"working_dir,optional"`      // Current directory (PWD) in the command will be launched
+	Entrypoint      []string      `json:"entrypoint,optional"`       // Entrypoint to run when starting the container
+	NetworkDisabled bool          `json:"network_disabled,optional"` // Is network disabled
+	MacAddress      string        `json:"mac_address,optional"`      // Mac Address of the container
+	OnBuild         []string      `json:"on_build,optional"`         // ONBUILD metadata that were defined on the image Dockerfile
+	Labels          interface{}   `json:"labels,optional"`           // List of labels set to this container
+	StopSignal      string        `json:"stop_signal,optional"`      // Signal to stop a container
+	StopTimeout     int           `json:"stop_timeout,optional"`     // Timeout (in seconds) to stop a container
+	Shell           []string      `json:"shell,optional"`            // Shell for shell-form of RUN, CMD, ENTRYPOINT
+}
+
+type ContainerStatus struct {
+	Todo string `json:"todo"`
+}
+
+type Container struct {
+	Metadata Metadata        `json:"metadata"`
+	Config   ContainerConfig `json:"config"`
+	Status   ContainerStatus `json:"status"`
+}
+
+type CronJobConfig struct {
+	Todo string `json:"todo"`
+}
+
+type CronJobStatus struct {
+	Todo string `json:"todo"`
+}
+
+type CronJob struct {
+	Metadata Metadata      `json:"metadata"`
+	Config   CronJobConfig `json:"config"`
+	Status   CronJobStatus `json:"status"`
+}
+
+type DeploymentConfig struct {
+	Todo string `json:"todo"`
+}
+
+type DeploymentStatus struct {
+	Todo string `json:"todo"`
+}
+
+type Deployment struct {
+	Metadata Metadata         `json:"metadata"`
+	Config   DeploymentConfig `json:"config"`
+	Status   DeploymentStatus `json:"status"`
+}
+
+type JobConfig struct {
+	Todo string `json:"todo"`
+}
+
+type JobStatus struct {
+	Todo string `json:"todo"`
+}
+
+type Job struct {
+	Metadata Metadata  `json:"metadata"`
+	Config   JobConfig `json:"config"`
+	Status   JobStatus `json:"status"`
+}
+
+type TokenConfig struct {
+	Todo string `json:"todo"`
+}
+
+type TokenStatus struct {
+	Todo string `json:"todo"`
+}
+
+type Token struct {
+	Metadata Metadata    `json:"metadata"`
+	Config   TokenConfig `json:"config"`
+	Status   TokenStatus `json:"status"`
+}
+
+type Command struct {
+	Todo string `json:"todo"`
+}
+
+type Namespace struct {
+	Name string `json:"name"`
 }
 
 type CreateCronJobRequest struct {

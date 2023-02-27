@@ -4,8 +4,9 @@ import (
 	"context"
 
 	"k2edge/worker/internal/svc"
-	"k2edge/worker/internal/types"
+	typesInternal "k2edge/worker/internal/types"
 
+	"github.com/docker/docker/api/types"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -23,8 +24,22 @@ func NewExecLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ExecLogic {
 	}
 }
 
-func (l *ExecLogic) Exec(req *types.ExecRequest) error {
-	// todo: add your logic here and delete this line
-
+func (l *ExecLogic) Exec(req *typesInternal.ExecRequest) error {
+	_, err := l.svcCtx.DockerClient.ContainerExecCreate(l.ctx, req.Container, types.ExecConfig{
+		User:         req.Config.User,
+		Privileged:   req.Config.Privileged,
+		Tty:          req.Config.Tty,
+		AttachStdin:  req.Config.AttachStdin,
+		AttachStderr: req.Config.AttachStderr,
+		AttachStdout: req.Config.AttachStdout,
+		Detach:       req.Config.Detach,
+		DetachKeys:   req.Config.DetachKeys,
+		Env:          req.Config.Env,
+		WorkingDir:   req.Config.WorkingDir,
+		Cmd:          req.Config.Cmd,
+	})
+	if err != nil {
+		return err
+	}
 	return nil
 }

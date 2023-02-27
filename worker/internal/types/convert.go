@@ -44,7 +44,7 @@ func (c ContainerConfig) DockerFormat() container.Config {
 		NetworkDisabled: c.NetworkDisabled,
 		MacAddress:      c.MacAddress,
 		OnBuild:         c.OnBuild,
-		Labels:          c.Labels,
+		Labels:          c.Labels.(map[string]string),
 		StopSignal:      c.StopSignal,
 		StopTimeout:     &c.StopTimeout,
 		Shell:           c.Shell,

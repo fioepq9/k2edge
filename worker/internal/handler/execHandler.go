@@ -3,11 +3,10 @@ package handler
 import (
 	"net/http"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"k2edge/worker/internal/logic"
 	"k2edge/worker/internal/svc"
 	"k2edge/worker/internal/types"
-
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func ExecHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -20,14 +19,10 @@ func ExecHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := logic.NewExecLogic(r.Context(), svcCtx)
 		err := l.Exec(&req)
-		var body types.Response
 		if err != nil {
-			body.Code = -1
-			body.Msg = err.Error()
+			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
-			body.Msg = "success"
-
+			httpx.Ok(w)
 		}
-		httpx.OkJsonCtx(r.Context(), w, body)
 	}
 }

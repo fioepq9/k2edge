@@ -24,7 +24,10 @@ func NewRunContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RunC
 }
 
 func (l *RunContainerLogic) RunContainer(req *types.RunContainerRequest) error {
-	// todo: add your logic here and delete this line
-
+	conf := req.Config.DockerFormat()
+	_, err := l.svcCtx.DockerClient.ContainerCreate(l.ctx, &conf, nil, nil, nil, req.ContainerName)
+	if err != nil {
+		return err
+	}
 	return nil
 }

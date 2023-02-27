@@ -3,25 +3,19 @@ package handler
 import (
 	"net/http"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"k2edge/worker/internal/logic"
 	"k2edge/worker/internal/svc"
-	"k2edge/worker/internal/types"
-
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func VersionHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		l := logic.NewVersionLogic(r.Context(), svcCtx)
 		resp, err := l.Version()
-		var body types.Response
 		if err != nil {
-			body.Code = -1
-			body.Msg = err.Error()
+			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
-			body.Msg = "success"
-			body.Data = resp
+			httpx.OkJsonCtx(r.Context(), w, resp)
 		}
-		httpx.OkJsonCtx(r.Context(), w, body)
 	}
 }
