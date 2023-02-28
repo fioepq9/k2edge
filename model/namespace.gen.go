@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-const TableNameNamesapceInfo = "namesapce_info"
+const TableNameNamespace = "namespace"
 
-// NamesapceInfo mapped from table <namesapce_info>
-type NamesapceInfo struct {
+// Namespace mapped from table <namespace>
+type Namespace struct {
 	Name        string    `gorm:"column:name;type:varchar(100);primaryKey" json:"name"`
 	Labels      string    `gorm:"column:labels;type:varchar(253)" json:"labels"`
 	Annotations string    `gorm:"column:annotations;type:varchar(250)" json:"annotations"`
@@ -19,7 +19,7 @@ type NamesapceInfo struct {
 	CreateTime  time.Time `gorm:"column:create_time;type:datetime;not null" json:"create_time"`
 }
 
-// TableName NamesapceInfo's table name
-func (*NamesapceInfo) TableName() string {
-	return TableNameNamesapceInfo
+// TableName Namespace's table name
+func (*Namespace) TableName() string {
+	return TableNameNamespace
 }

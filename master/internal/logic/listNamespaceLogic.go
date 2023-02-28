@@ -25,6 +25,5 @@ func NewListNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 
 func (l *ListNamespaceLogic) ListNamespace() (resp *types.ListNamespaceResponse, err error) {
 	// todo: add your logic here and delete this line
-
 	return
 }

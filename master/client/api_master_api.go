@@ -42,7 +42,7 @@ func (a *MasterApiApiService) ApplyContainer(ctx context.Context, body ApplyCont
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "container/apply"
+	localVarPath := a.client.cfg.BasePath + "/container/apply"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -142,7 +142,7 @@ func (a *MasterApiApiService) ApplyCronJob(ctx context.Context, body ApplyCronJo
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "cronjob/apply"
+	localVarPath := a.client.cfg.BasePath + "/cronjob/apply"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -242,7 +242,7 @@ func (a *MasterApiApiService) ApplyDeployment(ctx context.Context, body ApplyDep
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "deployment/apply"
+	localVarPath := a.client.cfg.BasePath + "/deployment/apply"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -342,7 +342,7 @@ func (a *MasterApiApiService) ApplyJob(ctx context.Context, body DeleteJobReques
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "job/apply"
+	localVarPath := a.client.cfg.BasePath + "/job/apply"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -442,7 +442,7 @@ func (a *MasterApiApiService) ApplyToken(ctx context.Context, body DeleteTokenRe
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "token/apply"
+	localVarPath := a.client.cfg.BasePath + "/token/apply"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -542,7 +542,7 @@ func (a *MasterApiApiService) AttachContainer(ctx context.Context, body AttachCo
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "container/attach"
+	localVarPath := a.client.cfg.BasePath + "/container/attach"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -642,7 +642,7 @@ func (a *MasterApiApiService) AttachDeployment(ctx context.Context, body AttachD
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "deployment/attach"
+	localVarPath := a.client.cfg.BasePath + "/deployment/attach"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -741,7 +741,7 @@ func (a *MasterApiApiService) ClusterInfo(ctx context.Context) (ClusterInfoRespo
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "cluster/info"
+	localVarPath := a.client.cfg.BasePath + "/cluster/info"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -839,7 +839,7 @@ func (a *MasterApiApiService) ContainerTop(ctx context.Context, selector interfa
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "container/top"
+	localVarPath := a.client.cfg.BasePath + "/container/top"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -938,7 +938,7 @@ func (a *MasterApiApiService) Cordon(ctx context.Context, body CordonRequest) (C
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "node/cordon"
+	localVarPath := a.client.cfg.BasePath + "/node/cordon"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1038,7 +1038,7 @@ func (a *MasterApiApiService) CreateContainer(ctx context.Context, body CreateCo
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "container/create"
+	localVarPath := a.client.cfg.BasePath + "/container/create"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1138,7 +1138,7 @@ func (a *MasterApiApiService) CreateCronJob(ctx context.Context, body CreateCron
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "cronjob/create"
+	localVarPath := a.client.cfg.BasePath + "/cronjob/create"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1238,7 +1238,7 @@ func (a *MasterApiApiService) CreateDeployment(ctx context.Context, body CreateD
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "deployment/create"
+	localVarPath := a.client.cfg.BasePath + "/deployment/create"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1338,7 +1338,7 @@ func (a *MasterApiApiService) CreateJob(ctx context.Context, body CreateJobReque
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "job/create"
+	localVarPath := a.client.cfg.BasePath + "/job/create"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1438,7 +1438,7 @@ func (a *MasterApiApiService) CreateNamespace(ctx context.Context, body CreateNa
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "namespace/create"
+	localVarPath := a.client.cfg.BasePath + "/namespace/create"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1538,7 +1538,7 @@ func (a *MasterApiApiService) CreateToken(ctx context.Context, body CreateTokenR
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "token/create"
+	localVarPath := a.client.cfg.BasePath + "/token/create"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1638,7 +1638,7 @@ func (a *MasterApiApiService) DeleteContainer(ctx context.Context, body DeleteCo
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "container/delete"
+	localVarPath := a.client.cfg.BasePath + "/container/delete"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1738,7 +1738,7 @@ func (a *MasterApiApiService) DeleteCronJob(ctx context.Context, body DeleteCron
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "cronjob/delete"
+	localVarPath := a.client.cfg.BasePath + "/cronjob/delete"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1838,7 +1838,7 @@ func (a *MasterApiApiService) DeleteDeployment(ctx context.Context, body DeleteD
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "deployment/delete"
+	localVarPath := a.client.cfg.BasePath + "/deployment/delete"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1938,7 +1938,7 @@ func (a *MasterApiApiService) DeleteJob(ctx context.Context, body DeleteJobReque
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "job/delete"
+	localVarPath := a.client.cfg.BasePath + "/job/delete"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2038,7 +2038,7 @@ func (a *MasterApiApiService) DeleteNamespace(ctx context.Context, body DeleteNa
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "namespace/delete"
+	localVarPath := a.client.cfg.BasePath + "/namespace/delete"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2138,7 +2138,7 @@ func (a *MasterApiApiService) DeleteToken(ctx context.Context, body DeleteTokenR
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "token/delete"
+	localVarPath := a.client.cfg.BasePath + "/token/delete"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2238,7 +2238,7 @@ func (a *MasterApiApiService) Drain(ctx context.Context, body DrainRequest) (Dra
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "node/drain"
+	localVarPath := a.client.cfg.BasePath + "/node/drain"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2338,7 +2338,7 @@ func (a *MasterApiApiService) ExecContainer(ctx context.Context, body ExecContai
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "container/exec"
+	localVarPath := a.client.cfg.BasePath + "/container/exec"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2438,7 +2438,7 @@ func (a *MasterApiApiService) ExecDeployment(ctx context.Context, body ExecDeplo
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "deployment/exec"
+	localVarPath := a.client.cfg.BasePath + "/deployment/exec"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2538,7 +2538,7 @@ func (a *MasterApiApiService) GetContainer(ctx context.Context, todo string) (Ge
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "container/get"
+	localVarPath := a.client.cfg.BasePath + "/container/get"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2637,7 +2637,7 @@ func (a *MasterApiApiService) GetCronJob(ctx context.Context, todo string) (GetC
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "cronjob/get"
+	localVarPath := a.client.cfg.BasePath + "/cronjob/get"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2736,7 +2736,7 @@ func (a *MasterApiApiService) GetDeployment(ctx context.Context, todo string) (G
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "deployment/get"
+	localVarPath := a.client.cfg.BasePath + "/deployment/get"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2835,7 +2835,7 @@ func (a *MasterApiApiService) GetJob(ctx context.Context, todo string) (GetJobRe
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "job/get"
+	localVarPath := a.client.cfg.BasePath + "/job/get"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2934,7 +2934,7 @@ func (a *MasterApiApiService) GetNamespace(ctx context.Context, name string) (Ge
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "namespace/get"
+	localVarPath := a.client.cfg.BasePath + "/namespace/get"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -3033,7 +3033,7 @@ func (a *MasterApiApiService) GetToken(ctx context.Context, todo string) (GetTok
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "token/get"
+	localVarPath := a.client.cfg.BasePath + "/token/get"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -3132,7 +3132,7 @@ func (a *MasterApiApiService) HistoryCronJob(ctx context.Context, todo string) (
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "cronjob/rollout/history"
+	localVarPath := a.client.cfg.BasePath + "/cronjob/rollout/history"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -3231,7 +3231,7 @@ func (a *MasterApiApiService) HistoryDeployment(ctx context.Context, todo string
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "deployment/rollout/history"
+	localVarPath := a.client.cfg.BasePath + "/deployment/rollout/history"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -3329,7 +3329,7 @@ func (a *MasterApiApiService) ListNamespace(ctx context.Context) (ListNamespaceR
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "namespace/list"
+	localVarPath := a.client.cfg.BasePath + "/namespace/list"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -3427,7 +3427,7 @@ func (a *MasterApiApiService) LogsContainer(ctx context.Context, body LogsContai
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "container/logs"
+	localVarPath := a.client.cfg.BasePath + "/container/logs"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -3527,7 +3527,7 @@ func (a *MasterApiApiService) LogsCronJob(ctx context.Context, body LogsCronJobR
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "cronjob/logs"
+	localVarPath := a.client.cfg.BasePath + "/cronjob/logs"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -3627,7 +3627,7 @@ func (a *MasterApiApiService) LogsDeployment(ctx context.Context, body LogsDeplo
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "deployment/logs"
+	localVarPath := a.client.cfg.BasePath + "/deployment/logs"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -3727,7 +3727,7 @@ func (a *MasterApiApiService) LogsJob(ctx context.Context, body LogsJobRequest) 
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "job/logs"
+	localVarPath := a.client.cfg.BasePath + "/job/logs"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -3827,7 +3827,7 @@ func (a *MasterApiApiService) NodeTop(ctx context.Context, selector interface{})
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "node/top"
+	localVarPath := a.client.cfg.BasePath + "/node/top"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -3926,7 +3926,7 @@ func (a *MasterApiApiService) RunContainer(ctx context.Context, body RunContaine
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "container/run"
+	localVarPath := a.client.cfg.BasePath + "/container/run"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -4026,7 +4026,7 @@ func (a *MasterApiApiService) Scale(ctx context.Context, body ScaleRequest) (Sca
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "deployment/scale"
+	localVarPath := a.client.cfg.BasePath + "/deployment/scale"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -4126,7 +4126,7 @@ func (a *MasterApiApiService) Uncordon(ctx context.Context, body UncordonRequest
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "node/uncordon"
+	localVarPath := a.client.cfg.BasePath + "/node/uncordon"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -4226,7 +4226,7 @@ func (a *MasterApiApiService) UndoCronJob(ctx context.Context, body UndoCronJobR
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "cronjob/rollout/undo"
+	localVarPath := a.client.cfg.BasePath + "/cronjob/rollout/undo"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -4326,7 +4326,7 @@ func (a *MasterApiApiService) UndoDeployment(ctx context.Context, body UndoDeplo
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "deployment/rollout/undo"
+	localVarPath := a.client.cfg.BasePath + "/deployment/rollout/undo"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}

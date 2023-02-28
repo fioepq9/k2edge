@@ -51,7 +51,7 @@ func (d DSN) Postgresql() string {
 func main() {
 	// Initialize the generator with configuration
 	g := gen.NewGenerator(gen.Config{
-		OutPath:           "./dao", // output directory, default value is ./query
+		OutPath:           "./query", // output directory, default value is ./query
 		Mode:              gen.WithQueryInterface,
 		FieldWithIndexTag: true,
 		FieldWithTypeTag:  true,

@@ -5,6 +5,7 @@ import (
 	"k2edge/master/internal/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"k2edge/query"
 )
 
 type DSN struct {
@@ -38,17 +39,19 @@ func (d DSN) MySQL() string {
 
 type ServiceContext struct {
 	Config config.Config
-	DatabaseClient *gorm.DB
+	DatabaseQuery *query.Query
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	databaseClient, err := gorm.Open(mysql.Open(NewDSN("root", "1234567890", "outlg.xyz", 3306, "k2edge").MySQL()), &gorm.Config{})
+	databaseConnection, err := gorm.Open(mysql.Open(NewDSN("root", "1234567890", "outlg.xyz", 3306, "k2edge").MySQL()), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
 
+	databaseQuery := query.Use(databaseConnection)
+
 	return &ServiceContext{
 		Config: c,
-		DatabaseClient: databaseClient,
+		DatabaseQuery: databaseQuery,
 	}
 }

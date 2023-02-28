@@ -14,7 +14,7 @@ produces:
 security:
 - apiKey: []
 paths:
-  cluster/info:
+  /cluster/info:
     get:
       tags:
       - "master-api"
@@ -25,7 +25,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/ClusterInfoResponse"
-  container/apply:
+  /container/apply:
     post:
       tags:
       - "master-api"
@@ -42,7 +42,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/ApplyContainerResponse"
-  container/attach:
+  /container/attach:
     post:
       tags:
       - "master-api"
@@ -59,7 +59,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/AttachContainerResponse"
-  container/create:
+  /container/create:
     post:
       tags:
       - "master-api"
@@ -76,7 +76,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/CreateContainerResponse"
-  container/delete:
+  /container/delete:
     post:
       tags:
       - "master-api"
@@ -93,7 +93,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/DeleteContainerResponse"
-  container/exec:
+  /container/exec:
     post:
       tags:
       - "master-api"
@@ -110,7 +110,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/ExecContainerResponse"
-  container/get:
+  /container/get:
     get:
       tags:
       - "master-api"
@@ -126,7 +126,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/GetContainerResponse"
-  container/logs:
+  /container/logs:
     post:
       tags:
       - "master-api"
@@ -143,7 +143,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/LogsContainerResponse"
-  container/run:
+  /container/run:
     post:
       tags:
       - "master-api"
@@ -160,7 +160,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/RunContainerResponse"
-  container/top:
+  /container/top:
     get:
       tags:
       - "master-api"
@@ -175,7 +175,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/ContainerTopResponse"
-  cronjob/apply:
+  /cronjob/apply:
     post:
       tags:
       - "master-api"
@@ -192,7 +192,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/ApplyCronJobResponse"
-  cronjob/create:
+  /cronjob/create:
     post:
       tags:
       - "master-api"
@@ -209,7 +209,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/CreateCronJobResponse"
-  cronjob/delete:
+  /cronjob/delete:
     post:
       tags:
       - "master-api"
@@ -226,7 +226,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/DeleteCronJobResponse"
-  cronjob/get:
+  /cronjob/get:
     get:
       tags:
       - "master-api"
@@ -242,7 +242,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/GetCronJobResponse"
-  cronjob/logs:
+  /cronjob/logs:
     post:
       tags:
       - "master-api"
@@ -259,7 +259,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/LogsCronJobResponse"
-  cronjob/rollout/history:
+  /cronjob/rollout/history:
     get:
       tags:
       - "master-api"
@@ -275,7 +275,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/HistoryCronJobResponse"
-  cronjob/rollout/undo:
+  /cronjob/rollout/undo:
     post:
       tags:
       - "master-api"
@@ -292,7 +292,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/UndoCronJobResponse"
-  deployment/apply:
+  /deployment/apply:
     post:
       tags:
       - "master-api"
@@ -309,7 +309,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/ApplyDeploymentResponse"
-  deployment/attach:
+  /deployment/attach:
     post:
       tags:
       - "master-api"
@@ -326,7 +326,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/AttachDeploymentResponse"
-  deployment/create:
+  /deployment/create:
     post:
       tags:
       - "master-api"
@@ -343,7 +343,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/CreateDeploymentResponse"
-  deployment/delete:
+  /deployment/delete:
     post:
       tags:
       - "master-api"
@@ -360,7 +360,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/DeleteDeploymentResponse"
-  deployment/exec:
+  /deployment/exec:
     post:
       tags:
       - "master-api"
@@ -377,7 +377,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/ExecDeploymentResponse"
-  deployment/get:
+  /deployment/get:
     get:
       tags:
       - "master-api"
@@ -393,7 +393,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/GetDeploymentResponse"
-  deployment/logs:
+  /deployment/logs:
     post:
       tags:
       - "master-api"
@@ -410,7 +410,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/LogsDeploymentResponse"
-  deployment/rollout/history:
+  /deployment/rollout/history:
     get:
       tags:
       - "master-api"
@@ -426,7 +426,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/HistoryDeploymentResponse"
-  deployment/rollout/undo:
+  /deployment/rollout/undo:
     post:
       tags:
       - "master-api"
@@ -443,7 +443,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/UndoDeploymentResponse"
-  deployment/scale:
+  /deployment/scale:
     post:
       tags:
       - "master-api"
@@ -460,7 +460,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/ScaleResponse"
-  job/apply:
+  /job/apply:
     post:
       tags:
       - "master-api"
@@ -477,7 +477,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/DeleteJobResponse"
-  job/create:
+  /job/create:
     post:
       tags:
       - "master-api"
@@ -494,7 +494,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/CreateJobResponse"
-  job/delete:
+  /job/delete:
     post:
       tags:
       - "master-api"
@@ -511,7 +511,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/DeleteJobResponse"
-  job/get:
+  /job/get:
     get:
       tags:
       - "master-api"
@@ -527,7 +527,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/GetJobResponse"
-  job/logs:
+  /job/logs:
     post:
       tags:
       - "master-api"
@@ -544,7 +544,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/LogsJobResponse"
-  namespace/create:
+  /namespace/create:
     post:
       tags:
       - "master-api"
@@ -562,7 +562,7 @@ paths:
         "200":
           description: "A successful response."
           schema: {}
-  namespace/delete:
+  /namespace/delete:
     post:
       tags:
       - "master-api"
@@ -579,7 +579,7 @@ paths:
         "200":
           description: "A successful response."
           schema: {}
-  namespace/get:
+  /namespace/get:
     get:
       tags:
       - "master-api"
@@ -595,7 +595,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/GetNamespaceResponse"
-  namespace/list:
+  /namespace/list:
     get:
       tags:
       - "master-api"
@@ -606,7 +606,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/ListNamespaceResponse"
-  node/cordon:
+  /node/cordon:
     post:
       tags:
       - "master-api"
@@ -623,7 +623,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/CordonResponse"
-  node/drain:
+  /node/drain:
     post:
       tags:
       - "master-api"
@@ -640,7 +640,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/DrainResponse"
-  node/top:
+  /node/top:
     get:
       tags:
       - "master-api"
@@ -655,7 +655,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/NodeTopResponse"
-  node/uncordon:
+  /node/uncordon:
     post:
       tags:
       - "master-api"
@@ -672,7 +672,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/UncordonResponse"
-  token/apply:
+  /token/apply:
     post:
       tags:
       - "master-api"
@@ -689,7 +689,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/DeleteTokenResponse"
-  token/create:
+  /token/create:
     post:
       tags:
       - "master-api"
@@ -706,7 +706,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/CreateTokenResponse"
-  token/delete:
+  /token/delete:
     post:
       tags:
       - "master-api"
@@ -723,7 +723,7 @@ paths:
           description: "A successful response."
           schema:
             $ref: "#/definitions/DeleteTokenResponse"
-  token/get:
+  /token/get:
     get:
       tags:
       - "master-api"
