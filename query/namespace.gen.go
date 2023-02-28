@@ -28,10 +28,9 @@ func newNamespace(db *gorm.DB, opts ...gen.DOOption) namespace {
 	tableName := _namespace.namespaceDo.TableName()
 	_namespace.ALL = field.NewAsterisk(tableName)
 	_namespace.Name = field.NewString(tableName, "name")
-	_namespace.Labels = field.NewString(tableName, "labels")
-	_namespace.Annotations = field.NewString(tableName, "annotations")
 	_namespace.Status = field.NewString(tableName, "status")
-	_namespace.CreateTime = field.NewTime(tableName, "create_time")
+	_namespace.UpdatedTime = field.NewTime(tableName, "updated_time")
+	_namespace.CreatedTime = field.NewTime(tableName, "created_time")
 
 	_namespace.fillFieldMap()
 
@@ -43,10 +42,9 @@ type namespace struct {
 
 	ALL         field.Asterisk
 	Name        field.String
-	Labels      field.String
-	Annotations field.String
 	Status      field.String
-	CreateTime  field.Time
+	UpdatedTime field.Time
+	CreatedTime field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -64,10 +62,9 @@ func (n namespace) As(alias string) *namespace {
 func (n *namespace) updateTableName(table string) *namespace {
 	n.ALL = field.NewAsterisk(table)
 	n.Name = field.NewString(table, "name")
-	n.Labels = field.NewString(table, "labels")
-	n.Annotations = field.NewString(table, "annotations")
 	n.Status = field.NewString(table, "status")
-	n.CreateTime = field.NewTime(table, "create_time")
+	n.UpdatedTime = field.NewTime(table, "updated_time")
+	n.CreatedTime = field.NewTime(table, "created_time")
 
 	n.fillFieldMap()
 
@@ -92,12 +89,11 @@ func (n *namespace) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (n *namespace) fillFieldMap() {
-	n.fieldMap = make(map[string]field.Expr, 5)
+	n.fieldMap = make(map[string]field.Expr, 4)
 	n.fieldMap["name"] = n.Name
-	n.fieldMap["labels"] = n.Labels
-	n.fieldMap["annotations"] = n.Annotations
 	n.fieldMap["status"] = n.Status
-	n.fieldMap["create_time"] = n.CreateTime
+	n.fieldMap["updated_time"] = n.UpdatedTime
+	n.fieldMap["created_time"] = n.CreatedTime
 }
 
 func (n namespace) clone(db *gorm.DB) namespace {

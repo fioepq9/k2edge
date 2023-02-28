@@ -3,9 +3,10 @@ package svc
 import (
 	"fmt"
 	"k2edge/master/internal/config"
+	"k2edge/query"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"k2edge/query"
 )
 
 type DSN struct {

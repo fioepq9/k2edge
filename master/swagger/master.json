@@ -1654,18 +1654,11 @@
       "properties": {
         "name": {
           "type": "string"
-        },
-        "labels": {
-          "type": "string"
-        },
-        "annotations": {
-          "type": "string"
         }
       },
       "title": "CreateNamespaceRequest",
       "required": [
-        "name",
-        "labels"
+        "name"
       ]
     },
     "CreateTokenRequest": {
@@ -2298,7 +2291,7 @@
         "namespaces": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/NamespaceSimpleInfo"
+            "$ref": "#/definitions/Namespace"
           }
         }
       },
@@ -2429,46 +2422,18 @@
         "name": {
           "type": "string"
         },
-        "labels": {
-          "type": "string"
-        },
-        "annotations": {
-          "type": "string"
-        },
         "status": {
           "type": "string"
         },
-        "create_time": {
+        "age": {
           "type": "string"
         }
       },
       "title": "Namespace",
       "required": [
         "name",
-        "labels",
-        "annotations",
         "status",
-        "create_time"
-      ]
-    },
-    "NamespaceSimpleInfo": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        },
-        "time": {
-          "type": "string"
-        }
-      },
-      "title": "NamespaceSimpleInfo",
-      "required": [
-        "name",
-        "status",
-        "time"
+        "age"
       ]
     },
     "NodeTopRequest": {

@@ -5,6 +5,7 @@ import (
 @server(
 	prefix: /cluster
 )
+
 service master-api{
 	@handler ClusterInfo
 	get /info returns (ClusterInfoResponse)
@@ -355,8 +356,6 @@ service master-api{
 // kubectl create namespace <insert-namespace-name-here> OR kubectl create -f ./my-namespace.yaml
 type CreateNamespaceRequest {
 	Name        string `json:"name"`
-	Labels      string `json:"labels"`
-	Annotations string `json:"annotations,optional"`
 }
 
 type GetNamespaceRequest {
@@ -369,13 +368,7 @@ type GetNamespaceResponse {
 
 // kubectl get namespaces
 type ListNamespaceResponse {
-	Namespaces []NamespaceSimpleInfo `json:"namespaces"`
-}
-
-type NamespaceSimpleInfo {
-	Name   string `json:"name"`
-	Status string `json:"status"`
-	Age    string `json:"time"`
+	Namespaces []Namespace `json:"namespaces"`
 }
 
 // kubectl delete namespaces <insert-some-namespace-name>

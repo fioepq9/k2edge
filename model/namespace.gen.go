@@ -13,10 +13,9 @@ const TableNameNamespace = "namespace"
 // Namespace mapped from table <namespace>
 type Namespace struct {
 	Name        string    `gorm:"column:name;type:varchar(100);primaryKey" json:"name"`
-	Labels      string    `gorm:"column:labels;type:varchar(253)" json:"labels"`
-	Annotations string    `gorm:"column:annotations;type:varchar(250)" json:"annotations"`
 	Status      string    `gorm:"column:status;type:enum('Active','Terminating');not null" json:"status"`
-	CreateTime  time.Time `gorm:"column:create_time;type:datetime;not null" json:"create_time"`
+	UpdatedTime time.Time `gorm:"column:updated_time;type:datetime;default:CURRENT_TIMESTAMP" json:"updated_time"`
+	CreatedTime time.Time `gorm:"column:created_time;type:datetime;default:CURRENT_TIMESTAMP" json:"created_time"`
 }
 
 // TableName Namespace's table name
