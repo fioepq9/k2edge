@@ -945,6 +945,15 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "all",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          }
+        ],
         "requestBody": {},
         "tags": [
           "master-api"
@@ -2284,6 +2293,16 @@
       "required": [
         "todo"
       ]
+    },
+    "ListNamespaceRequest": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "ListNamespaceRequest"
     },
     "ListNamespaceResponse": {
       "type": "object",

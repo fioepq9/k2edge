@@ -127,7 +127,7 @@ type Command {
 }
 
 type Namespace {
-	Name    string `json:"name"`
-	Status  string `json:"status"`
-	Age  	string `json:"age"`
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	Age    string `json:"age"`
 }

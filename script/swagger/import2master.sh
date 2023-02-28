@@ -21,3 +21,6 @@ echo "" >> script/swagger/tmp_master.api
 cat api/token.api >> script/swagger/tmp_master.api
 echo "" >> script/swagger/tmp_master.api
 cat api/global.api >> script/swagger/tmp_global.api
+
+sed -i "/^import (/,/^)$/s/.*/\n/g" script/swagger/tmp_master.api
+echo -e '\nimport (\n	"tmp_global.api"\n)' >> script/swagger/tmp_master.api

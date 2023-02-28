@@ -13,7 +13,7 @@ service master-api{
 	get /get(GetNamespaceRequest) returns(GetNamespaceResponse)
 	
 	@handler ListNamespace
-	get /list returns(ListNamespaceResponse)
+	get /list(ListNamespaceRequest) returns(ListNamespaceResponse)
 	
 	@handler DeleteNamespace
 	post /delete(DeleteNamespaceRequest)
@@ -25,7 +25,7 @@ type CreateNamespaceRequest {
 }
 
 type GetNamespaceRequest {
-	Name string `json:"name"`
+	Name string `form:"name"`
 }
 
 type GetNamespaceResponse {
@@ -33,6 +33,10 @@ type GetNamespaceResponse {
 }
 
 // kubectl get namespaces
+type ListNamespaceRequest {
+	All bool `form:"all,optional"`
+}
+
 type ListNamespaceResponse {
 	Namespaces []Namespace `json:"namespaces"`
 }

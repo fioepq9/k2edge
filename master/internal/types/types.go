@@ -388,11 +388,15 @@ type CreateNamespaceRequest struct {
 }
 
 type GetNamespaceRequest struct {
-	Name string `json:"name"`
+	Name string `form:"name"`
 }
 
 type GetNamespaceResponse struct {
 	NamespaceInfo Namespace `json:"namespace"`
+}
+
+type ListNamespaceRequest struct {
+	All bool `form:"all,optional"`
 }
 
 type ListNamespaceResponse struct {

@@ -1,11 +1,6 @@
-import (
-	"tmp_global.api"
-)
-
 @server(
 	prefix: /cluster
 )
-
 service master-api{
 	@handler ClusterInfo
 	get /info returns (ClusterInfoResponse)
@@ -14,6 +9,11 @@ service master-api{
 type ClusterInfoResponse {
 	Todo string `json:"todo"`
 }
+
+
+
+
+
 
 
 @server (
@@ -137,6 +137,11 @@ type ContainerTopResponse {
 }
 
 
+
+
+
+
+
 @server (
 	prefix: /cronjob
 )
@@ -218,6 +223,11 @@ type LogsCronJobRequest {
 type LogsCronJobResponse {
 	Todo string `json:"todo"`
 }
+
+
+
+
+
 
 
 @server (
@@ -336,6 +346,11 @@ type LogsDeploymentResponse {
 }
 
 
+
+
+
+
+
 @server (
 	prefix: /namespace
 )
@@ -344,10 +359,10 @@ service master-api{
 	post /create(CreateNamespaceRequest)
 	
 	@handler GetNamespace
-	get /get(GetNamespaceRequest) returns (GetNamespaceResponse)
+	get /get(GetNamespaceRequest) returns(GetNamespaceResponse)
 	
 	@handler ListNamespace
-	get /list returns (ListNamespaceResponse)
+	get /list(ListNamespaceRequest) returns(ListNamespaceResponse)
 	
 	@handler DeleteNamespace
 	post /delete(DeleteNamespaceRequest)
@@ -355,11 +370,11 @@ service master-api{
 
 // kubectl create namespace <insert-namespace-name-here> OR kubectl create -f ./my-namespace.yaml
 type CreateNamespaceRequest {
-	Name        string `json:"name"`
+	Name string `json:"name"`
 }
 
 type GetNamespaceRequest {
-	Name string `json:"name"`
+	Name string `form:"name"`
 }
 
 type GetNamespaceResponse {
@@ -367,6 +382,10 @@ type GetNamespaceResponse {
 }
 
 // kubectl get namespaces
+type ListNamespaceRequest {
+	All bool `form:"all,optional"`
+}
+
 type ListNamespaceResponse {
 	Namespaces []Namespace `json:"namespaces"`
 }
@@ -375,6 +394,11 @@ type ListNamespaceResponse {
 type DeleteNamespaceRequest {
 	Name string `json:"name"`
 }
+
+
+
+
+
 
 
 @server (
@@ -428,6 +452,11 @@ type LogsJobRequest {
 type LogsJobResponse {
 	Todo string `json:"todo"`
 }
+
+
+
+
+
 
 @server(
 	prefix: /node
@@ -484,6 +513,11 @@ type DrainResponse {
 }
 
 
+
+
+
+
+
 @server (
 	prefix: /token
 )
@@ -533,3 +567,7 @@ type ApplyTokenRequest {
 type ApplyTokenResponse {
 	Error Error `json:"error,omitempty"`
 }
+
+import (
+	"tmp_global.api"
+)
