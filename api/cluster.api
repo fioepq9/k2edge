@@ -1,5 +1,5 @@
 @server(
-	prefix: cluster
+	prefix: /cluster
 )
 service master-api{
 	@handler ClusterInfo

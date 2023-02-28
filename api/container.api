@@ -3,7 +3,7 @@ import (
 )
 
 @server (
-	prefix: container
+	prefix: /container
 )
 service master-api{
 	@handler CreateContainer

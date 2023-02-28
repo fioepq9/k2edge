@@ -1,8 +1,8 @@
-import(
+import (
 	"global.api"
 )
 @server(
-	prefix: node
+	prefix: /node
 )
 
 service master-api{

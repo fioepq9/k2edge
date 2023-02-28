@@ -3,7 +3,7 @@ import (
 )
 
 @server (
-	prefix: token
+	prefix: /token
 )
 service master-api{
 	@handler CreateToken

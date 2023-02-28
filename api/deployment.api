@@ -3,7 +3,7 @@ import (
 )
 
 @server (
-	prefix: deployment
+	prefix: /deployment
 )
 service master-api {
 	@handler CreateDeployment

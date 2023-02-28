@@ -3,7 +3,7 @@ import (
 )
 
 @server (
-	prefix: cronjob
+	prefix: /cronjob
 )
 service master-api{
 	@handler CreateCronJob

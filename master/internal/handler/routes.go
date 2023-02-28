@@ -215,7 +215,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/list",
-				Handler: ListNamespacesHandler(serverCtx),
+				Handler: ListNamespaceHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,

@@ -29,7 +29,7 @@ def updateAPI(w: bool = True, m: bool = True):
 @app.command()
 def updateSwagger(w: bool = True, m: bool = True, port: int = 8888):
     if w: RunCommand(f"goctl api plugin -plugin goctl-swagger='swagger -filename worker.json --host 127.0.0.1:{port}' -api ./api/worker.api -dir ./worker/swagger")
-    if m: RunCommand(f"goctl api plugin -plugin goctl-swagger='swagger -filename master.json --host 127.0.0.1:{port}' -api ./api/master.api -dir ./master/swagger")
+    if m: RunCommand(f"goctl api plugin -plugin goctl-swagger='swagger -filename master.json --host 127.0.0.1:{port}' -api ./script/swagger/tmp_master.api -dir ./master/swagger")
 
 @app.command()
 def runSwagger(name: str = "worker-api", port: int = 8083):

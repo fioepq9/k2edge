@@ -1,0 +1,2303 @@
+---
+swagger: "2.0"
+info:
+  version: ""
+  title: ""
+host: "127.0.0.1:8080"
+schemes:
+- "http"
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+security:
+- apiKey: []
+paths:
+  cluster/info:
+    get:
+      tags:
+      - "master-api"
+      operationId: "ClusterInfo"
+      parameters: []
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/ClusterInfoResponse"
+  container/apply:
+    post:
+      tags:
+      - "master-api"
+      operationId: "ApplyContainer"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ApplyContainerRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/ApplyContainerResponse"
+  container/attach:
+    post:
+      tags:
+      - "master-api"
+      operationId: "AttachContainer"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AttachContainerRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/AttachContainerResponse"
+  container/create:
+    post:
+      tags:
+      - "master-api"
+      operationId: "CreateContainer"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/CreateContainerRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/CreateContainerResponse"
+  container/delete:
+    post:
+      tags:
+      - "master-api"
+      operationId: "DeleteContainer"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/DeleteContainerRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/DeleteContainerResponse"
+  container/exec:
+    post:
+      tags:
+      - "master-api"
+      operationId: "ExecContainer"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ExecContainerRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/ExecContainerResponse"
+  container/get:
+    get:
+      tags:
+      - "master-api"
+      operationId: "GetContainer"
+      parameters:
+      - name: "todo"
+        in: "query"
+        required: true
+        type: "string"
+        x-exportParamName: "Todo"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/GetContainerResponse"
+  container/logs:
+    post:
+      tags:
+      - "master-api"
+      operationId: "LogsContainer"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/LogsContainerRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/LogsContainerResponse"
+  container/run:
+    post:
+      tags:
+      - "master-api"
+      operationId: "RunContainer"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/RunContainerRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/RunContainerResponse"
+  container/top:
+    get:
+      tags:
+      - "master-api"
+      operationId: "ContainerTop"
+      parameters:
+      - name: "selector"
+        in: "query"
+        required: true
+        x-exportParamName: "Selector"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/ContainerTopResponse"
+  cronjob/apply:
+    post:
+      tags:
+      - "master-api"
+      operationId: "ApplyCronJob"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ApplyCronJobRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/ApplyCronJobResponse"
+  cronjob/create:
+    post:
+      tags:
+      - "master-api"
+      operationId: "CreateCronJob"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/CreateCronJobRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/CreateCronJobResponse"
+  cronjob/delete:
+    post:
+      tags:
+      - "master-api"
+      operationId: "DeleteCronJob"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/DeleteCronJobRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/DeleteCronJobResponse"
+  cronjob/get:
+    get:
+      tags:
+      - "master-api"
+      operationId: "GetCronJob"
+      parameters:
+      - name: "todo"
+        in: "query"
+        required: true
+        type: "string"
+        x-exportParamName: "Todo"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/GetCronJobResponse"
+  cronjob/logs:
+    post:
+      tags:
+      - "master-api"
+      operationId: "LogsCronJob"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/LogsCronJobRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/LogsCronJobResponse"
+  cronjob/rollout/history:
+    get:
+      tags:
+      - "master-api"
+      operationId: "HistoryCronJob"
+      parameters:
+      - name: "todo"
+        in: "query"
+        required: true
+        type: "string"
+        x-exportParamName: "Todo"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/HistoryCronJobResponse"
+  cronjob/rollout/undo:
+    post:
+      tags:
+      - "master-api"
+      operationId: "UndoCronJob"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UndoCronJobRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/UndoCronJobResponse"
+  deployment/apply:
+    post:
+      tags:
+      - "master-api"
+      operationId: "ApplyDeployment"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ApplyDeploymentRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/ApplyDeploymentResponse"
+  deployment/attach:
+    post:
+      tags:
+      - "master-api"
+      operationId: "AttachDeployment"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AttachDeploymentRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/AttachDeploymentResponse"
+  deployment/create:
+    post:
+      tags:
+      - "master-api"
+      operationId: "CreateDeployment"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/CreateDeploymentRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/CreateDeploymentResponse"
+  deployment/delete:
+    post:
+      tags:
+      - "master-api"
+      operationId: "DeleteDeployment"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/DeleteDeploymentRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/DeleteDeploymentResponse"
+  deployment/exec:
+    post:
+      tags:
+      - "master-api"
+      operationId: "ExecDeployment"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ExecDeploymentRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/ExecDeploymentResponse"
+  deployment/get:
+    get:
+      tags:
+      - "master-api"
+      operationId: "GetDeployment"
+      parameters:
+      - name: "todo"
+        in: "query"
+        required: true
+        type: "string"
+        x-exportParamName: "Todo"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/GetDeploymentResponse"
+  deployment/logs:
+    post:
+      tags:
+      - "master-api"
+      operationId: "LogsDeployment"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/LogsDeploymentRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/LogsDeploymentResponse"
+  deployment/rollout/history:
+    get:
+      tags:
+      - "master-api"
+      operationId: "HistoryDeployment"
+      parameters:
+      - name: "todo"
+        in: "query"
+        required: true
+        type: "string"
+        x-exportParamName: "Todo"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/HistoryDeploymentResponse"
+  deployment/rollout/undo:
+    post:
+      tags:
+      - "master-api"
+      operationId: "UndoDeployment"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UndoDeploymentRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/UndoDeploymentResponse"
+  deployment/scale:
+    post:
+      tags:
+      - "master-api"
+      operationId: "Scale"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ScaleRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/ScaleResponse"
+  job/apply:
+    post:
+      tags:
+      - "master-api"
+      operationId: "ApplyJob"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/DeleteJobRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/DeleteJobResponse"
+  job/create:
+    post:
+      tags:
+      - "master-api"
+      operationId: "CreateJob"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/CreateJobRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/CreateJobResponse"
+  job/delete:
+    post:
+      tags:
+      - "master-api"
+      operationId: "DeleteJob"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/DeleteJobRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/DeleteJobResponse"
+  job/get:
+    get:
+      tags:
+      - "master-api"
+      operationId: "GetJob"
+      parameters:
+      - name: "todo"
+        in: "query"
+        required: true
+        type: "string"
+        x-exportParamName: "Todo"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/GetJobResponse"
+  job/logs:
+    post:
+      tags:
+      - "master-api"
+      operationId: "LogsJob"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/LogsJobRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/LogsJobResponse"
+  namespace/create:
+    post:
+      tags:
+      - "master-api"
+      operationId: "CreateNamespace"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: " kubectl create namespace <insert-namespace-name-here> OR kubectl\
+          \ create -f ./my-namespace.yaml"
+        required: true
+        schema:
+          $ref: "#/definitions/CreateNamespaceRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema: {}
+  namespace/delete:
+    post:
+      tags:
+      - "master-api"
+      operationId: "DeleteNamespace"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: " kubectl delete namespaces <insert-some-namespace-name>"
+        required: true
+        schema:
+          $ref: "#/definitions/DeleteNamespaceRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema: {}
+  namespace/get:
+    get:
+      tags:
+      - "master-api"
+      operationId: "GetNamespace"
+      parameters:
+      - name: "name"
+        in: "query"
+        required: true
+        type: "string"
+        x-exportParamName: "Name"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/GetNamespaceResponse"
+  namespace/list:
+    get:
+      tags:
+      - "master-api"
+      operationId: "ListNamespace"
+      parameters: []
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/ListNamespaceResponse"
+  node/cordon:
+    post:
+      tags:
+      - "master-api"
+      operationId: "Cordon"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/CordonRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/CordonResponse"
+  node/drain:
+    post:
+      tags:
+      - "master-api"
+      operationId: "Drain"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/DrainRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/DrainResponse"
+  node/top:
+    get:
+      tags:
+      - "master-api"
+      operationId: "NodeTop"
+      parameters:
+      - name: "selector"
+        in: "query"
+        required: true
+        x-exportParamName: "Selector"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/NodeTopResponse"
+  node/uncordon:
+    post:
+      tags:
+      - "master-api"
+      operationId: "Uncordon"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UncordonRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/UncordonResponse"
+  token/apply:
+    post:
+      tags:
+      - "master-api"
+      operationId: "ApplyToken"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/DeleteTokenRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/DeleteTokenResponse"
+  token/create:
+    post:
+      tags:
+      - "master-api"
+      operationId: "CreateToken"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/CreateTokenRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/CreateTokenResponse"
+  token/delete:
+    post:
+      tags:
+      - "master-api"
+      operationId: "DeleteToken"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/DeleteTokenRequest"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/DeleteTokenResponse"
+  token/get:
+    get:
+      tags:
+      - "master-api"
+      operationId: "GetToken"
+      parameters:
+      - name: "todo"
+        in: "query"
+        required: true
+        type: "string"
+        x-exportParamName: "Todo"
+      responses:
+        "200":
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/GetTokenResponse"
+securityDefinitions:
+  apiKey:
+    description: "Enter JWT Bearer token **_only_**"
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+definitions:
+  ApplyContainerRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "ApplyContainerRequest"
+    example:
+      todo: "todo"
+  ApplyContainerResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "ApplyContainerResponse"
+    example:
+      error:
+        todo: "todo"
+  ApplyCronJobRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "ApplyCronJobRequest"
+    example:
+      todo: "todo"
+  ApplyCronJobResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "ApplyCronJobResponse"
+    example:
+      error:
+        todo: "todo"
+  ApplyDeploymentRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "ApplyDeploymentRequest"
+    example:
+      todo: "todo"
+  ApplyDeploymentResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "ApplyDeploymentResponse"
+    example:
+      error:
+        todo: "todo"
+  ApplyTokenRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "ApplyTokenRequest"
+  ApplyTokenResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "ApplyTokenResponse"
+  AttachContainerRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "AttachContainerRequest"
+    example:
+      todo: "todo"
+  AttachContainerResponse:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "AttachContainerResponse"
+    example:
+      todo: "todo"
+  AttachDeploymentRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "AttachDeploymentRequest"
+    example:
+      todo: "todo"
+  AttachDeploymentResponse:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "AttachDeploymentResponse"
+    example:
+      todo: "todo"
+  ClusterInfoResponse:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "ClusterInfoResponse"
+    example:
+      todo: "todo"
+  Command:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "Command"
+  Container:
+    type: "object"
+    required:
+    - "config"
+    - "metadata"
+    - "status"
+    properties:
+      metadata:
+        $ref: "#/definitions/Metadata"
+      config:
+        $ref: "#/definitions/ContainerConfig"
+      status:
+        $ref: "#/definitions/ContainerStatus"
+    title: "Container"
+    example:
+      metadata:
+        kind: "kind"
+        namespace: "namespace"
+        name: "name"
+      config:
+        working_dir: "working_dir"
+        on_build:
+        - "on_build"
+        - "on_build"
+        attach_stdout: true
+        healthcheck:
+          retries: 5
+          test:
+          - "test"
+          - "test"
+          start_period: 1
+          interval: 0
+          timeout: 6
+        stop_timeout: 5
+        hostname: "hostname"
+        attach_stderr: true
+        args_escaped: true
+        entrypoint:
+        - "entrypoint"
+        - "entrypoint"
+        mac_address: "mac_address"
+        stop_signal: "stop_signal"
+        stdin_once: true
+        open_stdin: true
+        image: "image"
+        attach_stdin: true
+        domainname: "domainname"
+        exposed_ports:
+        - "exposed_ports"
+        - "exposed_ports"
+        volumes:
+        - "volumes"
+        - "volumes"
+        env:
+        - "env"
+        - "env"
+        network_disabled: true
+        labels: "{}"
+        shell:
+        - "shell"
+        - "shell"
+        tty: true
+        cmd:
+        - "cmd"
+        - "cmd"
+        user: "user"
+      status:
+        todo: "todo"
+  ContainerConfig:
+    type: "object"
+    required:
+    - "image"
+    properties:
+      hostname:
+        type: "string"
+        description: " Hostname"
+      domainname:
+        type: "string"
+        description: " Domainname"
+      user:
+        type: "string"
+        description: " User that will run the command(s) inside the container, also\
+          \ support user:group"
+      attach_stdin:
+        type: "boolean"
+        format: "boolean"
+        description: " Attach the standard input, makes possible user interaction"
+      attach_stdout:
+        type: "boolean"
+        format: "boolean"
+        description: " Attach the standard output"
+      attach_stderr:
+        type: "boolean"
+        format: "boolean"
+        description: " Attach the standard error"
+      exposed_ports:
+        type: "array"
+        description: " List of exposed ports"
+        items:
+          type: "string"
+      tty:
+        type: "boolean"
+        format: "boolean"
+        description: " Attach standard streams to a tty, including stdin if it is\
+          \ not closed."
+      open_stdin:
+        type: "boolean"
+        format: "boolean"
+        description: " Open stdin"
+      stdin_once:
+        type: "boolean"
+        format: "boolean"
+        description: " If true, close stdin after the 1 attached client disconnects."
+      env:
+        type: "array"
+        description: " List of environment variable to set in the container"
+        items:
+          type: "string"
+      cmd:
+        type: "array"
+        description: " Command to run when starting the container"
+        items:
+          type: "string"
+      healthcheck:
+        description: " Healthcheck describes how to check the container is healthy"
+        $ref: "#/definitions/HealthConfig"
+      args_escaped:
+        type: "boolean"
+        format: "boolean"
+        description: " True if command is already escaped (meaning treat as a command\
+          \ line) (Windows specific)."
+      image:
+        type: "string"
+        description: " Name of the image as it was passed by the operator (e.g. could\
+          \ be symbolic)"
+      volumes:
+        type: "array"
+        description: " List of volumes (mounts) used for the container"
+        items:
+          type: "string"
+      working_dir:
+        type: "string"
+        description: " Current directory (PWD) in the command will be launched"
+      entrypoint:
+        type: "array"
+        description: " Entrypoint to run when starting the container"
+        items:
+          type: "string"
+      network_disabled:
+        type: "boolean"
+        format: "boolean"
+        description: " Is network disabled"
+      mac_address:
+        type: "string"
+        description: " Mac Address of the container"
+      on_build:
+        type: "array"
+        description: " ONBUILD metadata that were defined on the image Dockerfile"
+        items:
+          type: "string"
+      labels:
+        type: "object"
+        description: " List of labels set to this container"
+        properties: {}
+      stop_signal:
+        type: "string"
+        description: " Signal to stop a container"
+      stop_timeout:
+        type: "integer"
+        format: "int32"
+        description: " Timeout (in seconds) to stop a container"
+      shell:
+        type: "array"
+        description: " Shell for shell-form of RUN, CMD, ENTRYPOINT"
+        items:
+          type: "string"
+    title: "ContainerConfig"
+    example:
+      working_dir: "working_dir"
+      on_build:
+      - "on_build"
+      - "on_build"
+      attach_stdout: true
+      healthcheck:
+        retries: 5
+        test:
+        - "test"
+        - "test"
+        start_period: 1
+        interval: 0
+        timeout: 6
+      stop_timeout: 5
+      hostname: "hostname"
+      attach_stderr: true
+      args_escaped: true
+      entrypoint:
+      - "entrypoint"
+      - "entrypoint"
+      mac_address: "mac_address"
+      stop_signal: "stop_signal"
+      stdin_once: true
+      open_stdin: true
+      image: "image"
+      attach_stdin: true
+      domainname: "domainname"
+      exposed_ports:
+      - "exposed_ports"
+      - "exposed_ports"
+      volumes:
+      - "volumes"
+      - "volumes"
+      env:
+      - "env"
+      - "env"
+      network_disabled: true
+      labels: "{}"
+      shell:
+      - "shell"
+      - "shell"
+      tty: true
+      cmd:
+      - "cmd"
+      - "cmd"
+      user: "user"
+  ContainerStatus:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "ContainerStatus"
+    example:
+      todo: "todo"
+  ContainerTopRequest:
+    type: "object"
+    required:
+    - "selector"
+    properties:
+      selector:
+        $ref: "#/definitions/Metadata"
+    title: "ContainerTopRequest"
+  ContainerTopResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "ContainerTopResponse"
+    example:
+      error:
+        todo: "todo"
+  CordonRequest:
+    type: "object"
+    required:
+    - "selector"
+    properties:
+      selector:
+        $ref: "#/definitions/Metadata"
+    title: "CordonRequest"
+    example:
+      selector:
+        kind: "kind"
+        namespace: "namespace"
+        name: "name"
+  CordonResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "CordonResponse"
+    example:
+      error:
+        todo: "todo"
+  CreateContainerRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "CreateContainerRequest"
+    example:
+      todo: "todo"
+  CreateContainerResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "CreateContainerResponse"
+    example:
+      error:
+        todo: "todo"
+  CreateCronJobRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "CreateCronJobRequest"
+    example:
+      todo: "todo"
+  CreateCronJobResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "CreateCronJobResponse"
+    example:
+      error:
+        todo: "todo"
+  CreateDeploymentRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "CreateDeploymentRequest"
+    example:
+      todo: "todo"
+  CreateDeploymentResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "CreateDeploymentResponse"
+    example:
+      error:
+        todo: "todo"
+  CreateJobRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "CreateJobRequest"
+    example:
+      todo: "todo"
+  CreateJobResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "CreateJobResponse"
+    example:
+      error:
+        todo: "todo"
+  CreateNamespaceRequest:
+    type: "object"
+    required:
+    - "labels"
+    - "name"
+    properties:
+      name:
+        type: "string"
+      labels:
+        type: "string"
+      annotations:
+        type: "string"
+    title: "CreateNamespaceRequest"
+    example:
+      name: "name"
+      annotations: "annotations"
+      labels: "labels"
+  CreateTokenRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "CreateTokenRequest"
+    example:
+      todo: "todo"
+  CreateTokenResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "CreateTokenResponse"
+    example:
+      error:
+        todo: "todo"
+  CronJob:
+    type: "object"
+    required:
+    - "config"
+    - "metadata"
+    - "status"
+    properties:
+      metadata:
+        $ref: "#/definitions/Metadata"
+      config:
+        $ref: "#/definitions/CronJobConfig"
+      status:
+        $ref: "#/definitions/CronJobStatus"
+    title: "CronJob"
+    example:
+      metadata:
+        kind: "kind"
+        namespace: "namespace"
+        name: "name"
+      config:
+        todo: "todo"
+      status:
+        todo: "todo"
+  CronJobConfig:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "CronJobConfig"
+    example:
+      todo: "todo"
+  CronJobStatus:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "CronJobStatus"
+    example:
+      todo: "todo"
+  DeleteContainerRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "DeleteContainerRequest"
+    example:
+      todo: "todo"
+  DeleteContainerResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "DeleteContainerResponse"
+    example:
+      error:
+        todo: "todo"
+  DeleteCronJobRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "DeleteCronJobRequest"
+    example:
+      todo: "todo"
+  DeleteCronJobResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "DeleteCronJobResponse"
+    example:
+      error:
+        todo: "todo"
+  DeleteDeploymentRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "DeleteDeploymentRequest"
+    example:
+      todo: "todo"
+  DeleteDeploymentResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "DeleteDeploymentResponse"
+    example:
+      error:
+        todo: "todo"
+  DeleteJobRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "DeleteJobRequest"
+    example:
+      todo: "todo"
+  DeleteJobResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "DeleteJobResponse"
+    example:
+      error:
+        todo: "todo"
+  DeleteNamespaceRequest:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      name:
+        type: "string"
+    title: "DeleteNamespaceRequest"
+    example:
+      name: "name"
+  DeleteTokenRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "DeleteTokenRequest"
+    example:
+      todo: "todo"
+  DeleteTokenResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "DeleteTokenResponse"
+    example:
+      error:
+        todo: "todo"
+  Deployment:
+    type: "object"
+    required:
+    - "config"
+    - "metadata"
+    - "status"
+    properties:
+      metadata:
+        $ref: "#/definitions/Metadata"
+      config:
+        $ref: "#/definitions/DeploymentConfig"
+      status:
+        $ref: "#/definitions/DeploymentStatus"
+    title: "Deployment"
+    example:
+      metadata:
+        kind: "kind"
+        namespace: "namespace"
+        name: "name"
+      config:
+        todo: "todo"
+      status:
+        todo: "todo"
+  DeploymentConfig:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "DeploymentConfig"
+    example:
+      todo: "todo"
+  DeploymentStatus:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "DeploymentStatus"
+    example:
+      todo: "todo"
+  DrainRequest:
+    type: "object"
+    required:
+    - "selector"
+    properties:
+      selector:
+        $ref: "#/definitions/Metadata"
+    title: "DrainRequest"
+    example:
+      selector:
+        kind: "kind"
+        namespace: "namespace"
+        name: "name"
+  DrainResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "DrainResponse"
+    example:
+      error:
+        todo: "todo"
+  Error:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "Error"
+    example:
+      todo: "todo"
+  ExecContainerRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "ExecContainerRequest"
+    example:
+      todo: "todo"
+  ExecContainerResponse:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "ExecContainerResponse"
+    example:
+      todo: "todo"
+  ExecDeploymentRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "ExecDeploymentRequest"
+    example:
+      todo: "todo"
+  ExecDeploymentResponse:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "ExecDeploymentResponse"
+    example:
+      todo: "todo"
+  GetContainerRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "GetContainerRequest"
+  GetContainerResponse:
+    type: "object"
+    required:
+    - "container"
+    properties:
+      container:
+        $ref: "#/definitions/Container"
+    title: "GetContainerResponse"
+    example:
+      container:
+        metadata:
+          kind: "kind"
+          namespace: "namespace"
+          name: "name"
+        config:
+          working_dir: "working_dir"
+          on_build:
+          - "on_build"
+          - "on_build"
+          attach_stdout: true
+          healthcheck:
+            retries: 5
+            test:
+            - "test"
+            - "test"
+            start_period: 1
+            interval: 0
+            timeout: 6
+          stop_timeout: 5
+          hostname: "hostname"
+          attach_stderr: true
+          args_escaped: true
+          entrypoint:
+          - "entrypoint"
+          - "entrypoint"
+          mac_address: "mac_address"
+          stop_signal: "stop_signal"
+          stdin_once: true
+          open_stdin: true
+          image: "image"
+          attach_stdin: true
+          domainname: "domainname"
+          exposed_ports:
+          - "exposed_ports"
+          - "exposed_ports"
+          volumes:
+          - "volumes"
+          - "volumes"
+          env:
+          - "env"
+          - "env"
+          network_disabled: true
+          labels: "{}"
+          shell:
+          - "shell"
+          - "shell"
+          tty: true
+          cmd:
+          - "cmd"
+          - "cmd"
+          user: "user"
+        status:
+          todo: "todo"
+  GetCronJobRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "GetCronJobRequest"
+  GetCronJobResponse:
+    type: "object"
+    required:
+    - "cronjob"
+    properties:
+      cronjob:
+        $ref: "#/definitions/CronJob"
+    title: "GetCronJobResponse"
+    example:
+      cronjob:
+        metadata:
+          kind: "kind"
+          namespace: "namespace"
+          name: "name"
+        config:
+          todo: "todo"
+        status:
+          todo: "todo"
+  GetDeploymentRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "GetDeploymentRequest"
+  GetDeploymentResponse:
+    type: "object"
+    required:
+    - "deployment"
+    properties:
+      deployment:
+        $ref: "#/definitions/Deployment"
+    title: "GetDeploymentResponse"
+    example:
+      deployment:
+        metadata:
+          kind: "kind"
+          namespace: "namespace"
+          name: "name"
+        config:
+          todo: "todo"
+        status:
+          todo: "todo"
+  GetJobRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "GetJobRequest"
+  GetJobResponse:
+    type: "object"
+    required:
+    - "job"
+    properties:
+      job:
+        $ref: "#/definitions/Job"
+    title: "GetJobResponse"
+    example:
+      job:
+        metadata:
+          kind: "kind"
+          namespace: "namespace"
+          name: "name"
+        config:
+          todo: "todo"
+        status:
+          todo: "todo"
+  GetNamespaceRequest:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      name:
+        type: "string"
+    title: "GetNamespaceRequest"
+  GetNamespaceResponse:
+    type: "object"
+    required:
+    - "namespace"
+    properties:
+      namespace:
+        $ref: "#/definitions/Namespace"
+    title: "GetNamespaceResponse"
+    example:
+      namespace:
+        create_time: "create_time"
+        name: "name"
+        annotations: "annotations"
+        labels: "labels"
+        status: "status"
+  GetTokenRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "GetTokenRequest"
+  GetTokenResponse:
+    type: "object"
+    required:
+    - "token"
+    properties:
+      token:
+        $ref: "#/definitions/Token"
+    title: "GetTokenResponse"
+    example:
+      token:
+        metadata:
+          kind: "kind"
+          namespace: "namespace"
+          name: "name"
+        config:
+          todo: "todo"
+        status:
+          todo: "todo"
+  HealthConfig:
+    type: "object"
+    required:
+    - "interval"
+    - "test"
+    - "timeout"
+    properties:
+      test:
+        type: "array"
+        items:
+          type: "string"
+      interval:
+        type: "integer"
+        format: "int64"
+        description: " Interval is the time to wait between checks."
+      timeout:
+        type: "integer"
+        format: "int64"
+        description: " Timeout is the time to wait before considering the check to\
+          \ have hung."
+      start_period:
+        type: "integer"
+        format: "int64"
+        description: " The start period for the container to initialize before the\
+          \ retries starts to count down."
+      retries:
+        type: "integer"
+        format: "int32"
+    title: "HealthConfig"
+    example:
+      retries: 5
+      test:
+      - "test"
+      - "test"
+      start_period: 1
+      interval: 0
+      timeout: 6
+  HistoryContainerRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "HistoryContainerRequest"
+  HistoryContainerResponse:
+    type: "object"
+    required:
+    - "container"
+    properties:
+      container:
+        $ref: "#/definitions/Container"
+    title: "HistoryContainerResponse"
+  HistoryCronJobRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "HistoryCronJobRequest"
+  HistoryCronJobResponse:
+    type: "object"
+    required:
+    - "cronjob"
+    properties:
+      cronjob:
+        $ref: "#/definitions/CronJob"
+    title: "HistoryCronJobResponse"
+    example:
+      cronjob:
+        metadata:
+          kind: "kind"
+          namespace: "namespace"
+          name: "name"
+        config:
+          todo: "todo"
+        status:
+          todo: "todo"
+  HistoryDeploymentRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "HistoryDeploymentRequest"
+  HistoryDeploymentResponse:
+    type: "object"
+    required:
+    - "deployment"
+    properties:
+      deployment:
+        $ref: "#/definitions/Deployment"
+    title: "HistoryDeploymentResponse"
+    example:
+      deployment:
+        metadata:
+          kind: "kind"
+          namespace: "namespace"
+          name: "name"
+        config:
+          todo: "todo"
+        status:
+          todo: "todo"
+  Job:
+    type: "object"
+    required:
+    - "config"
+    - "metadata"
+    - "status"
+    properties:
+      metadata:
+        $ref: "#/definitions/Metadata"
+      config:
+        $ref: "#/definitions/JobConfig"
+      status:
+        $ref: "#/definitions/JobStatus"
+    title: "Job"
+    example:
+      metadata:
+        kind: "kind"
+        namespace: "namespace"
+        name: "name"
+      config:
+        todo: "todo"
+      status:
+        todo: "todo"
+  JobConfig:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "JobConfig"
+    example:
+      todo: "todo"
+  JobStatus:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "JobStatus"
+    example:
+      todo: "todo"
+  ListNamespaceResponse:
+    type: "object"
+    required:
+    - "namespaces"
+    properties:
+      namespaces:
+        type: "array"
+        items:
+          $ref: "#/definitions/NamespaceSimpleInfo"
+    title: "ListNamespaceResponse"
+    example:
+      namespaces:
+      - name: "name"
+        time: "time"
+        status: "status"
+      - name: "name"
+        time: "time"
+        status: "status"
+  LogsContainerRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "LogsContainerRequest"
+    example:
+      todo: "todo"
+  LogsContainerResponse:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "LogsContainerResponse"
+    example:
+      todo: "todo"
+  LogsCronJobRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "LogsCronJobRequest"
+    example:
+      todo: "todo"
+  LogsCronJobResponse:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "LogsCronJobResponse"
+    example:
+      todo: "todo"
+  LogsDeploymentRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "LogsDeploymentRequest"
+    example:
+      todo: "todo"
+  LogsDeploymentResponse:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "LogsDeploymentResponse"
+    example:
+      todo: "todo"
+  LogsJobRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "LogsJobRequest"
+    example:
+      todo: "todo"
+  LogsJobResponse:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "LogsJobResponse"
+    example:
+      todo: "todo"
+  Metadata:
+    type: "object"
+    required:
+    - "kind"
+    - "name"
+    - "namespace"
+    properties:
+      namespace:
+        type: "string"
+      kind:
+        type: "string"
+      name:
+        type: "string"
+    title: "Metadata"
+    example:
+      kind: "kind"
+      namespace: "namespace"
+      name: "name"
+  Namespace:
+    type: "object"
+    required:
+    - "annotations"
+    - "create_time"
+    - "labels"
+    - "name"
+    - "status"
+    properties:
+      name:
+        type: "string"
+      labels:
+        type: "string"
+      annotations:
+        type: "string"
+      status:
+        type: "string"
+      create_time:
+        type: "string"
+    title: "Namespace"
+    example:
+      create_time: "create_time"
+      name: "name"
+      annotations: "annotations"
+      labels: "labels"
+      status: "status"
+  NamespaceSimpleInfo:
+    type: "object"
+    required:
+    - "name"
+    - "status"
+    - "time"
+    properties:
+      name:
+        type: "string"
+      status:
+        type: "string"
+      time:
+        type: "string"
+    title: "NamespaceSimpleInfo"
+    example:
+      name: "name"
+      time: "time"
+      status: "status"
+  NodeTopRequest:
+    type: "object"
+    required:
+    - "selector"
+    properties:
+      selector:
+        $ref: "#/definitions/Metadata"
+    title: "NodeTopRequest"
+  NodeTopResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "NodeTopResponse"
+    example:
+      error:
+        todo: "todo"
+  RunContainerRequest:
+    type: "object"
+    required:
+    - "container"
+    properties:
+      container:
+        $ref: "#/definitions/Container"
+    title: "RunContainerRequest"
+    example:
+      container:
+        metadata:
+          kind: "kind"
+          namespace: "namespace"
+          name: "name"
+        config:
+          working_dir: "working_dir"
+          on_build:
+          - "on_build"
+          - "on_build"
+          attach_stdout: true
+          healthcheck:
+            retries: 5
+            test:
+            - "test"
+            - "test"
+            start_period: 1
+            interval: 0
+            timeout: 6
+          stop_timeout: 5
+          hostname: "hostname"
+          attach_stderr: true
+          args_escaped: true
+          entrypoint:
+          - "entrypoint"
+          - "entrypoint"
+          mac_address: "mac_address"
+          stop_signal: "stop_signal"
+          stdin_once: true
+          open_stdin: true
+          image: "image"
+          attach_stdin: true
+          domainname: "domainname"
+          exposed_ports:
+          - "exposed_ports"
+          - "exposed_ports"
+          volumes:
+          - "volumes"
+          - "volumes"
+          env:
+          - "env"
+          - "env"
+          network_disabled: true
+          labels: "{}"
+          shell:
+          - "shell"
+          - "shell"
+          tty: true
+          cmd:
+          - "cmd"
+          - "cmd"
+          user: "user"
+        status:
+          todo: "todo"
+  RunContainerResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "RunContainerResponse"
+    example:
+      error:
+        todo: "todo"
+  ScaleRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "ScaleRequest"
+    example:
+      todo: "todo"
+  ScaleResponse:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "ScaleResponse"
+    example:
+      todo: "todo"
+  Token:
+    type: "object"
+    required:
+    - "config"
+    - "metadata"
+    - "status"
+    properties:
+      metadata:
+        $ref: "#/definitions/Metadata"
+      config:
+        $ref: "#/definitions/TokenConfig"
+      status:
+        $ref: "#/definitions/TokenStatus"
+    title: "Token"
+    example:
+      metadata:
+        kind: "kind"
+        namespace: "namespace"
+        name: "name"
+      config:
+        todo: "todo"
+      status:
+        todo: "todo"
+  TokenConfig:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "TokenConfig"
+    example:
+      todo: "todo"
+  TokenStatus:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "TokenStatus"
+    example:
+      todo: "todo"
+  UncordonRequest:
+    type: "object"
+    required:
+    - "selector"
+    properties:
+      selector:
+        $ref: "#/definitions/Metadata"
+    title: "UncordonRequest"
+    example:
+      selector:
+        kind: "kind"
+        namespace: "namespace"
+        name: "name"
+  UncordonResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "UncordonResponse"
+    example:
+      error:
+        todo: "todo"
+  UndoContainerRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "UndoContainerRequest"
+  UndoContainerResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "UndoContainerResponse"
+  UndoCronJobRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "UndoCronJobRequest"
+    example:
+      todo: "todo"
+  UndoCronJobResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "UndoCronJobResponse"
+    example:
+      error:
+        todo: "todo"
+  UndoDeploymentRequest:
+    type: "object"
+    required:
+    - "todo"
+    properties:
+      todo:
+        type: "string"
+    title: "UndoDeploymentRequest"
+    example:
+      todo: "todo"
+  UndoDeploymentResponse:
+    type: "object"
+    required:
+    - "error"
+    properties:
+      error:
+        $ref: "#/definitions/Error"
+    title: "UndoDeploymentResponse"
+    example:
+      error:
+        todo: "todo"

@@ -3,31 +3,27 @@ import (
 )
 
 @server (
-	prefix: namespace
+	prefix: /namespace
 )
 service master-api{
 	@handler CreateNamespace
-	post /create(CreateNamespaceRequest) returns (CreateNamespaceResponse)
+	post /create(CreateNamespaceRequest)
 	
 	@handler GetNamespace
 	get /get(GetNamespaceRequest) returns (GetNamespaceResponse)
 	
 	@handler ListNamespace
 	get /list returns (ListNamespaceResponse)
-
+	
 	@handler DeleteNamespace
 	post /delete(DeleteNamespaceRequest)
 }
 
 // kubectl create namespace <insert-namespace-name-here> OR kubectl create -f ./my-namespace.yaml
 type CreateNamespaceRequest {
-	Name 		string `json:"name"`
-	Labels 		string `json:"labels"`
-	Annotations string `json:"annotations"`
-}
-
-type CreateNamespaceRequest {
-// kubectl describe namespaces <name>
+	Name        string `json:"name"`
+	Labels      string `json:"labels"`
+	Annotations string `json:"annotations,optional"`
 }
 
 type GetNamespaceRequest {
@@ -35,22 +31,18 @@ type GetNamespaceRequest {
 }
 
 type GetNamespaceResponse {
-	Name 		string `json:"name"`
-	Labels 		string `json:"labels"`
-	Annotations string `json:"annotations`
-	Status 		string `json:status`
-	Age 		string `json:time`
+	NamespaceInfo Namespace `json:"namespace"`
 }
 
 // kubectl get namespaces
-type ListNamespacesResponse {
-	Namespaces []Namespace `json:"namespaces"`
+type ListNamespaceResponse {
+	Namespaces []NamespaceSimpleInfo `json:"namespaces"`
 }
 
-type Namespace {
-	Name 	string 	`json:"name"`
-	Status 	string 	`json:"status"`
-	Age 	string 	`json:"time"`
+type NamespaceSimpleInfo {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	Age    string `json:"time"`
 }
 
 // kubectl delete namespaces <insert-some-namespace-name>

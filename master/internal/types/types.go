@@ -210,7 +210,11 @@ type Command struct {
 }
 
 type Namespace struct {
-	Name string `json:"name"`
+	Name        string `json:"name"`
+	Labels      string `json:"labels"`
+	Annotations string `json:"annotations"`
+	Status      string `json:"status"`
+	CreateTime  string `json:"create_time"`
 }
 
 type CreateCronJobRequest struct {
@@ -382,27 +386,31 @@ type LogsJobResponse struct {
 }
 
 type CreateNamespaceRequest struct {
-	Todo string `json:"todo"`
+	Name        string `json:"name"`
+	Labels      string `json:"labels"`
+	Annotations string `json:"annotations,optional"`
 }
 
 type GetNamespaceRequest struct {
-	Todo string `json:"todo"`
+	Name string `json:"name"`
 }
 
 type GetNamespaceResponse struct {
-	Namespace Namespace `json:"namespace"`
+	NamespaceInfo Namespace `json:"namespace"`
 }
 
-type ListNamespacesRequest struct {
-	Todo string `json:"todo"`
+type ListNamespaceResponse struct {
+	Namespaces []NamespaceSimpleInfo `json:"namespaces"`
 }
 
-type ListNamespacesResponse struct {
-	Namespaces []Namespace `json:"namespaces"`
+type NamespaceSimpleInfo struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	Age    string `json:"time"`
 }
 
 type DeleteNamespaceRequest struct {
-	Todo string `json:"todo"`
+	Name string `json:"name"`
 }
 
 type NodeTopRequest struct {

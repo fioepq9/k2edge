@@ -1,0 +1,542 @@
+import (
+	"tmp_global.api"
+)
+
+@server(
+	prefix: /cluster
+)
+service master-api{
+	@handler ClusterInfo
+	get /info returns (ClusterInfoResponse)
+}
+
+type ClusterInfoResponse {
+	Todo string `json:"todo"`
+}
+
+
+@server (
+	prefix: /container
+)
+service master-api{
+	@handler CreateContainer
+	post /create(CreateContainerRequest) returns (CreateContainerResponse)
+	
+	@handler GetContainer
+	get /get(GetContainerRequest) returns (GetContainerResponse)
+	
+	@handler DeleteContainer
+	post /delete(DeleteContainerRequest) returns (DeleteContainerResponse)
+	
+	@handler RunContainer
+	post /run(RunContainerRequest) returns (RunContainerResponse)
+	
+	@handler ApplyContainer
+	post /apply(ApplyContainerRequest) returns (ApplyContainerResponse)
+	
+	@handler AttachContainer
+	post /attach(AttachContainerRequest) returns (AttachContainerResponse)
+	
+	@handler ExecContainer
+	post /exec(ExecContainerRequest) returns (ExecContainerResponse)
+	
+	@handler LogsContainer
+	post /logs(LogsContainerRequest) returns (LogsContainerResponse)
+	
+	@handler ContainerTop
+	get /top(ContainerTopRequest) returns (ContainerTopResponse)
+}
+
+type CreateContainerRequest {
+	Todo string `json:"todo"`
+}
+
+type CreateContainerResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type GetContainerRequest {
+	Todo string `json:"todo"`
+}
+
+type GetContainerResponse {
+	Container Container `json:"container"`
+}
+
+type DeleteContainerRequest {
+	Todo string `json:"todo"`
+}
+
+type DeleteContainerResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type RunContainerRequest {
+	Container Container `json:"container"`
+}
+
+type RunContainerResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type ApplyContainerRequest {
+	Todo string `json:"todo"`
+}
+
+type ApplyContainerResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type HistoryContainerRequest {
+	Todo string `json:"todo"`
+}
+
+type HistoryContainerResponse {
+	Container Container `json:"container"`
+}
+
+type UndoContainerRequest {
+	Todo string `json:"todo"`
+}
+
+type UndoContainerResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type AttachContainerRequest {
+	Todo string `json:"todo"`
+}
+
+type AttachContainerResponse {
+	Todo string `json:"todo"`
+}
+
+type ExecContainerRequest {
+	Todo string `json:"todo"`
+}
+
+type ExecContainerResponse {
+	Todo string `json:"todo"`
+}
+
+type LogsContainerRequest {
+	Todo string `json:"todo"`
+}
+
+type LogsContainerResponse {
+	Todo string `json:"todo"`
+}
+
+type ContainerTopRequest {
+	Selector Metadata `json:"selector"`
+}
+
+type ContainerTopResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+
+@server (
+	prefix: /cronjob
+)
+service master-api{
+	@handler CreateCronJob
+	post /create(CreateCronJobRequest) returns (CreateCronJobResponse)
+	
+	@handler GetCronJob
+	get /get(GetCronJobRequest) returns (GetCronJobResponse)
+	
+	@handler DeleteCronJob
+	post /delete(DeleteCronJobRequest) returns (DeleteCronJobResponse)
+	
+	@handler ApplyCronJob
+	post /apply(ApplyCronJobRequest) returns (ApplyCronJobResponse)
+	
+	@handler HistoryCronJob
+	get /rollout/history(HistoryCronJobRequest) returns (HistoryCronJobResponse)
+	
+	@handler UndoCronJob
+	post /rollout/undo(UndoCronJobRequest) returns (UndoCronJobResponse)
+	
+	@handler LogsCronJob
+	post /logs(LogsCronJobRequest) returns (LogsCronJobResponse)
+}
+
+type CreateCronJobRequest {
+	Todo string `json:"todo"`
+}
+
+type CreateCronJobResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type GetCronJobRequest {
+	Todo string `json:"todo"`
+}
+
+type GetCronJobResponse {
+	CronJob CronJob `json:"cronjob"`
+}
+
+type DeleteCronJobRequest {
+	Todo string `json:"todo"`
+}
+
+type DeleteCronJobResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type ApplyCronJobRequest {
+	Todo string `json:"todo"`
+}
+
+type ApplyCronJobResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type HistoryCronJobRequest {
+	Todo string `json:"todo"`
+}
+
+type HistoryCronJobResponse {
+	CronJob CronJob `json:"cronjob"`
+}
+
+type UndoCronJobRequest {
+	Todo string `json:"todo"`
+}
+
+type UndoCronJobResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type LogsCronJobRequest {
+	Todo string `json:"todo"`
+}
+
+type LogsCronJobResponse {
+	Todo string `json:"todo"`
+}
+
+
+@server (
+	prefix: /deployment
+)
+service master-api {
+	@handler CreateDeployment
+	post /create(CreateDeploymentRequest) returns (CreateDeploymentResponse)
+	
+	@handler GetDeployment
+	get /get(GetDeploymentRequest) returns (GetDeploymentResponse)
+	
+	@handler DeleteDeployment
+	post /delete(DeleteDeploymentRequest) returns (DeleteDeploymentResponse)
+	
+	@handler ApplyDeployment
+	post /apply(ApplyDeploymentRequest) returns (ApplyDeploymentResponse)
+	
+	@handler HistoryDeployment
+	get /rollout/history(HistoryDeploymentRequest) returns (HistoryDeploymentResponse)
+	
+	@handler UndoDeployment
+	post /rollout/undo(UndoDeploymentRequest) returns (UndoDeploymentResponse)
+	
+	@handler Scale
+	post /scale(ScaleRequest) returns (ScaleResponse)
+	
+	@handler AttachDeployment
+	post /attach(AttachDeploymentRequest) returns (AttachDeploymentResponse)
+	
+	@handler ExecDeployment
+	post /exec(ExecDeploymentRequest) returns (ExecDeploymentResponse)
+	
+	@handler LogsDeployment
+	post /logs(LogsDeploymentRequest) returns (LogsDeploymentResponse)
+}
+
+type CreateDeploymentRequest {
+	Todo string `json:"todo"`
+}
+
+type CreateDeploymentResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type GetDeploymentRequest {
+	Todo string `json:"todo"`
+}
+
+type GetDeploymentResponse {
+	Deployment Deployment `json:"deployment"`
+}
+
+type DeleteDeploymentRequest {
+	Todo string `json:"todo"`
+}
+
+type DeleteDeploymentResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type ApplyDeploymentRequest {
+	Todo string `json:"todo"`
+}
+
+type ApplyDeploymentResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type HistoryDeploymentRequest {
+	Todo string `json:"todo"`
+}
+
+type HistoryDeploymentResponse {
+	Deployment Deployment `json:"deployment"`
+}
+
+type UndoDeploymentRequest {
+	Todo string `json:"todo"`
+}
+
+type UndoDeploymentResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type ScaleRequest {
+	Todo string `json:"todo"`
+}
+
+type ScaleResponse {
+	Todo string `json:"todo"`
+}
+
+type AttachDeploymentRequest {
+	Todo string `json:"todo"`
+}
+
+type AttachDeploymentResponse {
+	Todo string `json:"todo"`
+}
+
+type ExecDeploymentRequest {
+	Todo string `json:"todo"`
+}
+
+type ExecDeploymentResponse {
+	Todo string `json:"todo"`
+}
+
+type LogsDeploymentRequest {
+	Todo string `json:"todo"`
+}
+
+type LogsDeploymentResponse {
+	Todo string `json:"todo"`
+}
+
+
+@server (
+	prefix: /namespace
+)
+service master-api{
+	@handler CreateNamespace
+	post /create(CreateNamespaceRequest)
+	
+	@handler GetNamespace
+	get /get(GetNamespaceRequest) returns (GetNamespaceResponse)
+	
+	@handler ListNamespace
+	get /list returns (ListNamespaceResponse)
+	
+	@handler DeleteNamespace
+	post /delete(DeleteNamespaceRequest)
+}
+
+// kubectl create namespace <insert-namespace-name-here> OR kubectl create -f ./my-namespace.yaml
+type CreateNamespaceRequest {
+	Name        string `json:"name"`
+	Labels      string `json:"labels"`
+	Annotations string `json:"annotations,optional"`
+}
+
+type GetNamespaceRequest {
+	Name string `json:"name"`
+}
+
+type GetNamespaceResponse {
+	NamespaceInfo Namespace `json:"namespace"`
+}
+
+// kubectl get namespaces
+type ListNamespaceResponse {
+	Namespaces []NamespaceSimpleInfo `json:"namespaces"`
+}
+
+type NamespaceSimpleInfo {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	Age    string `json:"time"`
+}
+
+// kubectl delete namespaces <insert-some-namespace-name>
+type DeleteNamespaceRequest {
+	Name string `json:"name"`
+}
+
+
+@server (
+	prefix: /job
+)
+service master-api{
+	@handler CreateJob
+	post /create(CreateJobRequest) returns (CreateJobResponse)
+	
+	@handler GetJob
+	get /get(GetJobRequest) returns (GetJobResponse)
+	
+	@handler DeleteJob
+	post /delete(DeleteJobRequest) returns (DeleteJobResponse)
+	
+	@handler ApplyJob
+	post /apply(DeleteJobRequest) returns (DeleteJobResponse)
+	
+	@handler LogsJob
+	post /logs(LogsJobRequest) returns (LogsJobResponse)
+}
+
+type CreateJobRequest {
+	Todo string `json:"todo"`
+}
+
+type CreateJobResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type GetJobRequest {
+	Todo string `json:"todo"`
+}
+
+type GetJobResponse {
+	Job Job `json:"job"`
+}
+
+type DeleteJobRequest {
+	Todo string `json:"todo"`
+}
+
+type DeleteJobResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type LogsJobRequest {
+	Todo string `json:"todo"`
+}
+
+type LogsJobResponse {
+	Todo string `json:"todo"`
+}
+
+@server(
+	prefix: /node
+)
+
+service master-api{
+	// NodeTop run command top
+	@handler NodeTop
+	get /top(NodeTopRequest) returns (NodeTopResponse)
+	
+	// Cordon mark node as unschedulable
+	@handler Cordon
+	post /cordon(CordonRequest) returns (CordonResponse)
+	
+	// Uncordon mark node as schedulable
+	@handler Uncordon
+	post /uncordon(UncordonRequest) returns (UncordonResponse)
+	
+	// Drain remove all containers in the node and mark it as unschedulable
+	@handler Drain
+	post /drain(DrainRequest) returns (DrainResponse)
+}
+
+type NodeTopRequest {
+	Selector Metadata `json:"selector"`
+}
+
+type NodeTopResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type CordonRequest {
+	Selector Metadata `json:"selector"`
+}
+
+type CordonResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type UncordonRequest {
+	Selector Metadata `json:"selector"`
+}
+
+type UncordonResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type DrainRequest {
+	Selector Metadata `json:"selector"`
+}
+
+type DrainResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+
+@server (
+	prefix: /token
+)
+service master-api{
+	@handler CreateToken
+	post /create(CreateTokenRequest) returns (CreateTokenResponse)
+	
+	@handler GetToken
+	get /get(GetTokenRequest) returns (GetTokenResponse)
+	
+	@handler DeleteToken
+	post /delete(DeleteTokenRequest) returns (DeleteTokenResponse)
+	
+	@handler ApplyToken
+	post /apply(DeleteTokenRequest) returns (DeleteTokenResponse)
+	
+}
+
+type CreateTokenRequest {
+	Todo string `json:"todo"`
+}
+
+type CreateTokenResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type GetTokenRequest {
+	Todo string `json:"todo"`
+}
+
+type GetTokenResponse {
+	Token Token `json:"token"`
+}
+
+type DeleteTokenRequest {
+	Todo string `json:"todo"`
+}
+
+type DeleteTokenResponse {
+	Error Error `json:"error,omitempty"`
+}
+
+type ApplyTokenRequest {
+	Todo string `json:"todo"`
+}
+
+type ApplyTokenResponse {
+	Error Error `json:"error,omitempty"`
+}
