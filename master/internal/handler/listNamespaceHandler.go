@@ -3,17 +3,23 @@ package handler
 import (
 	"net/http"
 
-	"k2edge/master/internal/types"
 	"k2edge/master/internal/logic"
 	"k2edge/master/internal/svc"
+	"k2edge/master/internal/types"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func ListNamespaceHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		var req types.ListNamespaceRequest
+		if err := httpx.Parse(r, &req); err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+			return
+		}
+
 		l := logic.NewListNamespaceLogic(r.Context(), svcCtx)
-		resp, err := l.ListNamespace()
+		resp, err := l.ListNamespace(&req)
 		var body types.Response
 		if err != nil {
 			body.Code = -1

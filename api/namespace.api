@@ -34,7 +34,7 @@ type GetNamespaceResponse {
 
 // kubectl get namespaces
 type ListNamespaceRequest {
-	All bool `form:"all,optional"`
+	All bool `form:"all, default=true"`
 }
 
 type ListNamespaceResponse {

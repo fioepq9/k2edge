@@ -26,10 +26,10 @@ func NewGetNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetN
 
 func (l *GetNamespaceLogic) GetNamespace(req *types.GetNamespaceRequest) (resp *types.GetNamespaceResponse, err error) {
 	n := l.svcCtx.DatabaseQuery.Namespace
-	namespace, err := n.WithContext(l.ctx).Where(n.Name.Eq(req.Name)).First()
+	namespace, dbErr := n.WithContext(l.ctx).Where(n.Name.Eq(req.Name)).First()
 
-	if err != nil {
-		return nil, err
+	if dbErr != nil {
+		return nil, dbErr
 	}
 	resp = new(types.GetNamespaceResponse)
 	resp.NamespaceInfo = types.Namespace{

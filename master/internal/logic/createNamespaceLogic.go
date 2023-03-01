@@ -28,9 +28,9 @@ func (l *CreateNamespaceLogic) CreateNamespace(req *types.CreateNamespaceRequest
 	n := l.svcCtx.DatabaseQuery.Namespace
 	namespace := model.Namespace{Name: req.Name, Status: "Active"}
 
-	err := n.WithContext(l.ctx).Create(&namespace)
-	if err != nil {
-		return err
+	dbErr := n.WithContext(l.ctx).Create(&namespace)
+	if dbErr != nil {
+		return dbErr
 	}
 
 	return nil

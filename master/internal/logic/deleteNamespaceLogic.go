@@ -24,7 +24,11 @@ func NewDeleteNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *D
 }
 
 func (l *DeleteNamespaceLogic) DeleteNamespace(req *types.DeleteNamespaceRequest) error {
-	// todo: add your logic here and delete this line
+	n := l.svcCtx.DatabaseQuery.Namespace;
+	_, dbErr := n.WithContext(l.ctx).Where(n.Name.Eq(req.Name)).Delete()
 
+	if dbErr != nil {
+		return dbErr
+	}
 	return nil
 }

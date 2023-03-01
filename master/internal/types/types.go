@@ -396,7 +396,7 @@ type GetNamespaceResponse struct {
 }
 
 type ListNamespaceRequest struct {
-	All bool `form:"all,optional"`
+	All bool `form:"all, default=true"`
 }
 
 type ListNamespaceResponse struct {
