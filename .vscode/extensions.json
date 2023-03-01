@@ -4,6 +4,7 @@
         "jinliming2.vscode-go-template",
         "golang.go",
         "eamodio.gitlens",
-        "ms-python.python"
+        "ms-python.python",
+        "ms-vscode.makefile-tools"
     ]
 }

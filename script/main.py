@@ -22,7 +22,7 @@ def updateAPI(w: bool = True, m: bool = True):
     if code != 0:
         Alert()
         return
-    if w: RunCommand("goctl api go -api ./api/worker.api -dir ./worker -style goZero")
+    if w: RunCommand("goctl api go -api ./api/worker.api -dir ./worker -style goZero --home ./template")
     if m: RunCommand("goctl api go -api ./api/master.api -dir ./master -style goZero --home ./template")
 
 
