@@ -1,7 +1,6 @@
 package client
 
 import (
-	"errors"
 	"fmt"
 	"k2edge/worker/internal/types"
 	"time"
@@ -22,25 +21,21 @@ func NewClient(BaseURL string) *Client {
 		AddCommonRetryCondition(func(resp *req.Response, err error) bool {
 			return err != nil || resp.StatusCode >= 500
 		}).
-		WrapRoundTripFunc(func(rt req.RoundTripper) req.RoundTripFunc {
-			return func(req *req.Request) (resp *req.Response, err error) {
-				resp, err = rt.RoundTrip(req)
-				if err != nil {
-					return nil, err
-				}
-				if resp.Err != nil {
-					return nil, resp.Err
-				}
-				if resp.IsErrorState() {
-					return nil, fmt.Errorf("bad response, raw content:\n%s", resp.Dump())
-				}
-				if r, ok := resp.SuccessResult().(types.Response); ok {
-					if r.Code != 0 {
-						return nil, errors.New(r.Msg)
-					}
-				}
-				return resp, err
+		OnAfterResponse(func(client *req.Client, resp *req.Response) error {
+			if resp.Err != nil {
+				return nil
 			}
+			if !resp.IsSuccessState() {
+				resp.Err = fmt.Errorf("bad response, raw content:\n%s", resp.Dump())
+				return nil
+			}
+			if r, ok := resp.SuccessResult().(*types.Response); ok {
+				if r.Code != 0 {
+					resp.Err = fmt.Errorf("code: %d, msg: %s", r.Code, r.Msg)
+					return nil
+				}
+			}
+			return nil
 		})
 	return &cli
 }
