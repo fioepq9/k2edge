@@ -874,26 +874,18 @@
         "name": {
           "type": "string"
         },
-        "labels": {
-          "type": "string"
-        },
-        "annotations": {
-          "type": "string"
-        },
         "status": {
           "type": "string"
         },
-        "create_time": {
+        "age": {
           "type": "string"
         }
       },
       "title": "Namespace",
       "required": [
         "name",
-        "labels",
-        "annotations",
         "status",
-        "create_time"
+        "age"
       ]
     },
     "RemoveContainerRequest": {

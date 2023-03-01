@@ -1,9 +1,13 @@
 .PHONY: all clean
-all: api swagger dao
+all: api swagger dao cleancache
 
 api: worker-api master-api
-dao: mysql
+worker: worker-api worker-swagger dao
+master: master-api master-swagger dao cleancache
 swagger: worker-swagger master-swagger
+dao: mysql
+cleancache:
+	rm -rf tmp
 
 worker-api:
 	goctl api format --dir ./api

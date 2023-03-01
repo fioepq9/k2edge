@@ -199,11 +199,9 @@ type Command struct {
 }
 
 type Namespace struct {
-	Name        string `json:"name"`
-	Labels      string `json:"labels"`
-	Annotations string `json:"annotations"`
-	Status      string `json:"status"`
-	CreateTime  string `json:"create_time"`
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	Age    string `json:"age"`
 }
 
 type Response struct {
