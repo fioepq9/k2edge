@@ -8,6 +8,7 @@ type Error {
 	Todo string `json:"todo"`
 }
 
+//>>>>>>>>>>>>>>>>>>>>>>>>>>> Worker <<<<<<<<<<<<<<<<<<<<<<<<<<
 type HealthConfig {
 	// Test is the test to perform to check that the container is healthy.
 	// An empty slice means to inherit the default.
@@ -56,16 +57,59 @@ type ContainerConfig {
 	Shell           []string      `json:"shell,optional"`            // Shell for shell-form of RUN, CMD, ENTRYPOINT
 }
 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>> Container <<<<<<<<<<<<<<<<<<<<<<<<<<
 type ContainerStatus {
 	Todo string `json:"todo"`
 }
 
 type Container {
-	Metadata Metadata        `json:"metadata"`
-	Config   ContainerConfig `json:"config"`
-	Status   ContainerStatus `json:"status"`
+	Metadata 			Metadata        `json:"metadata"`
+	ContainerTemplate	ContainerTemplate	`json:"container_template"` 
 }
 
+type ContainerTemplate {
+	Image 	string 			`json:"image"`
+	Command string 			`json:"command"`
+	Args	[]string 		`json:"args"`
+	Expose	[]ExposedPort	`json:"expose"`
+	Env		[]string		`json:"env"`
+}
+
+type ExposedPort {
+	Port		int64 	`json:"port"`
+	Protocol	string 	`json:"protocol"`
+	HostPort	int64 	`json:"host_port"`
+}
+
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>> Job <<<<<<<<<<<<<<<<<<<<<<<<<<
+type JobConfig {
+	Todo string `json:"todo"`
+}
+
+type JobStatus {
+	Todo string `json:"todo"`
+}
+
+type Job {
+	Metadata 	Metadata  	`json:"metadata"`
+	Node 		string 		`json:"node"`
+	Containers	[]string 	`json:"containers"`
+	Completions	int64		`json:"completions"`
+	BackoffLimit	int64	`json:"backoffLimit"`
+	activeDeadlineSeconds int64 `json:activeDeadlineSeconds`
+	StartTime 	string		`json:start_time`
+	CompletionTime	string	`json:completion_time`
+	Active 		int64 		`json:"active"`
+	Failed		int64		`json:"failed"`
+	Succeeded	int64		`json:"succeeded"`
+	Status		string		`json:"status"`
+	
+	Template	container_template	`json:"template"`
+}
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>> CronJob <<<<<<<<<<<<<<<<<<<<<<<<<<
 type CronJobConfig {
 	Todo string `json:"todo"`
 }
@@ -80,6 +124,8 @@ type CronJob {
 	Status   CronJobStatus `json:"status"`
 }
 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>> Deployment <<<<<<<<<<<<<<<<<<<<<<<<<<
 type DeploymentConfig {
 	Todo string `json:"todo"`
 }
@@ -94,20 +140,8 @@ type Deployment {
 	Status   DeploymentStatus `json:"status"`
 }
 
-type JobConfig {
-	Todo string `json:"todo"`
-}
 
-type JobStatus {
-	Todo string `json:"todo"`
-}
-
-type Job {
-	Metadata Metadata  `json:"metadata"`
-	Config   JobConfig `json:"config"`
-	Status   JobStatus `json:"status"`
-}
-
+//>>>>>>>>>>>>>>>>>>>>>>>>>>> Token <<<<<<<<<<<<<<<<<<<<<<<<<<
 type TokenConfig {
 	Todo string `json:"todo"`
 }
@@ -122,6 +156,8 @@ type Token {
 	Status   TokenStatus `json:"status"`
 }
 
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>> Other <<<<<<<<<<<<<<<<<<<<<<<<<<
 type Command {
 	Todo string `json:"todo"`
 }

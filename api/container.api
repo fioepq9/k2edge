@@ -35,7 +35,7 @@ service master-api{
 }
 
 type CreateContainerRequest {
-	Todo string `json:"todo"`
+	
 }
 
 type CreateContainerResponse {
