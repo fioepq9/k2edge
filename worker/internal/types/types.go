@@ -19,7 +19,7 @@ type RemoveContainerRequest struct {
 
 type StopContainerRequest struct {
 	ID      string `json:"id"`
-	Timeout int64  `json:"timeout,optional"`
+	Timeout int    `json:"timeout,optional"`
 }
 
 type StartContainerRequest struct {

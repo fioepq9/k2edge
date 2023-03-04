@@ -2,11 +2,11 @@ package logic
 
 import (
 	"context"
-	"time"
 
 	"k2edge/worker/internal/svc"
 	"k2edge/worker/internal/types"
 
+	"github.com/docker/docker/api/types/container"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,9 +25,11 @@ func NewStopContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Sto
 }
 
 func (l *StopContainerLogic) StopContainer(req *types.StopContainerRequest) error {
-	var timeout *time.Duration
+	var timeout *int
 	if req.Timeout != 0 {
-		timeout = (*time.Duration)(&req.Timeout)
+		timeout = &req.Timeout
 	}
-	return l.svcCtx.DockerClient.ContainerStop(l.ctx, req.ID, timeout)
+	return l.svcCtx.DockerClient.ContainerStop(l.ctx, req.ID, container.StopOptions{
+		Timeout: timeout,
+	})
 }

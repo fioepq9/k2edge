@@ -34,7 +34,7 @@ type RemoveContainerRequest {
 
 type StopContainerRequest {
 	ID      string `json:"id"`
-	Timeout int64  `json:"timeout,optional"`
+	Timeout int    `json:"timeout,optional"`
 }
 
 type StartContainerRequest {
