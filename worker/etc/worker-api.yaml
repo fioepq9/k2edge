@@ -3,9 +3,10 @@ Host: 0.0.0.0
 Port: 8888
 Mode: dev
 
-Postgresql:
-  Host: localhost
-  User: k2edge
-  Password: "1234567890"
-  DBName: k2edge
-  Port: 5432
+Master:
+  BaseURL:
+
+Etcd:
+  Endpoints:
+    - 127.0.0.1:2379
+  DialTimeout: 5
