@@ -57,31 +57,29 @@ type ContainerConfig {
 	Shell           []string      `json:"shell,optional"`            // Shell for shell-form of RUN, CMD, ENTRYPOINT
 }
 
-
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Container <<<<<<<<<<<<<<<<<<<<<<<<<<
 type ContainerStatus {
 	Todo string `json:"todo"`
 }
 
 type Container {
-	Metadata 			Metadata        `json:"metadata"`
-	ContainerTemplate	ContainerTemplate	`json:"container_template"` 
+	Metadata          Metadata          `json:"metadata"`
+	ContainerTemplate ContainerTemplate `json:"container_template"`
 }
 
 type ContainerTemplate {
-	Image 	string 			`json:"image"`
-	Command string 			`json:"command"`
-	Args	[]string 		`json:"args"`
-	Expose	[]ExposedPort	`json:"expose"`
-	Env		[]string		`json:"env"`
+	Image   string        `json:"image"`
+	Command string        `json:"command"`
+	Args    []string      `json:"args"`
+	Expose  []ExposedPort `json:"expose"`
+	Env     []string      `json:"env"`
 }
 
 type ExposedPort {
-	Port		int64 	`json:"port"`
-	Protocol	string 	`json:"protocol"`
-	HostPort	int64 	`json:"host_port"`
+	Port     int64  `json:"port"`
+	Protocol string `json:"protocol"`
+	HostPort int64  `json:"host_port"`
 }
-
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Job <<<<<<<<<<<<<<<<<<<<<<<<<<
 type JobConfig {
@@ -93,20 +91,20 @@ type JobStatus {
 }
 
 type Job {
-	Metadata 	Metadata  	`json:"metadata"`
-	Node 		string 		`json:"node"`
-	Containers	[]string 	`json:"containers"`
-	Completions	int64		`json:"completions"`
-	BackoffLimit	int64	`json:"backoffLimit"`
-	activeDeadlineSeconds int64 `json:activeDeadlineSeconds`
-	StartTime 	string		`json:start_time`
-	CompletionTime	string	`json:completion_time`
-	Active 		int64 		`json:"active"`
-	Failed		int64		`json:"failed"`
-	Succeeded	int64		`json:"succeeded"`
-	Status		string		`json:"status"`
-	
-	Template	container_template	`json:"template"`
+	Metadata              Metadata `json:"metadata"`
+	Node                  string   `json:"node"`
+	Containers            []string `json:"containers"`
+	Completions           int64    `json:"completions"`
+	BackoffLimit          int64    `json:"backoff_limit"`
+	ActiveDeadlineSeconds int64    `json:"active_deadline_seconds"`
+	StartTime             string   `json:"start_time"`
+	CompletionTime        string   `json:"completion_time"`
+	Active                int64    `json:"active"`
+	Failed                int64    `json:"failed"`
+	Succeeded             int64    `json:"succeeded"`
+	Status                string   `json:"status"`
+
+	Template ContainerTemplate `json:"template"`
 }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> CronJob <<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -124,7 +122,6 @@ type CronJob {
 	Status   CronJobStatus `json:"status"`
 }
 
-
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Deployment <<<<<<<<<<<<<<<<<<<<<<<<<<
 type DeploymentConfig {
 	Todo string `json:"todo"`
@@ -139,7 +136,6 @@ type Deployment {
 	Config   DeploymentConfig `json:"config"`
 	Status   DeploymentStatus `json:"status"`
 }
-
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Token <<<<<<<<<<<<<<<<<<<<<<<<<<
 type TokenConfig {
@@ -156,6 +152,13 @@ type Token {
 	Status   TokenStatus `json:"status"`
 }
 
+//>>>>>>>>>>>>>>>>>>>>>>>>>>> Node <<<<<<<<<<<<<<<<<<<<<<<<<<
+type Node {
+	Metadata     Metadata `json:"metadata"`
+	BaseURL      string   `json:"base_url"`
+	Status       string   `json:"status"`
+	RegisterTime int64    `json:"register_time"`
+}
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Other <<<<<<<<<<<<<<<<<<<<<<<<<<
 type Command {
@@ -163,7 +166,7 @@ type Command {
 }
 
 type Namespace {
-	Name   string `json:"name"`
-	Status string `json:"status"`
-	Age    string `json:"age"`
+	Metadata Metadata `json:"metadata"`
+	Status   string   `json:"status"`
+	Age      string   `json:"age"`
 }

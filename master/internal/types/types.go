@@ -6,7 +6,6 @@ type ClusterInfoResponse struct {
 }
 
 type CreateContainerRequest struct {
-	Todo string `json:"todo"`
 }
 
 type CreateContainerResponse struct {
@@ -144,9 +143,46 @@ type ContainerStatus struct {
 }
 
 type Container struct {
-	Metadata Metadata        `json:"metadata"`
-	Config   ContainerConfig `json:"config"`
-	Status   ContainerStatus `json:"status"`
+	Metadata          Metadata          `json:"metadata"`
+	ContainerTemplate ContainerTemplate `json:"container_template"`
+}
+
+type ContainerTemplate struct {
+	Image   string        `json:"image"`
+	Command string        `json:"command"`
+	Args    []string      `json:"args"`
+	Expose  []ExposedPort `json:"expose"`
+	Env     []string      `json:"env"`
+}
+
+type ExposedPort struct {
+	Port     int64  `json:"port"`
+	Protocol string `json:"protocol"`
+	HostPort int64  `json:"host_port"`
+}
+
+type JobConfig struct {
+	Todo string `json:"todo"`
+}
+
+type JobStatus struct {
+	Todo string `json:"todo"`
+}
+
+type Job struct {
+	Metadata              Metadata          `json:"metadata"`
+	Node                  string            `json:"node"`
+	Containers            []string          `json:"containers"`
+	Completions           int64             `json:"completions"`
+	BackoffLimit          int64             `json:"backoff_limit"`
+	ActiveDeadlineSeconds int64             `json:"active_deadline_seconds"`
+	StartTime             string            `json:"start_time"`
+	CompletionTime        string            `json:"completion_time"`
+	Active                int64             `json:"active"`
+	Failed                int64             `json:"failed"`
+	Succeeded             int64             `json:"succeeded"`
+	Status                string            `json:"status"`
+	Template              ContainerTemplate `json:"template"`
 }
 
 type CronJobConfig struct {
@@ -177,20 +213,6 @@ type Deployment struct {
 	Status   DeploymentStatus `json:"status"`
 }
 
-type JobConfig struct {
-	Todo string `json:"todo"`
-}
-
-type JobStatus struct {
-	Todo string `json:"todo"`
-}
-
-type Job struct {
-	Metadata Metadata  `json:"metadata"`
-	Config   JobConfig `json:"config"`
-	Status   JobStatus `json:"status"`
-}
-
 type TokenConfig struct {
 	Todo string `json:"todo"`
 }
@@ -205,14 +227,21 @@ type Token struct {
 	Status   TokenStatus `json:"status"`
 }
 
+type Node struct {
+	Metadata     Metadata `json:"metadata"`
+	BaseURL      string   `json:"base_url"`
+	Status       string   `json:"status"`
+	RegisterTime int64    `json:"register_time"`
+}
+
 type Command struct {
 	Todo string `json:"todo"`
 }
 
 type Namespace struct {
-	Name   string `json:"name"`
-	Status string `json:"status"`
-	Age    string `json:"age"`
+	Metadata Metadata `json:"metadata"`
+	Status   string   `json:"status"`
+	Age      string   `json:"age"`
 }
 
 type CreateCronJobRequest struct {

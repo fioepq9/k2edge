@@ -5,5 +5,5 @@ Mode: dev
 
 Etcd:
   Endpoints:
-    - 127.0.0.1:2379
+    - outlg.xyz:2379
   DialTimeout: 5

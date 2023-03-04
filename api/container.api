@@ -35,7 +35,6 @@ service master-api{
 }
 
 type CreateContainerRequest {
-	
 }
 
 type CreateContainerResponse {
