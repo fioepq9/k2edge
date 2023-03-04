@@ -1,58 +1,29 @@
 package svc
 
 import (
-	"fmt"
 	"k2edge/master/internal/config"
-	"k2edge/query"
+	"time"
 
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
-
-type DSN struct {
-	username string
-	password string
-	host     string
-	port     int
-	db       string
-}
-
-func NewDSN(username, password, host string, port int, db string) DSN {
-	return DSN{
-		username: username,
-		password: password,
-		host:     host,
-		port:     port,
-		db:       db,
-	}
-}
-
-func (d DSN) MySQL() string {
-	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=true&loc=Local&timeout=30s",
-		d.username,
-		d.password,
-		d.host,
-		d.port,
-		d.db,
-	)
-}
 
 type ServiceContext struct {
 	Config config.Config
-	DatabaseQuery *query.Query
+	Etcd   *clientv3.Client
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	databaseConnection, err := gorm.Open(mysql.Open(NewDSN("root", "1234567890", "outlg.xyz", 3306, "k2edge").MySQL()), &gorm.Config{})
+	config := clientv3.Config{
+		Endpoints:   c.Etcd.Endpoints,
+		DialTimeout: time.Duration(c.Etcd.DialTimeout) * time.Second,
+	}
+
+	etcd, err := clientv3.New(config)
 	if err != nil {
 		panic(err)
 	}
-
-	databaseQuery := query.Use(databaseConnection)
-
 	return &ServiceContext{
 		Config: c,
-		DatabaseQuery: databaseQuery,
+		Etcd:   etcd,
 	}
 }
