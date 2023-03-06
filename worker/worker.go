@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"time"
 
+	"k2edge/etcdutil"
 	"k2edge/worker/internal/config"
 	"k2edge/worker/internal/handler"
 	"k2edge/worker/internal/svc"
@@ -14,7 +14,6 @@ import (
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
-	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 var configFile = flag.String("f", "etc/worker-api.yaml", "the config file")
@@ -45,18 +44,13 @@ func main() {
 }
 
 func RegisterWorker(ctx *svc.ServiceContext) (func() error, error) {
-	c, _ := context.WithTimeout(context.TODO(), 10*time.Second)
-	gresp, err := ctx.Etcd.KV.Get(c, "workers")
+	c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	workers, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "workers")
 	if err != nil {
 		return nil, err
 	}
-	val := gresp.Kvs[0].Value
-	var workers []types.Node
-	err = json.Unmarshal(val, &workers)
-	if err != nil {
-		return nil, err
-	}
-	for _, w := range workers {
+	for _, w := range *workers {
 		if w.Metadata.Name == ctx.Config.Name {
 			return nil, fmt.Errorf("exist name: %s", ctx.Config.Name)
 		}
@@ -68,47 +62,25 @@ func RegisterWorker(ctx *svc.ServiceContext) (func() error, error) {
 			Name:      ctx.Config.Name,
 		},
 		BaseURL:      fmt.Sprintf("%s:%d", ctx.Config.Host, ctx.Config.Port),
-		Status:       "",
-		RegisterTime: 0,
+		Status:       "active",
+		RegisterTime: time.Now().Unix(),
 	}
-	workers = append(workers, node)
-	b, err := json.Marshal(workers)
-	if err != nil {
-		return nil, err
-	}
-	_, err = ctx.Etcd.KV.Put(c, "workers", string(b))
-	if err != nil {
-		return nil, err
-	}
+	*workers = append(*workers, node)
+	etcdutil.PutOne(ctx.Etcd, c, "workers", *workers)
 	return func() error {
-		c, _ := context.WithTimeout(context.TODO(), 10*time.Second)
-		workers, err := Get[[]types.Node](ctx.Etcd, c, "workers")
+		c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+		defer cancel()
+		workers, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "workers")
 		if err != nil {
 			return err
 		}
 		newWorkers := make([]types.Node, 0)
 		for _, w := range *workers {
 			if w.Metadata.Name == ctx.Config.Name {
-				continue
+				w.Status = "disconnect"
 			}
 			newWorkers = append(newWorkers, w)
 		}
-		Put()
-
+		return etcdutil.PutOne(ctx.Etcd, c, "workers", newWorkers)
 	}, nil
-}
-
-func Get[T any](cli *clientv3.Client, ctx context.Context, key string) (result *T, err error) {
-	c, _ := context.WithTimeout(context.TODO(), 10*time.Second)
-	gresp, err := cli.KV.Get(c, "workers")
-	if err != nil {
-		return nil, err
-	}
-	val := gresp.Kvs[0].Value
-	var ret T
-	err = json.Unmarshal(val, &ret)
-	if err != nil {
-		return nil, err
-	}
-	return &ret, nil
 }
