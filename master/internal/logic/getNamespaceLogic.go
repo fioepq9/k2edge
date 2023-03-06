@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"time"
 
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
@@ -25,17 +24,17 @@ func NewGetNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetN
 }
 
 func (l *GetNamespaceLogic) GetNamespace(req *types.GetNamespaceRequest) (resp *types.GetNamespaceResponse, err error) {
-	n := l.svcCtx.DatabaseQuery.Namespace
-	namespace, dbErr := n.WithContext(l.ctx).Where(n.Name.Eq(req.Name)).First()
+	// n := l.svcCtx.DatabaseQuery.Namespace
+	// namespace, dbErr := n.WithContext(l.ctx).Where(n.Name.Eq(req.Name)).First()
 
-	if dbErr != nil {
-		return nil, dbErr
-	}
-	resp = new(types.GetNamespaceResponse)
-	resp.NamespaceInfo = types.Namespace{
-		Name:   namespace.Name,
-		Status: namespace.Status,
-		Age:    time.Since(namespace.CreatedTime).Round(time.Second).String(),
-	}
+	// if dbErr != nil {
+	// 	return nil, dbErr
+	// }
+	// resp = new(types.GetNamespaceResponse)
+	// resp.NamespaceInfo = types.Namespace{
+	// 	Name:   namespace.Name,
+	// 	Status: namespace.Status,
+	// 	Age:    time.Since(namespace.CreatedTime).Round(time.Second).String(),
+	// }
 	return resp, nil
 }

@@ -1,9 +1,9 @@
 .PHONY: all clean
-all: api worker-update master-update swagger-update
+all: api swagger cleancache
 
 api: worker-api master-api
-worker-update: worker-api worker-swagger-update 
-master-update: master-api master-swagger-update
+worker-update: worker-api worker-swagger-update
+master-update: master-api master-swagger-update cleancache
 swagger-update: worker-swagger-update master-swagger-update
 
 worker-api-port=8888
@@ -63,3 +63,8 @@ master.api: master-api
 	echo "" >> tmp/master.api
 	cat api/token.api >> tmp/master.api
 	sed s/"global.api"//g tmp/master.api > tmp/master.api
+
+#>>>>>>>>>>>>>>>>>>>>>>>> Other Command <<<<<<<<<<<<<<<<<<<<<< 
+
+clean:
+	rm -rf tmp

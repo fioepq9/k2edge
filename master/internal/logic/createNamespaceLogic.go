@@ -2,10 +2,10 @@ package logic
 
 import (
 	"context"
+	"fmt"
 
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
-	"k2edge/model"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,13 +25,17 @@ func NewCreateNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 }
 
 func (l *CreateNamespaceLogic) CreateNamespace(req *types.CreateNamespaceRequest) error {
-	
-	namespace := model.Namespace{Name: req.Name, Status: "Active"}
-
-	dbErr := n.WithContext(l.ctx).Create(&namespace)
-	if dbErr != nil {
-		return dbErr
+	namespaces, err := l.svcCtx.Etcd.Get(l.ctx, "aaa")
+	if err != nil {
+		return err
 	}
 
+	for _, KV:= range namespaces.Kvs[0].Value  {
+		fmt.Println(string(KV))
+	}
+
+	if err != nil {
+		return err
+	}
 	return nil
 }

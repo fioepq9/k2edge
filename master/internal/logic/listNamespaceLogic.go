@@ -2,11 +2,9 @@ package logic
 
 import (
 	"context"
-	"time"
 
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
-	"k2edge/model"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,28 +24,28 @@ func NewListNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 }
 
 func (l *ListNamespaceLogic) ListNamespace(req *types.ListNamespaceRequest) (resp *types.ListNamespaceResponse, err error) {
-	n := l.svcCtx.DatabaseQuery.Namespace
+	// n := l.svcCtx.DatabaseQuery.Namespace
 
-	var namespaces []*model.Namespace
-	var dbErr error
-	if !req.All {
-		namespaces, dbErr = n.WithContext(l.ctx).Where(n.Status.Eq("Active")).Find()
-	} else {
-		namespaces, dbErr = n.WithContext(l.ctx).Where().Find()
-	}
+	// var namespaces []*model.Namespace
+	// var dbErr error
+	// if !req.All {
+	// 	namespaces, dbErr = n.WithContext(l.ctx).Where(n.Status.Eq("Active")).Find()
+	// } else {
+	// 	namespaces, dbErr = n.WithContext(l.ctx).Where().Find()
+	// }
 
-	if dbErr != nil {
-		return nil, dbErr
-	}
+	// if dbErr != nil {
+	// 	return nil, dbErr
+	// }
 
-	resp = new(types.ListNamespaceResponse)
-	for _, namespace := range namespaces {
-		resp.Namespaces = append(resp.Namespaces, types.Namespace{
-			Name: namespace.Name,
-			Status: namespace.Status,
-			Age: time.Since(namespace.CreatedTime).Round(time.Second).String(),
-		})
-	}
+	// resp = new(types.ListNamespaceResponse)
+	// for _, namespace := range namespaces {
+	// 	resp.Namespaces = append(resp.Namespaces, types.Namespace{
+	// 		Name: namespace.Name,
+	// 		Status: namespace.Status,
+	// 		Age: time.Since(namespace.CreatedTime).Round(time.Second).String(),
+	// 	})
+	// }
 
 	return resp, nil
 }

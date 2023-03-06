@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"fmt"
 
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
@@ -25,15 +24,15 @@ func NewDeleteNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *D
 }
 
 func (l *DeleteNamespaceLogic) DeleteNamespace(req *types.DeleteNamespaceRequest) error {
-	n := l.svcCtx.DatabaseQuery.Namespace;
-	result, dbErr := n.WithContext(l.ctx).Where(n.Name.Eq(req.Name)).Delete()
+	// n := l.svcCtx.DatabaseQuery.Namespace;
+	// result, dbErr := n.WithContext(l.ctx).Where(n.Name.Eq(req.Name)).Delete()
 
-	if dbErr != nil {
-		return dbErr
-	}
+	// if dbErr != nil {
+	// 	return dbErr
+	// }
 
-	if result.RowsAffected == 0 {
-		return fmt.Errorf("namespace is not exists")
-	}
+	// if result.RowsAffected == 0 {
+	// 	return fmt.Errorf("namespace is not exists")
+	// }
 	return nil
 }
