@@ -1,11 +1,10 @@
 .PHONY: all clean
-all: api swagger dao cleancache
+all: api worker-update master-update swagger-update
 
 api: worker-api master-api
-worker-update: worker-api worker-swagger-update dao
-master-update: master-api master-swagger-update dao cleancache
+worker-update: worker-api worker-swagger-update 
+master-update: master-api master-swagger-update
 swagger-update: worker-swagger-update master-swagger-update
-dao: mysql
 
 worker-api-port=8888
 worker-swagger-port=8083
@@ -14,9 +13,6 @@ master-api-port=8080
 master-swagger-port=8084
 
 mkfile_path := $(shell pwd)
-
-cleancache:
-	rm -rf tmp
 
 #>>>>>>>>>>>>>>>>>>>>>>>> Worker Command <<<<<<<<<<<<<<<<<<<<<< 
 worker-api:
@@ -67,10 +63,3 @@ master.api: master-api
 	echo "" >> tmp/master.api
 	cat api/token.api >> tmp/master.api
 	sed s/"global.api"//g tmp/master.api > tmp/master.api
-
-#>>>>>>>>>>>>>>>>>>>>>>>> Other Command <<<<<<<<<<<<<<<<<<<<<< 
-mysql:
-	go run ./script/sql
-
-clean:
-	rm -rf tmp

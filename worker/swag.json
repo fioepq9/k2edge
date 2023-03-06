@@ -349,18 +349,14 @@
         "metadata": {
           "$ref": "#/definitions/Metadata"
         },
-        "config": {
-          "$ref": "#/definitions/ContainerConfig"
-        },
-        "status": {
-          "$ref": "#/definitions/ContainerStatus"
+        "container_template": {
+          "$ref": "#/definitions/ContainerTemplate"
         }
       },
       "title": "Container",
       "required": [
         "metadata",
-        "config",
-        "status"
+        "container_template"
       ]
     },
     "ContainerConfig": {
@@ -536,6 +532,43 @@
       "title": "ContainerStatusResponse",
       "required": [
         "status"
+      ]
+    },
+    "ContainerTemplate": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string"
+        },
+        "command": {
+          "type": "string"
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expose": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExposedPort"
+          }
+        },
+        "env": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "ContainerTemplate",
+      "required": [
+        "image",
+        "command",
+        "args",
+        "expose",
+        "env"
       ]
     },
     "CronJob": {
@@ -728,6 +761,28 @@
         "container"
       ]
     },
+    "ExposedPort": {
+      "type": "object",
+      "properties": {
+        "port": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "host_port": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "ExposedPort",
+      "required": [
+        "port",
+        "protocol",
+        "host_port"
+      ]
+    },
     "HealthConfig": {
       "type": "object",
       "properties": {
@@ -770,18 +825,67 @@
         "metadata": {
           "$ref": "#/definitions/Metadata"
         },
-        "config": {
-          "$ref": "#/definitions/JobConfig"
+        "node": {
+          "type": "string"
+        },
+        "containers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "completions": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "backoff_limit": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "active_deadline_seconds": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "completion_time": {
+          "type": "string"
+        },
+        "active": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "failed": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "succeeded": {
+          "type": "integer",
+          "format": "int64"
         },
         "status": {
-          "$ref": "#/definitions/JobStatus"
+          "type": "string"
+        },
+        "template": {
+          "$ref": "#/definitions/ContainerTemplate"
         }
       },
       "title": "Job",
       "required": [
         "metadata",
-        "config",
-        "status"
+        "node",
+        "containers",
+        "completions",
+        "backoff_limit",
+        "active_deadline_seconds",
+        "start_time",
+        "completion_time",
+        "active",
+        "failed",
+        "succeeded",
+        "status",
+        "template"
       ]
     },
     "JobConfig": {
@@ -871,8 +975,8 @@
     "Namespace": {
       "type": "object",
       "properties": {
-        "name": {
-          "type": "string"
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
         },
         "status": {
           "type": "string"
@@ -883,9 +987,34 @@
       },
       "title": "Namespace",
       "required": [
-        "name",
+        "metadata",
         "status",
         "age"
+      ]
+    },
+    "Node": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "base_url": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "register_time": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "Node",
+      "required": [
+        "metadata",
+        "base_url",
+        "status",
+        "register_time"
       ]
     },
     "RemoveContainerRequest": {
@@ -955,7 +1084,7 @@
         },
         "timeout": {
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         }
       },
       "title": "StopContainerRequest",
