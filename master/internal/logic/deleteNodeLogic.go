@@ -44,9 +44,9 @@ func (l *DeleteNodeLogic) DeleteNode(req *types.DeleteRequest) error {
 	err = etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, key, func(item types.Node, index int) bool {
 		if item.Metadata.Name == req.Metadata.Name &&
 		 item.Metadata.Kind == req.Metadata.Kind && item.Metadata.Namespace == req.Metadata.Namespace{
-			return true
-		} else {
 			return false
+		} else {
+			return true
 		}
 	})
 
