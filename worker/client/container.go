@@ -3,7 +3,6 @@ package client
 import (
 	"context"
 	"fmt"
-	"k2edge/worker/internal/types"
 	"reflect"
 	"strings"
 
@@ -20,24 +19,24 @@ type containers struct {
 	cli *req.Client
 }
 
-func (c containers) Run(ctx context.Context, req types.RunContainerRequest) error {
+func (c containers) Run(ctx context.Context, req RunContainerRequest) error {
 	return c.cli.Post("/container/run").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 
-func (c containers) Remove(ctx context.Context, req types.RemoveContainerRequest) error {
+func (c containers) Remove(ctx context.Context, req RemoveContainerRequest) error {
 	return c.cli.Post("/container/remove").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 
-func (c containers) Stop(ctx context.Context, req types.StopContainerRequest) error {
+func (c containers) Stop(ctx context.Context, req StopContainerRequest) error {
 	return c.cli.Post("/container/stop").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 
-func (c containers) Start(ctx context.Context, req types.StartContainerRequest) error {
+func (c containers) Start(ctx context.Context, req StartContainerRequest) error {
 	return c.cli.Post("/container/start").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 
-func (c containers) Status(ctx context.Context, req types.ContainerStatusRequest) (resp *types.ContainerStatusResponse, err error) {
-	resp = new(types.ContainerStatusResponse)
+func (c containers) Status(ctx context.Context, req ContainerStatusRequest) (resp *ContainerStatusResponse, err error) {
+	resp = new(ContainerStatusResponse)
 	err = c.cli.Get("/container/status").AddQueryParam("id", req.ID).Do(ctx).Into(&resp)
 	if err != nil {
 		return nil, err
@@ -45,8 +44,8 @@ func (c containers) Status(ctx context.Context, req types.ContainerStatusRequest
 	return resp, nil
 }
 
-func (c containers) List(ctx context.Context, req types.ListContainersRequest) (resp *types.ListContainersResponse, err error) {
-	resp = new(types.ListContainersResponse)
+func (c containers) List(ctx context.Context, req ListContainersRequest) (resp *ListContainersResponse, err error) {
+	resp = new(ListContainersResponse)
 	params := make(map[string]interface{})
 	rv := reflect.ValueOf(req)
 	rt := rv.Type()
@@ -71,10 +70,10 @@ func (c containers) List(ctx context.Context, req types.ListContainersRequest) (
 	return resp, nil
 }
 
-func (c containers) Exec(ctx context.Context, req types.ExecRequest) error {
+func (c containers) Exec(ctx context.Context, req ExecRequest) error {
 	return c.cli.Post("/container/exec").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 
-func (c containers) Attach(ctx context.Context, req types.AttachRequest) error {
+func (c containers) Attach(ctx context.Context, req AttachRequest) error {
 	return c.cli.Post("/container/attach").SetBodyJsonMarshal(req).Do(ctx).Err
 }
