@@ -88,7 +88,7 @@ func AddOne[T any](cli *clientv3.Client, ctx context.Context, key string, val T)
 	return nil
 }
 
-// 删除 key 下的某个 value 值，通过 lo.filter 来进行过滤
+// 删除 key 下的某个 value 值，通过 lo.filter 来进行过滤, T 不为数组
 func DeleteOne[T any](cli *clientv3.Client, ctx context.Context, key string, filter func(item T, index int) bool) error {
 	// 获取旧值
 	gresp, err := cli.KV.Get(ctx, key)
@@ -127,4 +127,44 @@ func DeleteOne[T any](cli *clientv3.Client, ctx context.Context, key string, fil
 		return fmt.Errorf("transaction execution failed when deleting %s , please try again", key)
 	}
 	return nil
+}
+
+// 根据 metadata 判断资源在是否已经存在
+func IsExist(cli *clientv3.Client, ctx context.Context, key string, metadata Metadata) (bool, error) {
+	gresp, err := cli.KV.Get(ctx, key)
+	if err != nil {
+		return false, err
+	}
+
+	if gresp.Count == 0 {
+		return false, ErrKeyNotExist
+	}
+
+	var value []Source
+	err = json.Unmarshal(gresp.Kvs[0].Value, &value)
+	if err != nil {
+		return false, err
+	}
+	
+	if err != nil {
+		return false, err
+	}
+
+	// 判断是否已存在
+	for _, v := range value {
+		if v.Metadata.Name == metadata.Name && v.Metadata.Kind == metadata.Kind && v.Metadata.Namespace == metadata.Namespace {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+type Metadata struct {
+	Namespace string `json:"namespace"`
+	Kind      string `json:"kind"`
+	Name      string `json:"name"`
+}
+
+type Source struct {
+	Metadata Metadata `json:"metadata"`
 }

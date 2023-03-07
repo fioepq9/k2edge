@@ -439,36 +439,43 @@ type DeleteNamespaceRequest struct {
 	Name string `json:"name"`
 }
 
+type RegisterRequest struct {
+	Name      string   `json:"name"`
+	Namespace string   `json:"namespace"`
+	Roles     []string `json:"roles"`
+	BaseURL   string   `json:"base_url"`
+}
+
 type NodeTopRequest struct {
-	Selector Metadata `json:"selector"`
+	Name string `json:"name"`
 }
 
 type NodeTopResponse struct {
-	Error Error `json:"error,omitempty"`
+	TopInfo []TopInfo `json:"top_info"`
+}
+
+type TopInfo struct {
+	Name       string `json:"name"`
+	CPU        string `json:"CPU"`
+	CPUProp    string `json:"CPU_prop"`
+	Memory     string `json:"memory"`
+	MemoryProp string `json:"memory_prop"`
 }
 
 type CordonRequest struct {
-	Selector Metadata `json:"selector"`
-}
-
-type CordonResponse struct {
-	Error Error `json:"error,omitempty"`
+	Metadata Metadata `json:"metadata"`
 }
 
 type UncordonRequest struct {
-	Selector Metadata `json:"selector"`
-}
-
-type UncordonResponse struct {
-	Error Error `json:"error,omitempty"`
+	Metadata Metadata `json:"metadata"`
 }
 
 type DrainRequest struct {
-	Selector Metadata `json:"selector"`
+	Metadata Metadata `json:"metadata"`
 }
 
-type DrainResponse struct {
-	Error Error `json:"error,omitempty"`
+type DeleteRequest struct {
+	Metadata Metadata `json:"metadata"`
 }
 
 type CreateTokenRequest struct {

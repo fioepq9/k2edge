@@ -23,8 +23,8 @@ func NewUncordonLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Uncordon
 	}
 }
 
-func (l *UncordonLogic) Uncordon(req *types.UncordonRequest) (resp *types.UncordonResponse, err error) {
+func (l *UncordonLogic) Uncordon(req *types.UncordonRequest) error {
 	// todo: add your logic here and delete this line
 
-	return
+	return nil
 }

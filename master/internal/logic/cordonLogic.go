@@ -23,8 +23,8 @@ func NewCordonLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CordonLogi
 	}
 }
 
-func (l *CordonLogic) Cordon(req *types.CordonRequest) (resp *types.CordonResponse, err error) {
+func (l *CordonLogic) Cordon(req *types.CordonRequest) error {
 	// todo: add your logic here and delete this line
 
-	return
+	return nil
 }

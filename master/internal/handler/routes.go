@@ -229,6 +229,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				Method:  http.MethodPost,
+				Path:    "/register",
+				Handler: registerNodeHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodGet,
 				Path:    "/top",
 				Handler: NodeTopHandler(serverCtx),
@@ -247,6 +252,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/drain",
 				Handler: DrainHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/delete",
+				Handler: DeleteNodeHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/node"),

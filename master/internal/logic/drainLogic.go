@@ -23,8 +23,8 @@ func NewDrainLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DrainLogic 
 	}
 }
 
-func (l *DrainLogic) Drain(req *types.DrainRequest) (resp *types.DrainResponse, err error) {
+func (l *DrainLogic) Drain(req *types.DrainRequest) error {
 	// todo: add your logic here and delete this line
 
-	return
+	return nil
 }

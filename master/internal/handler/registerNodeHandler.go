@@ -10,16 +10,16 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func CordonHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func registerNodeHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.CordonRequest
+		var req types.RegisterRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := logic.NewCordonLogic(r.Context(), svcCtx)
-		err := l.Cordon(&req)
+		l := logic.NewRegisterNodeLogic(r.Context(), svcCtx)
+		err := l.RegisterNode(&req)
 		var body types.Response
 		if err != nil {
 			body.Code = -1

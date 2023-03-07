@@ -26,7 +26,7 @@ func NewListNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 }
 
 func (l *ListNamespaceLogic) ListNamespace(req *types.ListNamespaceRequest) (resp *types.ListNamespaceResponse, err error) {
-	namespace, err := etcdutil.GetOne[[]types.Namespace](l.svcCtx.Etcd, l.ctx, "/namespace")
+	namespace, err := etcdutil.GetOne[[]types.Namespace](l.svcCtx.Etcd, l.ctx, "/namespaces")
 	if err != nil {
 		return nil, err
 	}

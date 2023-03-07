@@ -19,14 +19,14 @@ func UncordonHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := logic.NewUncordonLogic(r.Context(), svcCtx)
-		resp, err := l.Uncordon(&req)
+		err := l.Uncordon(&req)
 		var body types.Response
 		if err != nil {
 			body.Code = -1
 			body.Msg = err.Error()
 		} else {
 			body.Msg = "success"
-			body.Data = resp
+
 		}
 		httpx.OkJsonCtx(r.Context(), w, body)
 	}

@@ -964,9 +964,7 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/CordonResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
@@ -985,15 +983,38 @@
         ]
       }
     },
+    "/node/delete": {
+      "post": {
+        "operationId": "DeleteNode",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "master-api"
+        ]
+      }
+    },
     "/node/drain": {
       "post": {
         "operationId": "Drain",
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/DrainResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
@@ -1003,6 +1024,31 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/DrainRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "master-api"
+        ]
+      }
+    },
+    "/node/register": {
+      "post": {
+        "operationId": "registerNode",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RegisterRequest"
             }
           }
         ],
@@ -1025,11 +1071,10 @@
         },
         "parameters": [
           {
-            "name": "selector",
+            "name": "name",
             "in": "query",
             "required": true,
-            "type": "invalid",
-            "format": "UNKNOWN"
+            "type": "string"
           }
         ],
         "requestBody": {},
@@ -1044,9 +1089,7 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/UncordonResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
@@ -1571,25 +1614,13 @@
     "CordonRequest": {
       "type": "object",
       "properties": {
-        "selector": {
+        "metadata": {
           "$ref": "#/definitions/Metadata"
         }
       },
       "title": "CordonRequest",
       "required": [
-        "selector"
-      ]
-    },
-    "CordonResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "CordonResponse",
-      "required": [
-        "error"
+        "metadata"
       ]
     },
     "CreateContainerRequest": {
@@ -1864,6 +1895,18 @@
         "name"
       ]
     },
+    "DeleteRequest": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        }
+      },
+      "title": "DeleteRequest",
+      "required": [
+        "metadata"
+      ]
+    },
     "DeleteTokenRequest": {
       "type": "object",
       "properties": {
@@ -1935,25 +1978,13 @@
     "DrainRequest": {
       "type": "object",
       "properties": {
-        "selector": {
+        "metadata": {
           "$ref": "#/definitions/Metadata"
         }
       },
       "title": "DrainRequest",
       "required": [
-        "selector"
-      ]
-    },
-    "DrainResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "DrainResponse",
-      "required": [
-        "error"
+        "metadata"
       ]
     },
     "Error": {
@@ -2599,25 +2630,55 @@
     "NodeTopRequest": {
       "type": "object",
       "properties": {
-        "selector": {
-          "$ref": "#/definitions/Metadata"
+        "name": {
+          "type": "string"
         }
       },
       "title": "NodeTopRequest",
       "required": [
-        "selector"
+        "name"
       ]
     },
     "NodeTopResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
+        "top_info": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TopInfo"
+          }
         }
       },
       "title": "NodeTopResponse",
       "required": [
-        "error"
+        "top_info"
+      ]
+    },
+    "RegisterRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "base_url": {
+          "type": "string"
+        }
+      },
+      "title": "RegisterRequest",
+      "required": [
+        "name",
+        "namespace",
+        "roles",
+        "base_url"
       ]
     },
     "RunContainerRequest": {
@@ -2712,28 +2773,44 @@
         "todo"
       ]
     },
+    "TopInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "CPU": {
+          "type": "string"
+        },
+        "CPU_prop": {
+          "type": "string"
+        },
+        "memory": {
+          "type": "string"
+        },
+        "memory_prop": {
+          "type": "string"
+        }
+      },
+      "title": "TopInfo",
+      "required": [
+        "name",
+        "CPU",
+        "CPU_prop",
+        "memory",
+        "memory_prop"
+      ]
+    },
     "UncordonRequest": {
       "type": "object",
       "properties": {
-        "selector": {
+        "metadata": {
           "$ref": "#/definitions/Metadata"
         }
       },
       "title": "UncordonRequest",
       "required": [
-        "selector"
-      ]
-    },
-    "UncordonResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "UncordonResponse",
-      "required": [
-        "error"
+        "metadata"
       ]
     },
     "UndoContainerRequest": {
