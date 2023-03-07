@@ -52,7 +52,7 @@ func RegisterWorker(ctx *svc.ServiceContext) (func() error, error) {
 	return func() error {
 		c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 		defer cancel()
-		workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "nodes")
+		workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "/nodes")
 		if err != nil {
 			return err
 		}
@@ -69,7 +69,7 @@ func RegisterWorker(ctx *svc.ServiceContext) (func() error, error) {
 func doRegisterWorker(ctx *svc.ServiceContext) error {
 	c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "nodes")
+	workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "/nodes")
 	if err != nil {
 		return err
 	}
@@ -79,11 +79,15 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 	})
 	if found {
 		if item.Status == "active" {
-			return fmt.Errorf("exist name: %s", ctx.Config.Name)
+			if lo.Contains(item.Roles, "worker") {
+				return fmt.Errorf("exist worker name: %s", ctx.Config.Name)
+			}
+			workers[idx].Roles = append(workers[idx].Roles, "worker")
 		} else {
 			workers[idx].Status = "active"
-			etcdutil.PutOne(ctx.Etcd, c, "nodes", workers)
+			workers[idx].Roles = []string{"worker"}
 		}
+		etcdutil.PutOne(ctx.Etcd, c, "/nodes", workers)
 		return nil
 	}
 	node := types.Node{
@@ -92,11 +96,12 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 			Kind:      "node",
 			Name:      ctx.Config.Name,
 		},
+		Roles:        []string{"worker"},
 		BaseURL:      fmt.Sprintf("%s:%d", ctx.Config.Host, ctx.Config.Port),
 		Status:       "active",
 		RegisterTime: time.Now().Unix(),
 	}
 	workers = append(workers, node)
-	etcdutil.PutOne(ctx.Etcd, c, "nodes", workers)
+	etcdutil.PutOne(ctx.Etcd, c, "/nodes", workers)
 	return nil
 }

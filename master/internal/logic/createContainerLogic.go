@@ -24,7 +24,5 @@ func NewCreateContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 }
 
 func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest) (resp *types.CreateContainerResponse, err error) {
-	// todo: add your logic here and delete this line
-
 	return
 }

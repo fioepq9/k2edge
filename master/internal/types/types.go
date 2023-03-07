@@ -230,6 +230,7 @@ type Token struct {
 
 type Node struct {
 	Metadata     Metadata `json:"metadata"`
+	Roles        []string `json:"roles"`
 	BaseURL      string   `json:"base_url"`
 	Status       string   `json:"status"`
 	RegisterTime int64    `json:"register_time"`

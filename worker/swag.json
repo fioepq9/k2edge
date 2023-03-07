@@ -1003,6 +1003,12 @@
         "metadata": {
           "$ref": "#/definitions/Metadata"
         },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "base_url": {
           "type": "string"
         },
@@ -1017,6 +1023,7 @@
       "title": "Node",
       "required": [
         "metadata",
+        "roles",
         "base_url",
         "status",
         "register_time"
