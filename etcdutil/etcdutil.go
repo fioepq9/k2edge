@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/samber/lo"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
@@ -54,16 +55,16 @@ func AddOne[T any](cli *clientv3.Client, ctx context.Context, key string, val T)
 		return fmt.Errorf("key: %s does not exist in etcd", key)
 	}
 
-	var oldValue []T
-	err = json.Unmarshal(gresp.Kvs[0].Value, &oldValue)
+	var value []T
+	err = json.Unmarshal(gresp.Kvs[0].Value, &value)
 
 	if err != nil {
 		return err
 	}
 
 	// 添加新值
-	oldValue = append(oldValue, val)
-	vbyte, err := json.Marshal(oldValue)
+	value = append(value, val)
+	vbyte, err := json.Marshal(value)
 
 	if err != nil {
 		return err
@@ -77,6 +78,49 @@ func AddOne[T any](cli *clientv3.Client, ctx context.Context, key string, val T)
 		return  err
 	}
 
-	println(commit)
+	if !commit.Succeeded {
+		return fmt.Errorf("transaction execution failed when adding %s , please try again", key)
+	}
+	return nil
+}
+
+// 删除 key 下的某个 value 值，通过 lo.filter 来进行过滤
+func DeleteOne[T any](cli *clientv3.Client, ctx context.Context, key string, filter func(item T, index int) bool) error {
+	// 获取旧值
+	gresp, err := cli.KV.Get(ctx, key)
+	if err != nil {
+		return nil
+	}
+
+	if gresp.Count == 0 {
+		return fmt.Errorf("key: %s does not exist in etcd", key)
+	}
+	
+	var value []T
+	err = json.Unmarshal(gresp.Kvs[0].Value, &value)
+
+	if err != nil {
+		return err
+	}
+
+	// 删除特定值
+	value = lo.Filter(value, filter)
+	vbyte, err := json.Marshal(value)
+
+	if err != nil {
+		return err
+	}
+
+	//事务提交
+	commit, err := cli.Txn(ctx).If(clientv3.Compare(clientv3.ModRevision(key), "=", gresp.Kvs[0].ModRevision)).Then(
+		clientv3.OpPut(key, string(vbyte))).Commit()
+
+	if err != nil {
+		return err
+	}
+
+	if !commit.Succeeded {
+		return fmt.Errorf("transaction execution failed when deleting %s , please try again", key)
+	}
 	return nil
 }

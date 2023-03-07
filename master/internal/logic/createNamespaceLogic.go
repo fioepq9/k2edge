@@ -26,7 +26,8 @@ func NewCreateNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 }
 
 func (l *CreateNamespaceLogic) CreateNamespace(req *types.CreateNamespaceRequest) error {
-	namespace, err := etcdutil.GetOne[[]types.Namespace](l.svcCtx.Etcd, l.ctx, "/namespace")
+	key := "/namespace"
+	namespace, err := etcdutil.GetOne[[]types.Namespace](l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
 		return err
 	}
@@ -46,7 +47,7 @@ func (l *CreateNamespaceLogic) CreateNamespace(req *types.CreateNamespaceRequest
 		CreateTime: time.Now().Unix(),
 	}
 
-	err = etcdutil.AddOne(l.svcCtx.Etcd, l.ctx, "/namespace", newNamespace)
+	err = etcdutil.AddOne(l.svcCtx.Etcd, l.ctx, key, newNamespace)
 	if err != nil {
 		return err
 	}
