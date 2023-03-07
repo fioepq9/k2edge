@@ -3,9 +3,6 @@ Host: 0.0.0.0
 Port: 8888
 Mode: dev
 
-Master:
-  BaseURL:
-
 Etcd:
   Endpoints:
     - outlg.xyz:2379
