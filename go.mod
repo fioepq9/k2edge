@@ -6,6 +6,7 @@ require (
 	github.com/docker/docker v23.0.1+incompatible
 	github.com/docker/go-connections v0.4.0
 	github.com/imroc/req/v3 v3.32.3
+	github.com/samber/lo v1.37.0
 	github.com/zeromicro/go-zero v1.4.4
 	go.etcd.io/etcd/client/v3 v3.5.7
 	golang.org/x/oauth2 v0.5.0

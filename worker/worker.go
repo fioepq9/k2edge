@@ -12,6 +12,7 @@ import (
 	"k2edge/worker/internal/svc"
 	"k2edge/worker/internal/types"
 
+	"github.com/samber/lo"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -44,16 +45,46 @@ func main() {
 }
 
 func RegisterWorker(ctx *svc.ServiceContext) (func() error, error) {
-	c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
-	defer cancel()
-	workers, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "workers")
+	err := doRegisterWorker(ctx)
 	if err != nil {
 		return nil, err
 	}
-	for _, w := range *workers {
-		if w.Metadata.Name == ctx.Config.Name {
-			return nil, fmt.Errorf("exist name: %s", ctx.Config.Name)
+	return func() error {
+		c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+		defer cancel()
+		workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "workers")
+		if err != nil {
+			return err
 		}
+		workers := *workersPtr
+		lo.ForEach(workers, func(_ types.Node, i int) {
+			if workers[i].Metadata.Name == ctx.Config.Name {
+				workers[i].Status = "closed"
+			}
+		})
+		return etcdutil.PutOne(ctx.Etcd, c, "workers", workers)
+	}, nil
+}
+
+func doRegisterWorker(ctx *svc.ServiceContext) error {
+	c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "workers")
+	if err != nil {
+		return err
+	}
+	workers := *workersPtr
+	item, idx, found := lo.FindIndexOf(workers, func(item types.Node) bool {
+		return item.Metadata.Name == ctx.Config.Name
+	})
+	if found {
+		if item.Status == "active" {
+			return fmt.Errorf("exist name: %s", ctx.Config.Name)
+		} else {
+			workers[idx].Status = "active"
+			etcdutil.PutOne(ctx.Etcd, c, "workers", workers)
+		}
+		return nil
 	}
 	node := types.Node{
 		Metadata: types.Metadata{
@@ -65,22 +96,7 @@ func RegisterWorker(ctx *svc.ServiceContext) (func() error, error) {
 		Status:       "active",
 		RegisterTime: time.Now().Unix(),
 	}
-	*workers = append(*workers, node)
-	etcdutil.PutOne(ctx.Etcd, c, "workers", *workers)
-	return func() error {
-		c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
-		defer cancel()
-		workers, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "workers")
-		if err != nil {
-			return err
-		}
-		newWorkers := make([]types.Node, 0)
-		for _, w := range *workers {
-			if w.Metadata.Name == ctx.Config.Name {
-				w.Status = "disconnect"
-			}
-			newWorkers = append(newWorkers, w)
-		}
-		return etcdutil.PutOne(ctx.Etcd, c, "workers", newWorkers)
-	}, nil
+	workers = append(workers, node)
+	etcdutil.PutOne(ctx.Etcd, c, "workers", workers)
+	return nil
 }
