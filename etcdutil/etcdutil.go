@@ -8,7 +8,7 @@ import (
 )
 
 func GetOne[T any](cli *clientv3.Client, ctx context.Context, key string) (result *T, err error) {
-	gresp, err := cli.KV.Get(ctx, "workers")
+	gresp, err := cli.KV.Get(ctx, key)
 	if err != nil {
 		return nil, err
 	}
