@@ -2,7 +2,9 @@ package logic
 
 import (
 	"context"
+	"time"
 
+	"k2edge/etcdutil"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
 
@@ -24,28 +26,22 @@ func NewListNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 }
 
 func (l *ListNamespaceLogic) ListNamespace(req *types.ListNamespaceRequest) (resp *types.ListNamespaceResponse, err error) {
-	// n := l.svcCtx.DatabaseQuery.Namespace
+	namespace, err := etcdutil.GetOne[[]types.Namespace](l.svcCtx.Etcd, l.ctx, "/namespace")
+	if err != nil {
+		return nil, err
+	}
 
-	// var namespaces []*model.Namespace
-	// var dbErr error
-	// if !req.All {
-	// 	namespaces, dbErr = n.WithContext(l.ctx).Where(n.Status.Eq("Active")).Find()
-	// } else {
-	// 	namespaces, dbErr = n.WithContext(l.ctx).Where().Find()
-	// }
-
-	// if dbErr != nil {
-	// 	return nil, dbErr
-	// }
-
-	// resp = new(types.ListNamespaceResponse)
-	// for _, namespace := range namespaces {
-	// 	resp.Namespaces = append(resp.Namespaces, types.Namespace{
-	// 		Name: namespace.Name,
-	// 		Status: namespace.Status,
-	// 		Age: time.Since(namespace.CreatedTime).Round(time.Second).String(),
-	// 	})
-	// }
+	resp = new(types.ListNamespaceResponse)
+	for _, n := range *namespace {
+		if req.All || n.Status == "Active" { // 判断是否需要返回所有数组
+			resp.Namespaces = append(resp.Namespaces, types.GetNamespaceResponse{
+				Kind:   n.Kind,
+				Name:   n.Name,
+				Status: n.Status,
+				Age:    time.Since(time.Unix(n.CreateTime, 0)).Round(time.Second).String(),
+			})
+		}
+	}
 
 	return resp, nil
 }

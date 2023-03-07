@@ -29,7 +29,10 @@ type GetNamespaceRequest {
 }
 
 type GetNamespaceResponse {
-	NamespaceInfo Namespace `json:"namespace"`
+	Kind   string `json:"kind"`
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	Age    string `json:"age"`
 }
 
 // kubectl get namespaces
@@ -38,7 +41,7 @@ type ListNamespaceRequest {
 }
 
 type ListNamespaceResponse {
-	Namespaces []Namespace `json:"namespaces"`
+	Namespaces []GetNamespaceResponse `json:"namespaces"`
 }
 
 // kubectl delete namespaces <insert-some-namespace-name>

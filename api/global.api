@@ -166,7 +166,8 @@ type Command {
 }
 
 type Namespace {
-	Metadata Metadata `json:"metadata"`
-	Status   string   `json:"status"`
-	Age      string   `json:"age"`
+	Kind       string `json:"kind"`
+	Name       string `json:"name"`
+	Status     string `json:"status"`
+	CreateTime int64  `json:"create_time"`
 }

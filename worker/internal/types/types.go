@@ -229,9 +229,10 @@ type Command struct {
 }
 
 type Namespace struct {
-	Metadata Metadata `json:"metadata"`
-	Status   string   `json:"status"`
-	Age      string   `json:"age"`
+	Kind       string `json:"kind" dafault:"namespace"`
+	Name       string `json:"name"`
+	Status     string `json:"status"`
+	CreateTime string `json:"create_time"`
 }
 
 type Response struct {

@@ -2,7 +2,10 @@ package logic
 
 import (
 	"context"
+	"fmt"
+	"time"
 
+	"k2edge/etcdutil"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
 
@@ -24,17 +27,22 @@ func NewGetNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetN
 }
 
 func (l *GetNamespaceLogic) GetNamespace(req *types.GetNamespaceRequest) (resp *types.GetNamespaceResponse, err error) {
-	// n := l.svcCtx.DatabaseQuery.Namespace
-	// namespace, dbErr := n.WithContext(l.ctx).Where(n.Name.Eq(req.Name)).First()
+	namespace, err := etcdutil.GetOne[[]types.Namespace](l.svcCtx.Etcd, l.ctx, "/namespace")
+	if err != nil {
+		return nil, err
+	}
 
-	// if dbErr != nil {
-	// 	return nil, dbErr
-	// }
-	// resp = new(types.GetNamespaceResponse)
-	// resp.NamespaceInfo = types.Namespace{
-	// 	Name:   namespace.Name,
-	// 	Status: namespace.Status,
-	// 	Age:    time.Since(namespace.CreatedTime).Round(time.Second).String(),
-	// }
-	return resp, nil
+	//遇到 name 相同的 namespace 则返回
+	resp = new(types.GetNamespaceResponse)
+	for _, n := range *namespace {
+		if n.Name == req.Name {
+			resp.Kind = n.Kind
+			resp.Name = n.Name
+			resp.Status = n.Status
+			resp.Age = time.Since(time.Unix(n.CreateTime, 0)).Round(time.Second).String()
+			return resp, nil
+		}
+	}
+
+	return nil, fmt.Errorf("namespace %s does not exist", req.Name)
 }

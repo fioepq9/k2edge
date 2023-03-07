@@ -239,9 +239,10 @@ type Command struct {
 }
 
 type Namespace struct {
-	Metadata Metadata `json:"metadata"`
-	Status   string   `json:"status"`
-	Age      string   `json:"age"`
+	Kind       string `json:"kind"`
+	Name       string `json:"name"`
+	Status     string `json:"status"`
+	CreateTime int64  `json:"create_time"`
 }
 
 type CreateCronJobRequest struct {
@@ -421,7 +422,10 @@ type GetNamespaceRequest struct {
 }
 
 type GetNamespaceResponse struct {
-	NamespaceInfo Namespace `json:"namespace"`
+	Kind   string `json:"kind"`
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	Age    string `json:"age"`
 }
 
 type ListNamespaceRequest struct {
@@ -429,7 +433,7 @@ type ListNamespaceRequest struct {
 }
 
 type ListNamespaceResponse struct {
-	Namespaces []Namespace `json:"namespaces"`
+	Namespaces []GetNamespaceResponse `json:"namespaces"`
 }
 
 type DeleteNamespaceRequest struct {

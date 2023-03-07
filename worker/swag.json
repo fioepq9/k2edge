@@ -975,21 +975,26 @@
     "Namespace": {
       "type": "object",
       "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
+        "kind": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         },
         "status": {
           "type": "string"
         },
-        "age": {
+        "create_time": {
           "type": "string"
         }
       },
       "title": "Namespace",
       "required": [
-        "metadata",
+        "kind",
+        "namespace",
+        "name",
         "status",
-        "age"
+        "create_time"
       ]
     },
     "Node": {

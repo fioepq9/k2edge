@@ -3,9 +3,10 @@ package logic
 import (
 	"context"
 	"fmt"
-
+	"k2edge/etcdutil"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,17 +26,30 @@ func NewCreateNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 }
 
 func (l *CreateNamespaceLogic) CreateNamespace(req *types.CreateNamespaceRequest) error {
-	namespaces, err := l.svcCtx.Etcd.Get(l.ctx, "aaa")
+	namespace, err := etcdutil.GetOne[[]types.Namespace](l.svcCtx.Etcd, l.ctx, "/namespace")
 	if err != nil {
 		return err
 	}
 
-	for _, KV:= range namespaces.Kvs[0].Value  {
-		fmt.Println(string(KV))
+	// 判断是否已存在 namespace
+	for _, n := range *namespace {
+		if n.Name == req.Name {
+			return fmt.Errorf("namespace %s already exists", req.Name)
+		}
 	}
 
+	// 插入 namespace
+	newNamespace := types.Namespace{
+		Kind:       "namespace",
+		Name:       req.Name,
+		Status:     "Active",
+		CreateTime: time.Now().Unix(),
+	}
+
+	err = etcdutil.AddOne(l.svcCtx.Etcd, l.ctx, "/namespace", newNamespace)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
