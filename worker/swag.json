@@ -985,13 +985,13 @@
           "type": "string"
         },
         "create_time": {
-          "type": "string"
+          "type": "integer",
+          "format": "int64"
         }
       },
       "title": "Namespace",
       "required": [
         "kind",
-        "namespace",
         "name",
         "status",
         "create_time"

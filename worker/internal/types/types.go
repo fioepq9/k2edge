@@ -229,10 +229,10 @@ type Command struct {
 }
 
 type Namespace struct {
-	Kind       string `json:"kind" dafault:"namespace"`
+	Kind       string `json:"kind"`
 	Name       string `json:"name"`
 	Status     string `json:"status"`
-	CreateTime string `json:"create_time"`
+	CreateTime int64  `json:"create_time"`
 }
 
 type Response struct {

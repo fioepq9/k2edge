@@ -1,9 +1,9 @@
 .PHONY: all clean
-all: api swagger cleancache
+all: api swagger-update clean
 
 api: worker-api master-api
 worker-update: worker-api worker-swagger-update
-master-update: master-api master-swagger-update cleancache
+master-update: master-api master-swagger-update clean
 swagger-update: worker-swagger-update master-swagger-update
 
 worker-api-port=8888
@@ -35,7 +35,6 @@ master-api:
 
 master-swagger-update: master-api master.api
 	goctl api plugin -plugin goctl-swagger='swagger -filename swag.json --host 127.0.0.1:$(master-api-port)' -api ./tmp/master.api -dir ./master
-	rm -rf tmp
 
 master-swagger-run: master-swagger-update
 	docker run --rm --privileged -d -p $(master-swagger-port):8080 -e SWAGGER_JSON=/app/master.json -v $(mkfile_path)/master/swagger:/app swaggerapi/swagger-ui

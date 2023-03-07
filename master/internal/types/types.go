@@ -6,6 +6,7 @@ type ClusterInfoResponse struct {
 }
 
 type CreateContainerRequest struct {
+	Container Container `json:"container"`
 }
 
 type CreateContainerResponse struct {
