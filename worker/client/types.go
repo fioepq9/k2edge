@@ -10,6 +10,10 @@ type RunContainerRequest struct {
 	Config        ContainerConfig `json:"config"`
 }
 
+type RunContainerResponse struct {
+	ID string `json:"id"`
+}
+
 type RemoveContainerRequest struct {
 	ID            string `json:"id"`
 	RemoveVolumes bool   `json:"remove_volumnes,optional"`
@@ -139,10 +143,11 @@ type Container struct {
 
 type ContainerTemplate struct {
 	Image   string        `json:"image"`
-	Command string        `json:"command"`
-	Args    []string      `json:"args"`
-	Expose  []ExposedPort `json:"expose"`
-	Env     []string      `json:"env"`
+	Node    string        `json:"node,optional"`
+	Command string        `json:"command,optional"`
+	Args    []string      `json:"args,optional"`
+	Expose  []ExposedPort `json:"expose,optional"`
+	Env     []string      `json:"env,optional"`
 }
 
 type ExposedPort struct {

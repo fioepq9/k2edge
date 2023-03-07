@@ -162,7 +162,9 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {}
+            "schema": {
+              "$ref": "#/definitions/RunContainerResponse"
+            }
           }
         },
         "parameters": [
@@ -540,6 +542,9 @@
         "image": {
           "type": "string"
         },
+        "node": {
+          "type": "string"
+        },
         "command": {
           "type": "string"
         },
@@ -564,11 +569,7 @@
       },
       "title": "ContainerTemplate",
       "required": [
-        "image",
-        "command",
-        "args",
-        "expose",
-        "env"
+        "image"
       ]
     },
     "CronJob": {
@@ -1068,6 +1069,18 @@
       "required": [
         "container_name",
         "config"
+      ]
+    },
+    "RunContainerResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "title": "RunContainerResponse",
+      "required": [
+        "id"
       ]
     },
     "StartContainerRequest": {

@@ -9,6 +9,10 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
+var (
+	ErrKeyNotExist error = fmt.Errorf("key not exist")
+)
+
 // 获取对应 key 的 value,将得到的 Json 解析并返回
 func GetOne[T any](cli *clientv3.Client, ctx context.Context, key string) (result *T, err error) {
 	gresp, err := cli.KV.Get(ctx, key)
@@ -17,7 +21,7 @@ func GetOne[T any](cli *clientv3.Client, ctx context.Context, key string) (resul
 	}
 
 	if gresp.Count == 0 {
-		return nil, fmt.Errorf("key: %s does not exist in etcd", key)
+		return nil, ErrKeyNotExist
 	}
 
 	val := gresp.Kvs[0].Value
@@ -52,7 +56,7 @@ func AddOne[T any](cli *clientv3.Client, ctx context.Context, key string, val T)
 	}
 
 	if gresp.Count == 0 {
-		return fmt.Errorf("key: %s does not exist in etcd", key)
+		return ErrKeyNotExist
 	}
 
 	var value []T
@@ -75,7 +79,7 @@ func AddOne[T any](cli *clientv3.Client, ctx context.Context, key string, val T)
 		clientv3.OpPut(key, string(vbyte))).Commit()
 
 	if err != nil {
-		return  err
+		return err
 	}
 
 	if !commit.Succeeded {
@@ -93,9 +97,9 @@ func DeleteOne[T any](cli *clientv3.Client, ctx context.Context, key string, fil
 	}
 
 	if gresp.Count == 0 {
-		return fmt.Errorf("key: %s does not exist in etcd", key)
+		return ErrKeyNotExist
 	}
-	
+
 	var value []T
 	err = json.Unmarshal(gresp.Kvs[0].Value, &value)
 

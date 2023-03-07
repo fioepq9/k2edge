@@ -25,6 +25,10 @@ type RunContainerRequest {
 	Config ContainerConfig `json:"config"`
 }
 
+type RunContainerResponse {
+	ID string `json:"id"`
+}
+
 type RemoveContainerRequest {
 	ID            string `json:"id"`
 	RemoveVolumes bool   `json:"remove_volumnes,optional"`
@@ -101,7 +105,7 @@ service worker-api {
 		summary: "creates and starts a container"
 	)
 	@handler RunContainer
-	post /container/run(RunContainerRequest)
+	post /container/run(RunContainerRequest) returns (RunContainerResponse)
 	@doc(
 		summary: "removes the container"
 	)

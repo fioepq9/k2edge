@@ -24,7 +24,7 @@ worker-swagger-update: worker-api
 	goctl api plugin -plugin goctl-swagger='swagger -filename swag.json --host 127.0.0.1:$(worker-api-port)' -api ./api/worker.api -dir ./worker
 
 worker-swagger-run: worker-swagger-update
-	docker run --rm --privileged -d -p $(worker-swagger-port):8080 -e SWAGGER_JSON=/app/worker.json -v $(mkfile_path)/worker/swagger:/app swaggerapi/swagger-ui
+	docker run --rm --privileged -d -p $(worker-swagger-port):8080 -e SWAGGER_JSON=/app/swag.json -v $(mkfile_path)/worker:/app swaggerapi/swagger-ui
 
 worker-run: 
 	go run worker/worker.go -f worker/etc/worker-api.yaml
@@ -35,10 +35,10 @@ master-api:
 	goctl api go -api ./api/master.api -dir ./master -style goZero --home ./template
 
 master-swagger-update: master-api master.api
-	goctl api plugin -plugin goctl-swagger='swagger -filename swag.json --host 127.0.0.1:$(master-api-port)' -api ./tmp/master.api -dir ./master
+	goctl api plugin -plugin goctl-swagger='swagger -filename swag.json --host 127.0.0.1:$(master-api-port)' -api ./tmp/master_noimport.api -dir ./master
 
-master-swagger-run: master-swagger-update
-	docker run --rm --privileged -d -p $(master-swagger-port):8080 -e SWAGGER_JSON=/app/master.json -v $(mkfile_path)/master/swagger:/app swaggerapi/swagger-ui
+master-swagger-run: master-swagger-update 
+	docker run --rm --privileged -d -p $(master-swagger-port):8080 -e SWAGGER_JSON=/app/swag.json -v $(mkfile_path)/master:/app swaggerapi/swagger-ui
 
 master-run: 
 	go run master/master.go -f master/etc/master-api.yaml
@@ -62,7 +62,7 @@ master.api: master-api
 	cat api/node.api >> tmp/master.api
 	echo "" >> tmp/master.api
 	cat api/token.api >> tmp/master.api
-	sed s/"global.api"//g tmp/master.api > tmp/master.api
+	sed -e '/import/{N;N;d;}' tmp/master.api > tmp/master_noimport.api
 
 #>>>>>>>>>>>>>>>>>>>>>>>> Other Command <<<<<<<<<<<<<<<<<<<<<< 
 

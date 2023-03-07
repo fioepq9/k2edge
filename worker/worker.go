@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"time"
@@ -70,25 +71,29 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 	c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "/nodes")
-	if err != nil {
+	if err != nil && !errors.Is(err, etcdutil.ErrKeyNotExist) {
 		return err
 	}
-	workers := *workersPtr
-	item, idx, found := lo.FindIndexOf(workers, func(item types.Node) bool {
-		return item.Metadata.Name == ctx.Config.Name
-	})
-	if found {
-		if item.Status == "active" {
-			if lo.Contains(item.Roles, "worker") {
-				return fmt.Errorf("exist worker name: %s", ctx.Config.Name)
+	workers := make([]types.Node, 0)
+	if workersPtr != nil {
+		workers = *workersPtr
+		item, idx, found := lo.FindIndexOf(workers, func(item types.Node) bool {
+			return item.Metadata.Name == ctx.Config.Name
+		})
+		if found {
+			if item.Status == "active" {
+				if lo.Contains(item.Roles, "worker") {
+					return fmt.Errorf("exist worker name: %s", ctx.Config.Name)
+				}
+				workers[idx].Roles = append(workers[idx].Roles, "worker")
+			} else {
+				workers[idx].Status = "active"
+				workers[idx].Roles = []string{"worker"}
 			}
-			workers[idx].Roles = append(workers[idx].Roles, "worker")
-		} else {
-			workers[idx].Status = "active"
-			workers[idx].Roles = []string{"worker"}
+			etcdutil.PutOne(ctx.Etcd, c, "/nodes", workers)
+			return nil
 		}
-		etcdutil.PutOne(ctx.Etcd, c, "/nodes", workers)
-		return nil
+
 	}
 	node := types.Node{
 		Metadata: types.Metadata{
@@ -97,7 +102,7 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 			Name:      ctx.Config.Name,
 		},
 		Roles:        []string{"worker"},
-		BaseURL:      fmt.Sprintf("%s:%d", ctx.Config.Host, ctx.Config.Port),
+		BaseURL:      fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port),
 		Status:       "active",
 		RegisterTime: time.Now().Unix(),
 	}

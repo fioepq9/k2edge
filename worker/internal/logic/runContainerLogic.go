@@ -6,6 +6,7 @@ import (
 	"k2edge/worker/internal/svc"
 	"k2edge/worker/internal/types"
 
+	dockerTypes "github.com/docker/docker/api/types"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -23,11 +24,17 @@ func NewRunContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RunC
 	}
 }
 
-func (l *RunContainerLogic) RunContainer(req *types.RunContainerRequest) error {
+func (l *RunContainerLogic) RunContainer(req *types.RunContainerRequest) (resp *types.RunContainerResponse, err error) {
 	conf := req.Config.DockerFormat()
-	_, err := l.svcCtx.DockerClient.ContainerCreate(l.ctx, &conf, nil, nil, nil, req.ContainerName)
+	_, err = l.svcCtx.DockerClient.ImagePull(l.ctx, req.Config.Image, dockerTypes.ImagePullOptions{})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	res, err := l.svcCtx.DockerClient.ContainerCreate(l.ctx, &conf, nil, nil, nil, req.ContainerName)
+	if err != nil {
+		return nil, err
+	}
+	resp = new(types.RunContainerResponse)
+	resp.ID = res.ID
+	return resp, nil
 }

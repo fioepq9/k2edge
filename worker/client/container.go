@@ -19,8 +19,13 @@ type containers struct {
 	cli *req.Client
 }
 
-func (c containers) Run(ctx context.Context, req RunContainerRequest) error {
-	return c.cli.Post("/container/run").SetBodyJsonMarshal(req).Do(ctx).Err
+func (c containers) Run(ctx context.Context, req RunContainerRequest) (resp *RunContainerResponse, err error) {
+	resp = new(RunContainerResponse)
+	err = c.cli.Post("/container/run").SetBodyJsonMarshal(req).Do(ctx).Err
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (c containers) Remove(ctx context.Context, req RemoveContainerRequest) error {
