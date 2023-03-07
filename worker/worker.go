@@ -52,7 +52,7 @@ func RegisterWorker(ctx *svc.ServiceContext) (func() error, error) {
 	return func() error {
 		c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 		defer cancel()
-		workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "workers")
+		workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "nodes")
 		if err != nil {
 			return err
 		}
@@ -62,14 +62,14 @@ func RegisterWorker(ctx *svc.ServiceContext) (func() error, error) {
 				workers[i].Status = "closed"
 			}
 		})
-		return etcdutil.PutOne(ctx.Etcd, c, "workers", workers)
+		return etcdutil.PutOne(ctx.Etcd, c, "nodes", workers)
 	}, nil
 }
 
 func doRegisterWorker(ctx *svc.ServiceContext) error {
 	c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "workers")
+	workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "nodes")
 	if err != nil {
 		return err
 	}
@@ -82,7 +82,7 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 			return fmt.Errorf("exist name: %s", ctx.Config.Name)
 		} else {
 			workers[idx].Status = "active"
-			etcdutil.PutOne(ctx.Etcd, c, "workers", workers)
+			etcdutil.PutOne(ctx.Etcd, c, "nodes", workers)
 		}
 		return nil
 	}
@@ -97,6 +97,6 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 		RegisterTime: time.Now().Unix(),
 	}
 	workers = append(workers, node)
-	etcdutil.PutOne(ctx.Etcd, c, "workers", workers)
+	etcdutil.PutOne(ctx.Etcd, c, "nodes", workers)
 	return nil
 }
