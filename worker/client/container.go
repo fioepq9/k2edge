@@ -19,9 +19,9 @@ type containers struct {
 	cli *req.Client
 }
 
-func (c containers) Run(ctx context.Context, req RunContainerRequest) (resp *RunContainerResponse, err error) {
-	resp = new(RunContainerResponse)
-	err = c.cli.Post("/container/run").SetBodyJsonMarshal(req).Do(ctx).Err
+func (c containers) Create(ctx context.Context, req CreateContainerRequest) (resp *CreateContainerResponse, err error) {
+	resp = new(CreateContainerResponse)
+	err = c.cli.Post("/container/create").SetBodyJsonMarshal(req).Do(ctx).Err
 	if err != nil {
 		return nil, err
 	}

@@ -5,6 +5,8 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"os"
+	"os/signal"
 	"time"
 
 	"k2edge/etcdutil"
@@ -42,7 +44,15 @@ func main() {
 		panic(err)
 	}
 	defer close()
-	server.Start()
+	go server.Start()
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch)
+	for {
+		sig := <-ch
+		if sig == os.Interrupt {
+			return
+		}
+	}
 }
 
 func RegisterWorker(ctx *svc.ServiceContext) (func() error, error) {
@@ -63,7 +73,7 @@ func RegisterWorker(ctx *svc.ServiceContext) (func() error, error) {
 				workers[i].Status = "closed"
 			}
 		})
-		return etcdutil.PutOne(ctx.Etcd, c, "nodes", workers)
+		return etcdutil.PutOne(ctx.Etcd, c, "/nodes", workers)
 	}, nil
 }
 

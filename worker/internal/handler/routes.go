@@ -26,8 +26,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Route{
 				{
 					Method:  http.MethodPost,
-					Path:    "/container/run",
-					Handler: RunContainerHandler(serverCtx),
+					Path:    "/container/create",
+					Handler: CreateContainerHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,

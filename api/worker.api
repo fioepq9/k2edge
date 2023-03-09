@@ -19,13 +19,13 @@ type VersionResponse {
 	Version string `json:"version"`
 }
 
-type RunContainerRequest {
+type CreateContainerRequest {
 	ContainerName string `json:"container_name"`
 	// the config of container will create and run
 	Config ContainerConfig `json:"config"`
 }
 
-type RunContainerResponse {
+type CreateContainerResponse {
 	ID string `json:"id"`
 }
 
@@ -104,8 +104,8 @@ service worker-api {
 	@doc(
 		summary: "creates and starts a container"
 	)
-	@handler RunContainer
-	post /container/run(RunContainerRequest) returns (RunContainerResponse)
+	@handler CreateContainer
+	post /container/create(CreateContainerRequest) returns (CreateContainerResponse)
 	@doc(
 		summary: "removes the container"
 	)

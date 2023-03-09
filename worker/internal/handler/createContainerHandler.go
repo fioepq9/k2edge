@@ -10,16 +10,16 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func RunContainerHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func CreateContainerHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.RunContainerRequest
+		var req types.CreateContainerRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := logic.NewRunContainerLogic(r.Context(), svcCtx)
-		resp, err := l.RunContainer(&req)
+		l := logic.NewCreateContainerLogic(r.Context(), svcCtx)
+		resp, err := l.CreateContainer(&req)
 		var body types.Response
 		if err != nil {
 			body.Code = -1

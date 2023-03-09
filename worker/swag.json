@@ -43,6 +43,34 @@
         ]
       }
     },
+    "/container/create": {
+      "post": {
+        "summary": "creates and starts a container",
+        "operationId": "CreateContainer",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/CreateContainerResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateContainerRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "worker-api"
+        ]
+      }
+    },
     "/container/exec": {
       "post": {
         "summary": "runs a command in a container.",
@@ -146,34 +174,6 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/RemoveContainerRequest"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "worker-api"
-        ]
-      }
-    },
-    "/container/run": {
-      "post": {
-        "summary": "creates and starts a container",
-        "operationId": "RunContainer",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/RunContainerResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/RunContainerRequest"
             }
           }
         ],
@@ -352,7 +352,7 @@
           "$ref": "#/definitions/Metadata"
         },
         "container_template": {
-          "$ref": "#/definitions/ContainerTemplate"
+          "$ref": "#/definitions/ContainerConfig"
         }
       },
       "title": "Container",
@@ -364,135 +364,32 @@
     "ContainerConfig": {
       "type": "object",
       "properties": {
-        "hostname": {
-          "type": "string",
-          "description": " Hostname"
+        "image": {
+          "type": "string"
         },
-        "domainname": {
-          "type": "string",
-          "description": " Domainname"
+        "node": {
+          "type": "string"
         },
-        "user": {
-          "type": "string",
-          "description": " User that will run the command(s) inside the container, also support user:group"
+        "command": {
+          "type": "string"
         },
-        "attach_stdin": {
-          "type": "boolean",
-          "format": "boolean",
-          "description": " Attach the standard input, makes possible user interaction"
-        },
-        "attach_stdout": {
-          "type": "boolean",
-          "format": "boolean",
-          "description": " Attach the standard output"
-        },
-        "attach_stderr": {
-          "type": "boolean",
-          "format": "boolean",
-          "description": " Attach the standard error"
-        },
-        "exposed_ports": {
+        "args": {
           "type": "array",
           "items": {
             "type": "string"
-          },
-          "description": " List of exposed ports"
+          }
         },
-        "tty": {
-          "type": "boolean",
-          "format": "boolean",
-          "description": " Attach standard streams to a tty, including stdin if it is not closed."
-        },
-        "open_stdin": {
-          "type": "boolean",
-          "format": "boolean",
-          "description": " Open stdin"
-        },
-        "stdin_once": {
-          "type": "boolean",
-          "format": "boolean",
-          "description": " If true, close stdin after the 1 attached client disconnects."
+        "expose": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExposedPort"
+          }
         },
         "env": {
           "type": "array",
           "items": {
             "type": "string"
-          },
-          "description": " List of environment variable to set in the container"
-        },
-        "cmd": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": " Command to run when starting the container"
-        },
-        "healthcheck": {
-          "$ref": "#/definitions/HealthConfig",
-          "description": " Healthcheck describes how to check the container is healthy"
-        },
-        "args_escaped": {
-          "type": "boolean",
-          "format": "boolean",
-          "description": " True if command is already escaped (meaning treat as a command line) (Windows specific)."
-        },
-        "image": {
-          "type": "string",
-          "description": " Name of the image as it was passed by the operator (e.g. could be symbolic)"
-        },
-        "volumes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": " List of volumes (mounts) used for the container"
-        },
-        "working_dir": {
-          "type": "string",
-          "description": " Current directory (PWD) in the command will be launched"
-        },
-        "entrypoint": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": " Entrypoint to run when starting the container"
-        },
-        "network_disabled": {
-          "type": "boolean",
-          "format": "boolean",
-          "description": " Is network disabled"
-        },
-        "mac_address": {
-          "type": "string",
-          "description": " Mac Address of the container"
-        },
-        "on_build": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": " ONBUILD metadata that were defined on the image Dockerfile"
-        },
-        "labels": {
-          "type": "object",
-          "description": " List of labels set to this container"
-        },
-        "stop_signal": {
-          "type": "string",
-          "description": " Signal to stop a container"
-        },
-        "stop_timeout": {
-          "type": "integer",
-          "format": "int32",
-          "description": " Timeout (in seconds) to stop a container"
-        },
-        "shell": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": " Shell for shell-form of RUN, CMD, ENTRYPOINT"
+          }
         }
       },
       "title": "ContainerConfig",
@@ -536,40 +433,32 @@
         "status"
       ]
     },
-    "ContainerTemplate": {
+    "CreateContainerRequest": {
       "type": "object",
       "properties": {
-        "image": {
+        "container_name": {
           "type": "string"
         },
-        "node": {
-          "type": "string"
-        },
-        "command": {
-          "type": "string"
-        },
-        "args": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "expose": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ExposedPort"
-          }
-        },
-        "env": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+        "config": {
+          "$ref": "#/definitions/ContainerConfig"
         }
       },
-      "title": "ContainerTemplate",
+      "title": "CreateContainerRequest",
       "required": [
-        "image"
+        "container_name",
+        "config"
+      ]
+    },
+    "CreateContainerResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "title": "CreateContainerResponse",
+      "required": [
+        "id"
       ]
     },
     "CronJob": {
@@ -784,42 +673,6 @@
         "host_port"
       ]
     },
-    "HealthConfig": {
-      "type": "object",
-      "properties": {
-        "test": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "interval": {
-          "type": "integer",
-          "format": "int64",
-          "description": " Interval is the time to wait between checks."
-        },
-        "timeout": {
-          "type": "integer",
-          "format": "int64",
-          "description": " Timeout is the time to wait before considering the check to have hung."
-        },
-        "start_period": {
-          "type": "integer",
-          "format": "int64",
-          "description": " The start period for the container to initialize before the retries starts to count down."
-        },
-        "retries": {
-          "type": "integer",
-          "format": "int32"
-        }
-      },
-      "title": "HealthConfig",
-      "required": [
-        "test",
-        "interval",
-        "timeout"
-      ]
-    },
     "Job": {
       "type": "object",
       "properties": {
@@ -869,7 +722,7 @@
           "type": "string"
         },
         "template": {
-          "$ref": "#/definitions/ContainerTemplate"
+          "$ref": "#/definitions/ContainerConfig"
         }
       },
       "title": "Job",
@@ -1053,34 +906,6 @@
       "required": [
         "id",
         "force"
-      ]
-    },
-    "RunContainerRequest": {
-      "type": "object",
-      "properties": {
-        "container_name": {
-          "type": "string"
-        },
-        "config": {
-          "$ref": "#/definitions/ContainerConfig"
-        }
-      },
-      "title": "RunContainerRequest",
-      "required": [
-        "container_name",
-        "config"
-      ]
-    },
-    "RunContainerResponse": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "title": "RunContainerResponse",
-      "required": [
-        "id"
       ]
     },
     "StartContainerRequest": {
