@@ -353,12 +353,20 @@
         },
         "container_template": {
           "$ref": "#/definitions/ContainerConfig"
+        },
+        "status": {
+          "type": "string"
+        },
+        "container_id": {
+          "type": "string"
         }
       },
       "title": "Container",
       "required": [
         "metadata",
-        "container_template"
+        "container_template",
+        "status",
+        "container_id"
       ]
     },
     "ContainerConfig": {

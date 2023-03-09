@@ -103,6 +103,8 @@ type ContainerStatus struct {
 type Container struct {
 	Metadata        Metadata        `json:"metadata"`
 	ContainerConfig ContainerConfig `json:"container_template"`
+	Status          string          `json:"status"`
+	ContainerID     string          `json:"container_id"`
 }
 
 type ContainerConfig struct {

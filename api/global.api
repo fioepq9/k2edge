@@ -14,10 +14,11 @@ type ContainerStatus {
 }
 
 type Container {
-	Metadata          	Metadata        `json:"metadata"`
-	ContainerConfig		ContainerConfig `json:"container_template"`
-	Status				string			`json:"status"`
-	ContainerID 		string 			`json:"container_id"`
+	Metadata        Metadata        `json:"metadata"`
+	ContainerConfig ContainerConfig `json:"container_template"`
+	Status          string          `json:"status"`
+	ContainerID     string          `json:"container_id"`
+	Status        interface{}		`json:"status"`
 }
 
 type ContainerConfig {

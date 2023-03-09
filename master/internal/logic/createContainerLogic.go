@@ -8,7 +8,7 @@ import (
 	"k2edge/etcdutil"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
-	"k2edge/master/model"
+	"k2edge/master/types/types.go"
 	"k2edge/worker/client"
 
 	"github.com/zeromicro/go-zero/core/logx"
