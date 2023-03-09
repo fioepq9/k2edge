@@ -99,7 +99,7 @@ type Error struct {
 type Container struct {
 	Metadata        Metadata        `json:"metadata"`
 	ContainerConfig ContainerConfig `json:"container_template"`
-	ContainerStatus ContainerStatus `json:"container_status"`
+	ContainerStatus ContainerStatus `json:"container_status,optional"`
 }
 
 type ContainerConfig struct {
@@ -119,6 +119,7 @@ type ExposedPort struct {
 
 type ContainerStatus struct {
 	Status      string      `json:"status"`
+	Node        string      `json:"node"`
 	ContainerID string      `json:"container_id"`
 	Info        interface{} `json:"info"`
 }

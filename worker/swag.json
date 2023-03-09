@@ -361,8 +361,7 @@
       "title": "Container",
       "required": [
         "metadata",
-        "container_template",
-        "container_status"
+        "container_template"
       ]
     },
     "ContainerConfig": {
@@ -407,6 +406,9 @@
         "status": {
           "type": "string"
         },
+        "node": {
+          "type": "string"
+        },
         "container_id": {
           "type": "string"
         },
@@ -417,6 +419,7 @@
       "title": "ContainerStatus",
       "required": [
         "status",
+        "node",
         "container_id",
         "info"
       ]

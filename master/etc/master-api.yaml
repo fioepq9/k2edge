@@ -1,6 +1,7 @@
 Name: master-api
 Host: 0.0.0.0
 Port: 8080
+Timeout: 0
 Mode: dev
 
 Etcd:

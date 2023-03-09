@@ -55,35 +55,41 @@ func AddOne[T any](cli *clientv3.Client, ctx context.Context, key string, val T)
 		return nil
 	}
 
-	if gresp.Count == 0 {
-		return ErrKeyNotExist
+	if gresp.Count != 0 {
+		value := make([]T, 0)
+		err = json.Unmarshal(gresp.Kvs[0].Value, &value)
+		if err != nil {
+			return err
+		}
+		// 添加新值
+		value = append(value, val)
+		vbyte, err := json.Marshal(value)
+
+		if err != nil {
+			return err
+		}
+
+		//事务提交
+		commit, err := cli.Txn(ctx).If(clientv3.Compare(clientv3.ModRevision(key), "=", gresp.Kvs[0].ModRevision)).Then(
+			clientv3.OpPut(key, string(vbyte))).Commit()
+
+		if err != nil {
+			return err
+		}
+
+		if !commit.Succeeded {
+			return fmt.Errorf("transaction execution failed when adding %s , please try again", key)
+		}
+		return nil
 	}
-
-	var value []T
-	err = json.Unmarshal(gresp.Kvs[0].Value, &value)
-
-	if err != nil {
-		return err
-	}
-
-	// 添加新值
-	value = append(value, val)
+	value := []T{val}
 	vbyte, err := json.Marshal(value)
-
 	if err != nil {
 		return err
 	}
-
-	//事务提交
-	commit, err := cli.Txn(ctx).If(clientv3.Compare(clientv3.ModRevision(key), "=", gresp.Kvs[0].ModRevision)).Then(
-		clientv3.OpPut(key, string(vbyte))).Commit()
-
+	_, err = cli.Put(ctx, key, string(vbyte))
 	if err != nil {
 		return err
-	}
-
-	if !commit.Succeeded {
-		return fmt.Errorf("transaction execution failed when adding %s , please try again", key)
 	}
 	return nil
 }
@@ -145,7 +151,7 @@ func IsExist(cli *clientv3.Client, ctx context.Context, key string, metadata Met
 	if err != nil {
 		return false, err
 	}
-	
+
 	if err != nil {
 		return false, err
 	}

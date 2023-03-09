@@ -3,12 +3,10 @@ package logic
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"k2edge/etcdutil"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
-	"k2edge/master/types/types.go"
 	"k2edge/worker/client"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -36,22 +34,32 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	}
 	cli := client.NewClient(worker.BaseURL)
 	var c types.Container
-	container.Container = req.Container
-	container.ContainerStatus = model.ContainerStatus{
-		Node:          worker.Metadata.Name,
-		ContainerName: fmt.Sprintf("%s-%d", req.Container.Metadata.Name, time.Now().Unix()),
+	c.Metadata = req.Container.Metadata
+	c.Metadata.Kind = "container"
+	c.ContainerConfig = req.Container.ContainerConfig
+	c.ContainerStatus.Node = worker.Metadata.Name
+	expose := make([]client.ExposedPort, 0)
+	for _, e := range c.ContainerConfig.Expose {
+		expose = append(expose, client.ExposedPort{
+			Port:     e.Port,
+			Protocol: e.Protocol,
+			HostPort: e.HostPort,
+		})
 	}
-	r, err := cli.Containers().Run(l.ctx, client.RunContainerRequest{
-		ContainerName: container.ContainerStatus.ContainerName,
+	res, err := cli.Containers().Create(l.ctx, client.CreateContainerRequest{
+		ContainerName: req.Container.Metadata.Name,
 		Config: client.ContainerConfig{
-			Image: container.ContainerTemplate.Image,
-			Cmd:   append([]string{container.ContainerTemplate.Command}, container.ContainerTemplate.Args...),
-			Env:   container.ContainerTemplate.Env,
+			Image:   c.ContainerConfig.Image,
+			Node:    c.ContainerConfig.Node,
+			Command: c.ContainerConfig.Command,
+			Args:    c.ContainerConfig.Args,
+			Expose:  expose,
+			Env:     c.ContainerConfig.Env,
 		},
 	})
 	if err != nil {
 		return err
 	}
-	container.ContainerStatus.ContainerID = r.ID
-	return etcdutil.AddOne(l.svcCtx.Etcd, l.ctx, "/containers", container)
+	c.ContainerStatus.ContainerID = res.ID
+	return etcdutil.AddOne(l.svcCtx.Etcd, l.ctx, "/containers", c)
 }
