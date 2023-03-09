@@ -91,13 +91,10 @@ type Error struct {
 	Todo string `json:"todo"`
 }
 
-type ContainerStatus struct {
-	Todo string `json:"todo"`
-}
-
 type Container struct {
 	Metadata        Metadata        `json:"metadata"`
 	ContainerConfig ContainerConfig `json:"container_template"`
+	ContainerStatus ContainerStatus `json:"container_status"`
 }
 
 type ContainerConfig struct {
@@ -113,6 +110,12 @@ type ExposedPort struct {
 	Port     int64  `json:"port"`
 	Protocol string `json:"protocol"`
 	HostPort int64  `json:"host_port"`
+}
+
+type ContainerStatus struct {
+	Status      string      `json:"status"`
+	ContainerID string      `json:"container_id"`
+	Info        interface{} `json:"info"`
 }
 
 type JobConfig struct {

@@ -354,19 +354,15 @@
         "container_template": {
           "$ref": "#/definitions/ContainerConfig"
         },
-        "status": {
-          "type": "string"
-        },
-        "container_id": {
-          "type": "string"
+        "container_status": {
+          "$ref": "#/definitions/ContainerStatus"
         }
       },
       "title": "Container",
       "required": [
         "metadata",
         "container_template",
-        "status",
-        "container_id"
+        "container_status"
       ]
     },
     "ContainerConfig": {
@@ -408,13 +404,21 @@
     "ContainerStatus": {
       "type": "object",
       "properties": {
-        "todo": {
+        "status": {
           "type": "string"
+        },
+        "container_id": {
+          "type": "string"
+        },
+        "info": {
+          "type": "object"
         }
       },
       "title": "ContainerStatus",
       "required": [
-        "todo"
+        "status",
+        "container_id",
+        "info"
       ]
     },
     "ContainerStatusRequest": {

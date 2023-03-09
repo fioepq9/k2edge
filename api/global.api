@@ -9,16 +9,10 @@ type Error {
 }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Container <<<<<<<<<<<<<<<<<<<<<<<<<<
-type ContainerStatus {
-	Todo string `json:"todo"`
-}
-
 type Container {
 	Metadata        Metadata        `json:"metadata"`
 	ContainerConfig ContainerConfig `json:"container_template"`
-	Status          string          `json:"status"`
-	ContainerID     string          `json:"container_id"`
-	Status        interface{}		`json:"status"`
+	ContainerStatus ContainerStatus `json:"container_status"`
 }
 
 type ContainerConfig {
@@ -34,6 +28,12 @@ type ExposedPort {
 	Port     int64  `json:"port"`
 	Protocol string `json:"protocol"`
 	HostPort int64  `json:"host_port"`
+}
+
+type ContainerStatus {
+	Status      string      `json:"status"`
+	ContainerID string      `json:"container_id"`
+	Info        interface{} `json:"info"`
 }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Job <<<<<<<<<<<<<<<<<<<<<<<<<<

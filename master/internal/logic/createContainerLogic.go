@@ -35,7 +35,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		return fmt.Errorf("not found worker can run")
 	}
 	cli := client.NewClient(worker.BaseURL)
-	var container model.Container
+	var c types.Container
 	container.Container = req.Container
 	container.ContainerStatus = model.ContainerStatus{
 		Node:          worker.Metadata.Name,
