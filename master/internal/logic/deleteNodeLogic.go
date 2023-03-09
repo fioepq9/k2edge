@@ -29,7 +29,7 @@ func (l *DeleteNodeLogic) DeleteNode(req *types.DeleteRequest) error {
 	key := "/nodes"
 	isExist, err := etcdutil.IsExist(l.svcCtx.Etcd, l.ctx, key, etcdutil.Metadata{
 		Namespace: req.Metadata.Namespace,
-		Kind: req.Metadata.Kind,
+		Kind: "node",
 		Name: req.Metadata.Name,
 	})
 
@@ -50,19 +50,7 @@ func (l *DeleteNodeLogic) DeleteNode(req *types.DeleteRequest) error {
 		}
 	})
 
-	// node, err := etcdutil.GetOne[[]types.Node](l.svcCtx.Etcd, l.ctx, key)
-	// if err != nil {
-	// 	return err
-	// }
 
-	// // 判断是否已存在 node
-	// for _, n := range *node {
-	// 	if n.Metadata.Name == req.Name {
-	// 		return fmt.Errorf("node %s already exists", req.Name)
-	// 	}
-	// }
-
-	// return nil
 	if err != nil {
 		return err
 	}

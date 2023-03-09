@@ -40,11 +40,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/run",
-				Handler: RunContainerHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
 				Path:    "/apply",
 				Handler: ApplyContainerHandler(serverCtx),
 			},

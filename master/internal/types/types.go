@@ -25,14 +25,6 @@ type DeleteContainerResponse struct {
 	Error Error `json:"error,omitempty"`
 }
 
-type RunContainerRequest struct {
-	Container Container `json:"container"`
-}
-
-type RunContainerResponse struct {
-	Error Error `json:"error,omitempty"`
-}
-
 type ApplyContainerRequest struct {
 	Todo string `json:"todo"`
 }

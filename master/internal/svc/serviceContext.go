@@ -36,6 +36,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 type WorkerFilter func([]types.Node) ([]types.Node, error)
 
 func (s *ServiceContext) Worker(filters ...WorkerFilter) (*types.Node, error) {
+	// if len(filters) == 0 {
+	//	负载均衡算法	
+	// }
+
 	nodes, err := etcdutil.GetOne[[]types.Node](s.Etcd, context.TODO(), "/nodes")
 	if err != nil {
 		return nil, err

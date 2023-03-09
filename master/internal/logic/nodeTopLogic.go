@@ -24,7 +24,7 @@ func NewNodeTopLogic(ctx context.Context, svcCtx *svc.ServiceContext) *NodeTopLo
 }
 
 func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopResponse, err error) {
-	// todo: add your logic here and delete this line
+	
 
 	return
 }

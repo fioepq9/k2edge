@@ -218,33 +218,6 @@
         ]
       }
     },
-    "/container/run": {
-      "post": {
-        "operationId": "RunContainer",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/RunContainerResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/RunContainerRequest"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
     "/container/top": {
       "get": {
         "operationId": "ContainerTop",
@@ -2504,30 +2477,6 @@
         "namespace",
         "roles",
         "base_url"
-      ]
-    },
-    "RunContainerRequest": {
-      "type": "object",
-      "properties": {
-        "container": {
-          "$ref": "#/definitions/Container"
-        }
-      },
-      "title": "RunContainerRequest",
-      "required": [
-        "container"
-      ]
-    },
-    "RunContainerResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "RunContainerResponse",
-      "required": [
-        "error"
       ]
     },
     "ScaleRequest": {

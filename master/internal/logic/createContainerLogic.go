@@ -29,6 +29,7 @@ func NewCreateContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 }
 
 func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest) error {
+	// 从 etcd 中获取需要创建容器的 worker 结点
 	worker, err := l.svcCtx.Worker()
 	if err != nil {
 		return fmt.Errorf("not found worker can run")

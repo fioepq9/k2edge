@@ -15,9 +15,6 @@ service master-api{
 	@handler DeleteContainer
 	post /delete(DeleteContainerRequest) returns (DeleteContainerResponse)
 	
-	@handler RunContainer
-	post /run(RunContainerRequest) returns (RunContainerResponse)
-	
 	@handler ApplyContainer
 	post /apply(ApplyContainerRequest) returns (ApplyContainerResponse)
 	
@@ -51,14 +48,6 @@ type DeleteContainerRequest {
 }
 
 type DeleteContainerResponse {
-	Error Error `json:"error,omitempty"`
-}
-
-type RunContainerRequest {
-	Container Container `json:"container"`
-}
-
-type RunContainerResponse {
 	Error Error `json:"error,omitempty"`
 }
 
