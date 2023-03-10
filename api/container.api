@@ -10,13 +10,16 @@ service master-api{
 	post /create(CreateContainerRequest)
 	
 	@handler GetContainer
-	get /get(GetContainerRequest) returns (GetContainerResponse)
+	post /get(GetContainerRequest) returns (GetContainerResponse)
+	
+	@handler ListContainer
+	get /list returns (ListContainerResponse)
 	
 	@handler DeleteContainer
-	post /delete(DeleteContainerRequest) returns (DeleteContainerResponse)
+	post /delete(DeleteContainerRequest)
 	
 	@handler ApplyContainer
-	post /apply(ApplyContainerRequest) returns (ApplyContainerResponse)
+	post /apply(ApplyContainerRequest)
 	
 	@handler AttachContainer
 	post /attach(AttachContainerRequest) returns (AttachContainerResponse)
@@ -36,27 +39,29 @@ type CreateContainerRequest {
 }
 
 type GetContainerRequest {
-	Todo string `json:"todo"`
+	Metadata Metadata `json:"metadata"`
 }
 
 type GetContainerResponse {
 	Container Container `json:"container"`
 }
 
-type DeleteContainerRequest {
-	Todo string `json:"todo"`
+type ListContainerResponse {
+	ContainerSimpleInfo []ContainerSimpleInfo `json:"containers"`
 }
 
-type DeleteContainerResponse {
-	Error Error `json:"error,omitempty"`
+type ContainerSimpleInfo {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	Node   string `json:"node"`
+}
+
+type DeleteContainerRequest {
+	Metadata Metadata `json:"metadata"`
 }
 
 type ApplyContainerRequest {
 	Todo string `json:"todo"`
-}
-
-type ApplyContainerResponse {
-	Error Error `json:"error,omitempty"`
 }
 
 type HistoryContainerRequest {

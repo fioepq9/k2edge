@@ -61,5 +61,6 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		return err
 	}
 	c.ContainerStatus.ContainerID = res.ID
+	fmt.Println(res.ID)
 	return etcdutil.AddOne(l.svcCtx.Etcd, l.ctx, "/containers", c)
 }

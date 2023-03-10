@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
@@ -20,8 +21,17 @@ type containers struct {
 }
 
 func (c containers) Create(ctx context.Context, req CreateContainerRequest) (resp *CreateContainerResponse, err error) {
+	var respbody Response
 	resp = new(CreateContainerResponse)
-	err = c.cli.Post("/container/create").SetBodyJsonMarshal(req).Do(ctx).Err
+	err = c.cli.Post("/container/create").SetBodyJsonMarshal(req).Do(ctx).Into(&respbody)
+	if err != nil {
+		return nil, err
+	}
+	b, err := json.Marshal(respbody.Data)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(b, resp)
 	if err != nil {
 		return nil, err
 	}

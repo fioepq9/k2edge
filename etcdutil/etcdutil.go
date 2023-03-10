@@ -13,7 +13,7 @@ var (
 	ErrKeyNotExist error = fmt.Errorf("key not exist")
 )
 
-// 获取对应 key 的 value,将得到的 Json 解析并返回
+// 获取对应 key 的 value,将得到的 Json 解析并返回, T 类型为 []value
 func GetOne[T any](cli *clientv3.Client, ctx context.Context, key string) (result *T, err error) {
 	gresp, err := cli.KV.Get(ctx, key)
 	if err != nil {
@@ -47,7 +47,7 @@ func PutOne[T any](cli *clientv3.Client, ctx context.Context, key string, val T)
 	return nil
 }
 
-// 将 val 值添加到 key 对应的 []val 中
+// 将 val 值添加到 key 对应的 []val 中，T 类型为 value
 func AddOne[T any](cli *clientv3.Client, ctx context.Context, key string, val T) error {
 	// 获取旧值
 	gresp, err := cli.KV.Get(ctx, key)
@@ -94,7 +94,7 @@ func AddOne[T any](cli *clientv3.Client, ctx context.Context, key string, val T)
 	return nil
 }
 
-// 删除 key 下的某个 value 值，通过 lo.filter 来进行过滤, T 不为数组
+// 删除 key 下的某个 value 值，通过 lo.filter 来进行过滤, T 类型为 value
 func DeleteOne[T any](cli *clientv3.Client, ctx context.Context, key string, filter func(item T, index int) bool) error {
 	// 获取旧值
 	gresp, err := cli.KV.Get(ctx, key)

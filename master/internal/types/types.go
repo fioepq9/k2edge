@@ -10,27 +10,29 @@ type CreateContainerRequest struct {
 }
 
 type GetContainerRequest struct {
-	Todo string `json:"todo"`
+	Metadata Metadata `json:"metadata"`
 }
 
 type GetContainerResponse struct {
 	Container Container `json:"container"`
 }
 
-type DeleteContainerRequest struct {
-	Todo string `json:"todo"`
+type ListContainerResponse struct {
+	ContainerSimpleInfo []ContainerSimpleInfo `json:"containers"`
 }
 
-type DeleteContainerResponse struct {
-	Error Error `json:"error,omitempty"`
+type ContainerSimpleInfo struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	Node   string `json:"node"`
+}
+
+type DeleteContainerRequest struct {
+	Metadata Metadata `json:"metadata"`
 }
 
 type ApplyContainerRequest struct {
 	Todo string `json:"todo"`
-}
-
-type ApplyContainerResponse struct {
-	Error Error `json:"error,omitempty"`
 }
 
 type HistoryContainerRequest struct {

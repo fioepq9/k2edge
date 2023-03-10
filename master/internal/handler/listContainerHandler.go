@@ -10,23 +10,17 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func ApplyContainerHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func ListContainerHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.ApplyContainerRequest
-		if err := httpx.Parse(r, &req); err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-			return
-		}
-
-		l := logic.NewApplyContainerLogic(r.Context(), svcCtx)
-		err := l.ApplyContainer(&req)
+		l := logic.NewListContainerLogic(r.Context(), svcCtx)
+		resp, err := l.ListContainer()
 		var body types.Response
 		if err != nil {
 			body.Code = -1
 			body.Msg = err.Error()
 		} else {
 			body.Msg = "success"
-
+			body.Data = resp
 		}
 		httpx.OkJsonCtx(r.Context(), w, body)
 	}

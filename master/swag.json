@@ -39,9 +39,7 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/ApplyContainerResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
@@ -118,9 +116,7 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/DeleteContainerResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
@@ -167,7 +163,7 @@
       }
     },
     "/container/get": {
-      "get": {
+      "post": {
         "operationId": "GetContainer",
         "responses": {
           "200": {
@@ -179,12 +175,31 @@
         },
         "parameters": [
           {
-            "name": "todo",
-            "in": "query",
+            "name": "body",
+            "in": "body",
             "required": true,
-            "type": "string"
+            "schema": {
+              "$ref": "#/definitions/GetContainerRequest"
+            }
           }
         ],
+        "requestBody": {},
+        "tags": [
+          "master-api"
+        ]
+      }
+    },
+    "/container/list": {
+      "get": {
+        "operationId": "ListContainer",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ListContainerResponse"
+            }
+          }
+        },
         "requestBody": {},
         "tags": [
           "master-api"
@@ -1201,18 +1216,6 @@
         "todo"
       ]
     },
-    "ApplyContainerResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "ApplyContainerResponse",
-      "required": [
-        "error"
-      ]
-    },
     "ApplyCronJobRequest": {
       "type": "object",
       "properties": {
@@ -1410,6 +1413,26 @@
       "title": "ContainerConfig",
       "required": [
         "image"
+      ]
+    },
+    "ContainerSimpleInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "node": {
+          "type": "string"
+        }
+      },
+      "title": "ContainerSimpleInfo",
+      "required": [
+        "name",
+        "status",
+        "node"
       ]
     },
     "ContainerStatus": {
@@ -1639,25 +1662,13 @@
     "DeleteContainerRequest": {
       "type": "object",
       "properties": {
-        "todo": {
-          "type": "string"
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
         }
       },
       "title": "DeleteContainerRequest",
       "required": [
-        "todo"
-      ]
-    },
-    "DeleteContainerResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "DeleteContainerResponse",
-      "required": [
-        "error"
+        "metadata"
       ]
     },
     "DeleteCronJobRequest": {
@@ -1921,13 +1932,13 @@
     "GetContainerRequest": {
       "type": "object",
       "properties": {
-        "todo": {
-          "type": "string"
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
         }
       },
       "title": "GetContainerRequest",
       "required": [
-        "todo"
+        "metadata"
       ]
     },
     "GetContainerResponse": {
@@ -2237,6 +2248,21 @@
       "title": "JobStatus",
       "required": [
         "todo"
+      ]
+    },
+    "ListContainerResponse": {
+      "type": "object",
+      "properties": {
+        "containers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContainerSimpleInfo"
+          }
+        }
+      },
+      "title": "ListContainerResponse",
+      "required": [
+        "containers"
       ]
     },
     "ListNamespaceRequest": {

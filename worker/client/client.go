@@ -2,7 +2,6 @@ package client
 
 import (
 	"fmt"
-	"k2edge/worker/internal/types"
 	"time"
 
 	"github.com/imroc/req/v3"
@@ -14,7 +13,7 @@ type Client struct {
 
 func NewClient(BaseURL string) *Client {
 	var cli Client
-	cli.Client = req.C().
+	cli.Client = req.C().DevMode().
 		SetBaseURL(BaseURL).
 		SetCommonRetryCount(2).
 		SetCommonRetryBackoffInterval(time.Second, 5*time.Second).
@@ -28,12 +27,6 @@ func NewClient(BaseURL string) *Client {
 			if !resp.IsSuccessState() {
 				resp.Err = fmt.Errorf("bad response, raw content:\n%s", resp.Dump())
 				return nil
-			}
-			if r, ok := resp.SuccessResult().(*types.Response); ok {
-				if r.Code != 0 {
-					resp.Err = fmt.Errorf("code: %d, msg: %s", r.Code, r.Msg)
-					return nil
-				}
 			}
 			return nil
 		})

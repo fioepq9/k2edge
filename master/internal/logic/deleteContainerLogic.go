@@ -23,8 +23,8 @@ func NewDeleteContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *D
 	}
 }
 
-func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest) (resp *types.DeleteContainerResponse, err error) {
+func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest) error {
 	// todo: add your logic here and delete this line
 
-	return
+	return nil
 }

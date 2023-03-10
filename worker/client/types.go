@@ -98,7 +98,7 @@ type Error struct {
 
 type Container struct {
 	Metadata        Metadata        `json:"metadata"`
-	ContainerConfig ContainerConfig `json:"container_template"`
+	ContainerConfig ContainerConfig `json:"container_config"`
 	ContainerStatus ContainerStatus `json:"container_status,optional"`
 }
 
