@@ -2,7 +2,6 @@ package client
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
@@ -21,21 +20,11 @@ type containers struct {
 }
 
 func (c containers) Create(ctx context.Context, req CreateContainerRequest) (resp *CreateContainerResponse, err error) {
-	var respbody Response
-	resp = new(CreateContainerResponse)
-	err = c.cli.Post("/container/create").SetBodyJsonMarshal(req).Do(ctx).Into(&respbody)
-	if err != nil {
-		return nil, err
-	}
-	b, err := json.Marshal(respbody.Data)
-	if err != nil {
-		return nil, err
-	}
-	err = json.Unmarshal(b, resp)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	err = c.cli.
+		Post("/container/create").
+		SetBodyJsonMarshal(req).
+		Do(ctx).Into(&resp)
+	return
 }
 
 func (c containers) Remove(ctx context.Context, req RemoveContainerRequest) error {
@@ -51,12 +40,11 @@ func (c containers) Start(ctx context.Context, req StartContainerRequest) error 
 }
 
 func (c containers) Status(ctx context.Context, req ContainerStatusRequest) (resp *ContainerStatusResponse, err error) {
-	resp = new(ContainerStatusResponse)
-	err = c.cli.Get("/container/status").AddQueryParam("id", req.ID).Do(ctx).Into(&resp)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	err = c.cli.
+		Get("/container/status").
+		AddQueryParam("id", req.ID).
+		Do(ctx).Into(&resp)
+	return
 }
 
 func (c containers) List(ctx context.Context, req ListContainersRequest) (resp *ListContainersResponse, err error) {
