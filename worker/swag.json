@@ -879,7 +879,7 @@
           }
         },
         "base_url": {
-          "type": "string"
+          "$ref": "#/definitions/NodeURL"
         },
         "status": {
           "type": "string"
@@ -896,6 +896,22 @@
         "base_url",
         "status",
         "register_time"
+      ]
+    },
+    "NodeURL": {
+      "type": "object",
+      "properties": {
+        "worker_url": {
+          "type": "string"
+        },
+        "master_url": {
+          "type": "string"
+        }
+      },
+      "title": "NodeURL",
+      "required": [
+        "worker_url",
+        "master_url"
       ]
     },
     "RemoveContainerRequest": {

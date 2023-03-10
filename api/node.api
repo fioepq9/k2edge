@@ -33,7 +33,7 @@ type RegisterRequest {
 	Name      string   `json:"name"`
 	Namespace string   `json:"namespace"`
 	Roles     []string `json:"roles"`
-	BaseURL   string   `json:"base_url"`
+	BaseURL   NodeURL  `json:"base_url"`
 }
 
 type NodeTopRequest {

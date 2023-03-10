@@ -190,9 +190,14 @@ type Token struct {
 type Node struct {
 	Metadata     Metadata `json:"metadata"`
 	Roles        []string `json:"roles"`
-	BaseURL      string   `json:"base_url"`
+	BaseURL      NodeURL  `json:"base_url"`
 	Status       string   `json:"status"`
 	RegisterTime int64    `json:"register_time"`
+}
+
+type NodeURL struct {
+	WorkerURL string `json:"worker_url"`
+	MasterURL string `json:"master_url"`
 }
 
 type Command struct {
@@ -405,7 +410,7 @@ type RegisterRequest struct {
 	Name      string   `json:"name"`
 	Namespace string   `json:"namespace"`
 	Roles     []string `json:"roles"`
-	BaseURL   string   `json:"base_url"`
+	BaseURL   NodeURL  `json:"base_url"`
 }
 
 type NodeTopRequest struct {

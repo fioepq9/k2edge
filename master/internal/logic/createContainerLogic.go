@@ -10,6 +10,7 @@ import (
 	"k2edge/worker/client"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/google/uuid"
 )
 
 type CreateContainerLogic struct {
@@ -27,23 +28,30 @@ func NewCreateContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 }
 
 func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest) error {
-	// 从 etcd 中获取需要创建容器的 worker 结点，根据在线调度算法自动获取
-	worker, err := l.svcCtx.Worker()
-	if err != nil {
-		return fmt.Errorf("not found worker can run")
+	var worker *types.Node
+	var err error
+	// 如果有指定结点，根据选择的结点创建容器
+	if req.Container.ContainerConfig.Node != "" {
+		
+
+	} else {
+		// 从 etcd 中获取需要创建容器的 worker 结点，根据在线调度算法自动获取
+		worker, err = l.svcCtx.Worker()
+		if err != nil {
+			return fmt.Errorf("not found worker can run")
+		}
 	}
 
-	// 根据选择的结点创建容器
-	// if req.Container.ContainerConfig.Node != nil {
-		                                                                                        
-	// }
-
-	cli := client.NewClient(worker.BaseURL)
+	cli := client.NewClient(worker.BaseURL.WorkerURL)
 	var c types.Container
 	c.Metadata = req.Container.Metadata
 	c.Metadata.Kind = "container"
 	c.ContainerConfig = req.Container.ContainerConfig
 	c.ContainerStatus.Node = worker.Metadata.Name
+
+	if c.Metadata.Name == "" {
+		c.Metadata.Name = c.ContainerConfig.Image + uuid.New().String()
+	}
 
 	// 判断容器是否已经存在
 	isExist, err := etcdutil.IsExist(l.svcCtx.Etcd, l.ctx, "/containers", etcdutil.Metadata{
@@ -59,7 +67,6 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	if isExist {
 		return fmt.Errorf("container %s already exist", c.Metadata.Name)
 	}
-
 
 	expose := make([]client.ExposedPort, 0)
 	for _, e := range c.ContainerConfig.Expose {

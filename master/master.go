@@ -95,10 +95,14 @@ func doRegisterMaster(ctx *svc.ServiceContext) error {
 		
 		if found {
 			if item.Status == "active" {
+				// 结点原本被注册为 master
 				if lo.Contains(item.Roles, "master") {
 					return fmt.Errorf("master already exist")
 				}
+
+				// 结点原本被注册为 worker
 				nodes[idx].Roles = append(nodes[idx].Roles, "master")
+				nodes[idx].BaseURL.MasterURL = fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port)
 			} else {
 				nodes[idx].Status = "active"
 				nodes[idx].Roles = []string{"master"}
@@ -109,6 +113,7 @@ func doRegisterMaster(ctx *svc.ServiceContext) error {
 
 	}
 
+	// 结点原本没被注册过
 	node := types.Node{
 		Metadata: types.Metadata{
 			Namespace: registerNamespace,
@@ -116,7 +121,10 @@ func doRegisterMaster(ctx *svc.ServiceContext) error {
 			Name:      ctx.Config.Name,
 		},
 		Roles:        []string{"master"},
-		BaseURL:      fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port),
+		BaseURL:      types.NodeURL{
+			WorkerURL:	"",
+			MasterURL: 	fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port),
+		},
 		Status:       "active",
 		RegisterTime: time.Now().Unix(),
 	}

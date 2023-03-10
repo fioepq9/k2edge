@@ -43,7 +43,7 @@ func (l *GetContainerLogic) GetContainer(req *types.GetContainerRequest) (resp *
 		}
 	}
 	
-	// 根据 node 名字查询 node 的 BaseURL
+	// 根据 node 名字查询 worker node 的 BaseURL
 	nodes, err := etcdutil.GetOne[[]types.Node](l.svcCtx.Etcd, l.ctx, "/nodes")
 
 	if err != nil {
@@ -52,7 +52,7 @@ func (l *GetContainerLogic) GetContainer(req *types.GetContainerRequest) (resp *
 
 	for _, n := range *nodes {
 		if n.Metadata.Name == nodeName {
-			nodeBaseURL = n.BaseURL
+			nodeBaseURL = n.BaseURL.WorkerURL
 			break
 		}
 	}

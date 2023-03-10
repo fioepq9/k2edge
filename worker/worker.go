@@ -93,12 +93,13 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 		})
 		if found {
 			if item.Status == "active" {
+				// 结点原本被注册为 worker
 				if lo.Contains(item.Roles, "worker") {
 					return fmt.Errorf("exist worker name: %s", ctx.Config.Name)
 				}
-				// 名字相同但是是 master 结点，则存储 worker 的url
-				workers[idx].BaseURL = fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port)
+				// 结点原本被注册为 master
 				workers[idx].Roles = append(workers[idx].Roles, "worker")
+				workers[idx].BaseURL.WorkerURL = fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port)
 			} else {
 				workers[idx].Status = "active"
 				workers[idx].Roles = []string{"worker"}
@@ -109,6 +110,7 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 
 	}
 	
+	// 结点原本没被注册过
 	node := types.Node{
 		Metadata: types.Metadata{
 			Namespace: "",
@@ -116,7 +118,10 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 			Name:      ctx.Config.Name,
 		},
 		Roles:        []string{"worker"},
-		BaseURL:      fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port),
+		BaseURL:      types.NodeURL{
+			WorkerURL:	fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port),
+			MasterURL: 	"",
+		},
 		Status:       "active",
 		RegisterTime: time.Now().Unix(),
 	}

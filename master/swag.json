@@ -2447,7 +2447,7 @@
           }
         },
         "base_url": {
-          "type": "string"
+          "$ref": "#/definitions/NodeURL"
         },
         "status": {
           "type": "string"
@@ -2493,6 +2493,22 @@
         "top_info"
       ]
     },
+    "NodeURL": {
+      "type": "object",
+      "properties": {
+        "worker_url": {
+          "type": "string"
+        },
+        "master_url": {
+          "type": "string"
+        }
+      },
+      "title": "NodeURL",
+      "required": [
+        "worker_url",
+        "master_url"
+      ]
+    },
     "RegisterRequest": {
       "type": "object",
       "properties": {
@@ -2509,7 +2525,7 @@
           }
         },
         "base_url": {
-          "type": "string"
+          "$ref": "#/definitions/NodeURL"
         }
       },
       "title": "RegisterRequest",
