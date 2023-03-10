@@ -6,6 +6,7 @@ import (
 	"k2edge/worker/internal/middleware"
 	"sync"
 	"time"
+	"os"
 
 	"github.com/zeromicro/go-zero/rest"
 
@@ -45,6 +46,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			if err != nil {
 				panic(err)
 			}
+
+			c.Name, err = os.Hostname()
+			if err != nil {
+				c.Name = "MyHost"
+			}
+
 			C = &ServiceContext{
 				Config:         c,
 				AuthMiddleware: middleware.NewAuthMiddleware().Handle,
@@ -53,5 +60,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			}
 		})
 	}
+
 	return C
 }

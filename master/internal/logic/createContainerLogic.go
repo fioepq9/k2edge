@@ -27,17 +27,40 @@ func NewCreateContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 }
 
 func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest) error {
-	// 从 etcd 中获取需要创建容器的 worker 结点
+	// 从 etcd 中获取需要创建容器的 worker 结点，根据在线调度算法自动获取
 	worker, err := l.svcCtx.Worker()
 	if err != nil {
 		return fmt.Errorf("not found worker can run")
 	}
+
+	// 根据选择的结点创建容器
+	// if req.Container.ContainerConfig.Node != nil {
+		                                                                                        
+	// }
+
 	cli := client.NewClient(worker.BaseURL)
 	var c types.Container
 	c.Metadata = req.Container.Metadata
 	c.Metadata.Kind = "container"
 	c.ContainerConfig = req.Container.ContainerConfig
 	c.ContainerStatus.Node = worker.Metadata.Name
+
+	// 判断容器是否已经存在
+	isExist, err := etcdutil.IsExist(l.svcCtx.Etcd, l.ctx, "/containers", etcdutil.Metadata{
+		Namespace: c.Metadata.Namespace,
+		Kind: c.Metadata.Kind,
+		Name: c.Metadata.Name,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if isExist {
+		return fmt.Errorf("container %s already exist", c.Metadata.Name)
+	}
+
+
 	expose := make([]client.ExposedPort, 0)
 	for _, e := range c.ContainerConfig.Expose {
 		expose = append(expose, client.ExposedPort{
@@ -46,6 +69,8 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 			HostPort: e.HostPort,
 		})
 	}
+
+	// 访问 worker 结点并创建容器
 	res, err := cli.Containers().Create(l.ctx, client.CreateContainerRequest{
 		ContainerName: req.Container.Metadata.Name,
 		Config: client.ContainerConfig{
@@ -62,5 +87,6 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	}
 	c.ContainerStatus.ContainerID = res.ID
 	fmt.Println(res.ID)
+	// 将容器信息写入etcd
 	return etcdutil.AddOne(l.svcCtx.Etcd, l.ctx, "/containers", c)
 }

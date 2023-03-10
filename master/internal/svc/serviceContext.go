@@ -7,6 +7,7 @@ import (
 	"k2edge/master/internal/config"
 	"k2edge/master/internal/types"
 	"time"
+	"os"
 
 	"github.com/samber/lo"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -27,6 +28,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	if err != nil {
 		panic(err)
 	}
+	c.Name, err = os.Hostname()
+	if err != nil {
+		c.Name = "MyHost"
+	}
+
 	return &ServiceContext{
 		Config: c,
 		Etcd:   etcd,

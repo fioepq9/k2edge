@@ -21,6 +21,7 @@ import (
 )
 
 var configFile = flag.String("f", "etc/worker-api.yaml", "the config file")
+var registerNamespace = "" 
 
 func main() {
 	flag.Parse()
@@ -88,13 +89,15 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 	if workersPtr != nil {
 		workers = *workersPtr
 		item, idx, found := lo.FindIndexOf(workers, func(item types.Node) bool {
-			return item.Metadata.Name == ctx.Config.Name
+			return item.Metadata.Name == ctx.Config.Name && item.Metadata.Namespace == registerNamespace
 		})
 		if found {
 			if item.Status == "active" {
 				if lo.Contains(item.Roles, "worker") {
 					return fmt.Errorf("exist worker name: %s", ctx.Config.Name)
 				}
+				// 名字相同但是是 master 结点，则存储 worker 的url
+				workers[idx].BaseURL = fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port)
 				workers[idx].Roles = append(workers[idx].Roles, "worker")
 			} else {
 				workers[idx].Status = "active"
@@ -105,6 +108,7 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 		}
 
 	}
+	
 	node := types.Node{
 		Metadata: types.Metadata{
 			Namespace: "",
