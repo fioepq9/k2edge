@@ -31,8 +31,28 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	var worker *types.Node
 	var err error
 	// 如果有指定结点，根据选择的结点创建容器
-	if req.Container.ContainerConfig.Node != "" {
-		
+	if req.Container.ContainerConfig.NodeName != "" {
+		// Node 的 Namespace
+		nodes , err := etcdutil.GetOne[[]types.Node](l.svcCtx.Etcd, l.ctx, "/nodes")
+		if err != nil {
+			return err
+		}
+
+		// 判断结点是否存在
+		found := false
+		for _, n := range *nodes {
+			if n.Metadata.Namespace == req.Container.ContainerConfig.NodeNamespace && n.Metadata.Name == req.Container.ContainerConfig.NodeName && n.Status == "active" {
+				worker = new(types.Node)
+				*worker =  n
+				found = true
+				break
+			}
+		}
+
+		// 未找到结点
+		if !found {
+			return fmt.Errorf("cannot find node %s", req.Container.ContainerConfig.NodeName)
+		}
 
 	} else {
 		// 从 etcd 中获取需要创建容器的 worker 结点，根据在线调度算法自动获取
@@ -53,6 +73,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		c.Metadata.Name = c.ContainerConfig.Image + uuid.New().String()
 	}
 
+	fmt.Println("aaaaa")
 	// 判断容器是否已经存在
 	isExist, err := etcdutil.IsExist(l.svcCtx.Etcd, l.ctx, "/containers", etcdutil.Metadata{
 		Namespace: c.Metadata.Namespace,
@@ -68,6 +89,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		return fmt.Errorf("container %s already exist", c.Metadata.Name)
 	}
 
+	fmt.Println("bbbbb")
 	expose := make([]client.ExposedPort, 0)
 	for _, e := range c.ContainerConfig.Expose {
 		expose = append(expose, client.ExposedPort{
@@ -82,13 +104,14 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		ContainerName: req.Container.Metadata.Name,
 		Config: client.ContainerConfig{
 			Image:   c.ContainerConfig.Image,
-			Node:    c.ContainerConfig.Node,
+			NodeName:    c.ContainerConfig.NodeName,
 			Command: c.ContainerConfig.Command,
 			Args:    c.ContainerConfig.Args,
 			Expose:  expose,
 			Env:     c.ContainerConfig.Env,
 		},
 	})
+	fmt.Println(res)
 	if err != nil {
 		return err
 	}

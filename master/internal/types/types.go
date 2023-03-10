@@ -100,12 +100,13 @@ type Container struct {
 }
 
 type ContainerConfig struct {
-	Image   string        `json:"image"`
-	Node    string        `json:"node,optional"`
-	Command string        `json:"command,optional"`
-	Args    []string      `json:"args,optional"`
-	Expose  []ExposedPort `json:"expose,optional"`
-	Env     []string      `json:"env,optional"`
+	Image         string        `json:"image"`
+	NodeName      string        `json:"node_name,optional"`
+	NodeNamespace string        `json:"node_namespace,optional"`
+	Command       string        `json:"command,optional"`
+	Args          []string      `json:"args,optional"`
+	Expose        []ExposedPort `json:"expose,optional"`
+	Env           []string      `json:"env,optional"`
 }
 
 type ExposedPort struct {

@@ -1385,7 +1385,10 @@
         "image": {
           "type": "string"
         },
-        "node": {
+        "node_name": {
+          "type": "string"
+        },
+        "node_namespace": {
           "type": "string"
         },
         "command": {

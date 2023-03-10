@@ -36,6 +36,8 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		conf.Cmd = []string{req.Config.Command}
 		conf.Cmd = append(conf.Cmd, req.Config.Args...)
 	}
+	
+	//conf.Hostname = "0.0.0.0"
 	conf.Image = req.Config.Image
 	conf.Env = req.Config.Env
 	rd, err := d.ImagePull(l.ctx, conf.Image, dockerTypes.ImagePullOptions{})
