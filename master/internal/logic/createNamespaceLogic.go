@@ -43,7 +43,7 @@ func (l *CreateNamespaceLogic) CreateNamespace(req *types.CreateNamespaceRequest
 	newNamespace := types.Namespace{
 		Kind:       "namespace",
 		Name:       req.Name,
-		Status:     "Active",
+		Status:     "active",
 		CreateTime: time.Now().Unix(),
 	}
 

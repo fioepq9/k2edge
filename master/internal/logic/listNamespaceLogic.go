@@ -33,7 +33,7 @@ func (l *ListNamespaceLogic) ListNamespace(req *types.ListNamespaceRequest) (res
 
 	resp = new(types.ListNamespaceResponse)
 	for _, n := range *namespace {
-		if req.All || n.Status == "Active" { // 判断是否需要返回所有数组
+		if req.All || n.Status == "active" { // 判断是否需要返回所有数组
 			resp.Namespaces = append(resp.Namespaces, types.GetNamespaceResponse{
 				Kind:   n.Kind,
 				Name:   n.Name,

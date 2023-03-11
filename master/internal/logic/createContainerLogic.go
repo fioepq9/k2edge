@@ -3,14 +3,15 @@ package logic
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"k2edge/etcdutil"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
 	"k2edge/worker/client"
 
-	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/google/uuid"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type CreateContainerLogic struct {
@@ -30,31 +31,45 @@ func NewCreateContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest) error {
 	var worker *types.Node
 	var err error
+
+	// 判断 container 的 Namespace 是否存在
+	isExist, err := etcdutil.IsExistNamespace(l.svcCtx.Etcd, l.ctx, req.Container.Metadata.Namespace)
+	if err != nil {
+		return err
+	}
+	
+	if !isExist {
+		return fmt.Errorf("namespace %s does not exist", req.Container.Metadata.Namespace)
+	}
+
 	// 如果有指定结点，根据选择的结点创建容器
 	if req.Container.ContainerConfig.NodeName != "" {
-		// Node 的 Namespace
-		nodes , err := etcdutil.GetOne[[]types.Node](l.svcCtx.Etcd, l.ctx, "/nodes")
+		w, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, req.Container.ContainerConfig.NodeNamespace, req.Container.ContainerConfig.NodeName)
 		if err != nil {
 			return err
 		}
 
-		// 判断结点是否存在
-		found := false
-		for _, n := range *nodes {
-			if n.Metadata.Namespace == req.Container.ContainerConfig.NodeNamespace && n.Metadata.Name == req.Container.ContainerConfig.NodeName && n.Status == "active" {
-				worker = new(types.Node)
-				*worker =  n
-				found = true
-				break
-			}
-		}
-
-		// 未找到结点
 		if !found {
-			return fmt.Errorf("cannot find node %s", req.Container.ContainerConfig.NodeName)
+			return fmt.Errorf("node %s does not exist", req.Container.ContainerConfig.NodeName)
 		}
 
-	} else {
+		worker = new(types.Node)
+		*worker = types.Node{
+			Metadata: types.Metadata{
+				Namespace: w.Metadata.Namespace,
+				Kind: w.Metadata.Kind,
+				Name: w.Metadata.Name,
+			},
+			Roles: w.Roles,
+			BaseURL: types.NodeURL{
+				WorkerURL: w.BaseURL.WorkerURL,
+				MasterURL: w.BaseURL.MasterURL,
+			},
+			Status: w.Status,
+			RegisterTime: w.RegisterTime,
+		}
+	
+		} else {
 		// 从 etcd 中获取需要创建容器的 worker 结点，根据在线调度算法自动获取
 		worker, err = l.svcCtx.Worker()
 		if err != nil {
@@ -70,12 +85,12 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	c.ContainerStatus.Node = worker.Metadata.Name
 
 	if c.Metadata.Name == "" {
-		c.Metadata.Name = c.ContainerConfig.Image + uuid.New().String()
+		c.Metadata.Name = strings.ReplaceAll(c.ContainerConfig.Image + uuid.New().String(), "-", "")
 	}
 
-	fmt.Println("aaaaa")
+	
 	// 判断容器是否已经存在
-	isExist, err := etcdutil.IsExist(l.svcCtx.Etcd, l.ctx, "/containers", etcdutil.Metadata{
+	isExist, err = etcdutil.IsExist(l.svcCtx.Etcd, l.ctx, "/containers", etcdutil.Metadata{
 		Namespace: c.Metadata.Namespace,
 		Kind: c.Metadata.Kind,
 		Name: c.Metadata.Name,
@@ -89,7 +104,6 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		return fmt.Errorf("container %s already exist", c.Metadata.Name)
 	}
 
-	fmt.Println("bbbbb")
 	expose := make([]client.ExposedPort, 0)
 	for _, e := range c.ContainerConfig.Expose {
 		expose = append(expose, client.ExposedPort{
@@ -101,7 +115,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 
 	// 访问 worker 结点并创建容器
 	res, err := cli.Containers().Create(l.ctx, client.CreateContainerRequest{
-		ContainerName: req.Container.Metadata.Name,
+		ContainerName: c.Metadata.Name,
 		Config: client.ContainerConfig{
 			Image:   c.ContainerConfig.Image,
 			NodeName:    c.ContainerConfig.NodeName,

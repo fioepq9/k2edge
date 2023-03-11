@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/samber/lo"
+
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
@@ -165,6 +166,41 @@ func IsExist(cli *clientv3.Client, ctx context.Context, key string, metadata Met
 	return false, nil
 }
 
+// 判断 namespace 是否存在且可用
+func IsExistNamespace(cli *clientv3.Client, ctx context.Context, namespace string) (bool, error) {
+	value, err := GetOne[[]Namespace](cli, ctx, "/namespaces")
+	if err != nil {
+		return false, err
+	}
+
+	for _, n := range *value {
+		if n.Name == namespace && n.Status == "active" {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+// 根据 nodeName 判断 node 是否存在且可用, 存在就返回
+func IsExistNode(cli *clientv3.Client, ctx context.Context, nodeNamespace string, nodeName string) (*Node, bool, error) {
+	nodes, err := GetOne[[]Node](cli, ctx, "/nodes")
+	if err != nil {
+		return nil, false, err
+	}
+
+	// 判断结点是否存在
+	for _, n := range *nodes {
+		if n.Metadata.Namespace == nodeNamespace && n.Metadata.Name == nodeName && n.Status == "active" {
+			ret := new(Node)
+			*ret = n
+			return ret, true, nil
+		}
+	}
+
+	// 未找到结点
+	return nil, false, fmt.Errorf("cannot find node %s", nodeName)
+}
+
 type Metadata struct {
 	Namespace string `json:"namespace"`
 	Kind      string `json:"kind"`
@@ -173,4 +209,24 @@ type Metadata struct {
 
 type Source struct {
 	Metadata Metadata `json:"metadata"`
+}
+
+type Namespace struct {
+	Kind       string `json:"kind"`
+	Name       string `json:"name"`
+	Status     string `json:"status"`
+	CreateTime int64  `json:"create_time"`
+}
+
+type Node  struct{
+	Metadata     Metadata `json:"metadata"`
+	Roles        []string `json:"roles"`
+	BaseURL      NodeURL  `json:"base_url"`
+	Status       string   `json:"status"`
+	RegisterTime int64    `json:"register_time"`
+}
+
+type NodeURL struct {
+	WorkerURL string `json:"worker_url"`
+	MasterURL string `json:"master_url"`
 }
