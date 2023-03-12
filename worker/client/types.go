@@ -86,6 +86,18 @@ type AttachConfig struct {
 	Logs       bool   `json:"logs"`
 }
 
+type NodeTopResponse struct {
+	Images            []string `json:"images"`
+	MemoryUsed        uint64   `json:"memory_used"`
+	MemoryAvailable   uint64   `json:"memory_available"`
+	MemoryUsedPercent float64  `json:"memory_used_percent"`
+	MemoryTotal       uint64   `json:"memory_total"`
+	DiskUsed          uint64   `json:"disk_used"`
+	DiskFree          uint64   `json:"disk_free"`
+	DiskUsedPercent   float64  `json:"disk_used_percent"`
+	DiskTotal         uint64   `json:"disk_total"`
+}
+
 type Metadata struct {
 	Namespace string `json:"namespace"`
 	Kind      string `json:"kind"`

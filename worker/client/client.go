@@ -16,7 +16,6 @@ type Client struct {
 func NewClient(BaseURL string) *Client {
 	var cli Client
 	cli.Client = req.C().
-		EnableDumpAll().
 		SetBaseURL(BaseURL).
 		SetCommonRetryCount(2).
 		SetCommonRetryBackoffInterval(time.Second, 5*time.Second).

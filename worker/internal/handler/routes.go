@@ -64,6 +64,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/container/attach",
 					Handler: AttachHandler(serverCtx),
 				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/node/top",
+					Handler: NodeTopHandler(serverCtx),
+				},
 			}...,
 		),
 	)

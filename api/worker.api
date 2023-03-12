@@ -97,6 +97,21 @@ type AttachConfig {
 	Logs       bool   `json:"logs"`
 }
 
+type NodeTopResponse {
+	// 当前节点存在的镜像列表
+	Images []string `json:"images"`
+	// 内存
+	MemoryUsed        uint64  `json:"memory_used"`
+	MemoryAvailable   uint64  `json:"memory_available"`
+	MemoryUsedPercent float64 `json:"memory_used_percent"`
+	MemoryTotal       uint64  `json:"memory_total"`
+	// 磁盘
+	DiskUsed        uint64  `json:"disk_used"`
+	DiskFree        uint64  `json:"disk_free"`
+	DiskUsedPercent float64 `json:"disk_used_percent"`
+	DiskTotal       uint64  `json:"disk_total"`
+}
+
 @server(
 	middleware: AuthMiddleware
 )
@@ -142,4 +157,9 @@ service worker-api {
 	)
 	@handler Attach
 	post /container/attach(AttachRequest)
+	@doc(
+		summary: "node top"
+	)
+	@handler NodeTop
+	get /node/top returns(NodeTopResponse)
 }
