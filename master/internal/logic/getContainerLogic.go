@@ -66,7 +66,6 @@ func (l *GetContainerLogic) GetContainer(req *types.GetContainerRequest) (resp *
 		return nil, err
 	}
 
-	//return nil, fmt.Errorf(fmt.Sprint(containerInfo.Status))
 	resp = new(types.GetContainerResponse)
 	resp.Container = container
 	resp.Container.ContainerStatus.Info = containerInfo.Status
