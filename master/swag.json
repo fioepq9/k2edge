@@ -1695,6 +1695,10 @@
         "force": {
           "type": "boolean",
           "format": "boolean"
+        },
+        "timeout": {
+          "type": "integer",
+          "format": "int32"
         }
       },
       "title": "DeleteContainerRequest",

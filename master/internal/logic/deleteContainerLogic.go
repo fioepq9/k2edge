@@ -59,6 +59,16 @@ func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest
 	}
 	// 向特定的 worker 结点发送获取conatiner信息的请求
 	cli := client.NewClient(worker.BaseURL.WorkerURL)
+	err = cli.Containers().Stop(l.ctx, client.StopContainerRequest{
+		ID: container.ContainerStatus.ContainerID,
+		Timeout: req.Timeout,
+	})
+
+	if err != nil {
+		return  err
+	}
+
+
 	err = cli.Containers().Remove(l.ctx, client.RemoveContainerRequest{
 		ID:            container.ContainerStatus.ContainerID,
 		RemoveVolumes: req.RemoveVolumnes,

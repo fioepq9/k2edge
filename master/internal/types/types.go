@@ -39,6 +39,7 @@ type DeleteContainerRequest struct {
 	RemoveVolumnes bool   `json:"remove_volumns,optional"`
 	RemoveLinks    bool   `json:"remoce_links,optional"`
 	Force          bool   `json:"force" default:"false"`
+	Timeout        int    `json:"timeout,optional"`
 }
 
 type ApplyContainerRequest struct {
