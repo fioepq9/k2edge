@@ -4,10 +4,11 @@ import (
 	"context"
 	"k2edge/worker/internal/config"
 	"k2edge/worker/internal/middleware"
+	"os"
 	"sync"
 	"time"
-	"os"
 
+	"github.com/gorilla/websocket"
 	"github.com/zeromicro/go-zero/rest"
 
 	"github.com/docker/docker/client"
@@ -21,10 +22,11 @@ var (
 )
 
 type ServiceContext struct {
-	Config         config.Config
-	AuthMiddleware rest.Middleware
-	DockerClient   *client.Client
-	Etcd           *clientv3.Client
+	Config            config.Config
+	AuthMiddleware    rest.Middleware
+	DockerClient      *client.Client
+	Etcd              *clientv3.Client
+	WebsocketUpgrader websocket.Upgrader
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -53,10 +55,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			}
 
 			C = &ServiceContext{
-				Config:         c,
-				AuthMiddleware: middleware.NewAuthMiddleware().Handle,
-				DockerClient:   dockerCli,
-				Etcd:           etcd,
+				Config:            c,
+				AuthMiddleware:    middleware.NewAuthMiddleware().Handle,
+				DockerClient:      dockerCli,
+				Etcd:              etcd,
+				WebsocketUpgrader: websocket.Upgrader{},
 			}
 		})
 	}

@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/gorilla/websocket"
 	"github.com/imroc/req/v3"
 )
 
@@ -74,7 +75,18 @@ func (c containers) List(ctx context.Context, req ListContainersRequest) (resp *
 }
 
 func (c containers) Exec(ctx context.Context, req ExecRequest) error {
-	return c.cli.Post("/container/exec").SetBodyJsonMarshal(req).Do(ctx).Err
+	conn, _, err := websocket.DefaultDialer.DialContext(ctx, "ws://localhost:8888/container/exec", nil)
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+	for {
+		_, p, err := conn.ReadMessage()
+		if err != nil {
+			return err
+		}
+		fmt.Printf("%s", string(p))
+	}
 }
 
 func (c containers) Attach(ctx context.Context, req AttachRequest) error {
