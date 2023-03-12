@@ -44,7 +44,7 @@ func (l *GetContainerLogic) GetContainer(req *types.GetContainerRequest) (resp *
 	}
 
 	if !found {
-		return nil, fmt.Errorf("container %s does not exist", container.Metadata.Name)
+		return nil, fmt.Errorf("container %s does not exist", req.Name)
 	}
 
 	// 获取 node 的 BaseURL
@@ -54,7 +54,7 @@ func (l *GetContainerLogic) GetContainer(req *types.GetContainerRequest) (resp *
 	}
 	
 	if !found {
-		return nil, fmt.Errorf("cannot find container %s info", container.Metadata.Name)
+		return nil, fmt.Errorf("cannot find container %s info", req.Name)
 	}
 	
 	// 向特定的 work 结点发送获取conatiner信息的请求
