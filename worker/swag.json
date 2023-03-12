@@ -412,6 +412,9 @@
         "node": {
           "type": "string"
         },
+        "node_namespace": {
+          "type": "string"
+        },
         "container_id": {
           "type": "string"
         },
@@ -423,6 +426,7 @@
       "required": [
         "status",
         "node",
+        "node_namespace",
         "container_id",
         "info"
       ]

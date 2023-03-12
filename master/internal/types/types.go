@@ -10,7 +10,8 @@ type CreateContainerRequest struct {
 }
 
 type GetContainerRequest struct {
-	Metadata Metadata `json:"metadata"`
+	Namespace string `form:"namespace,optional"`
+	Name      string `form:"name"`
 }
 
 type GetContainerResponse struct {
@@ -116,10 +117,11 @@ type ExposedPort struct {
 }
 
 type ContainerStatus struct {
-	Status      string      `json:"status"`
-	Node        string      `json:"node"`
-	ContainerID string      `json:"container_id"`
-	Info        interface{} `json:"info"`
+	Status        string      `json:"status"`
+	Node          string      `json:"node"`
+	NodeNamespace string      `json:"node_namespace"`
+	ContainerID   string      `json:"container_id"`
+	Info          interface{} `json:"info"`
 }
 
 type JobConfig struct {

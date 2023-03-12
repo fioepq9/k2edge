@@ -166,8 +166,12 @@ func IsExist(cli *clientv3.Client, ctx context.Context, key string, metadata Met
 	return false, nil
 }
 
-// 判断 namespace 是否存在且可用
+// 判断 namespace 是否存在且可用, namespace 为""则直接返回true
 func IsExistNamespace(cli *clientv3.Client, ctx context.Context, namespace string) (bool, error) {
+	if namespace == "" {
+		return true, nil
+	}
+	
 	value, err := GetOne[[]Namespace](cli, ctx, "/namespaces")
 	if err != nil {
 		return false, err

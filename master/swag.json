@@ -163,7 +163,7 @@
       }
     },
     "/container/get": {
-      "post": {
+      "get": {
         "operationId": "GetContainer",
         "responses": {
           "200": {
@@ -175,12 +175,16 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "namespace",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/GetContainerRequest"
-            }
+            "type": "string"
           }
         ],
         "requestBody": {},
@@ -1447,6 +1451,9 @@
         "node": {
           "type": "string"
         },
+        "node_namespace": {
+          "type": "string"
+        },
         "container_id": {
           "type": "string"
         },
@@ -1458,6 +1465,7 @@
       "required": [
         "status",
         "node",
+        "node_namespace",
         "container_id",
         "info"
       ]
@@ -1935,13 +1943,16 @@
     "GetContainerRequest": {
       "type": "object",
       "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       },
       "title": "GetContainerRequest",
       "required": [
-        "metadata"
+        "name"
       ]
     },
     "GetContainerResponse": {

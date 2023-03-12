@@ -10,7 +10,7 @@ service master-api{
 	post /create(CreateContainerRequest)
 	
 	@handler GetContainer
-	post /get(GetContainerRequest) returns (GetContainerResponse)
+	get /get(GetContainerRequest) returns (GetContainerResponse)
 	
 	@handler ListContainer
 	get /list returns (ListContainerResponse)
@@ -39,7 +39,8 @@ type CreateContainerRequest {
 }
 
 type GetContainerRequest {
-	Metadata Metadata `json:"metadata"`
+	Namespace string `form:"namespace,optional"`
+	Name      string `form:"name"`
 }
 
 type GetContainerResponse {

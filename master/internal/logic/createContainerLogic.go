@@ -83,6 +83,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	c.Metadata.Kind = "container"
 	c.ContainerConfig = req.Container.ContainerConfig
 	c.ContainerStatus.Node = worker.Metadata.Name
+	c.ContainerStatus.NodeNamespace = worker.Metadata.Namespace
 
 	if c.Metadata.Name == "" {
 		c.Metadata.Name = strings.ReplaceAll(c.ContainerConfig.Image + uuid.New().String(), "-", "")
@@ -125,12 +126,11 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 			Env:     c.ContainerConfig.Env,
 		},
 	})
-	fmt.Println(res)
+	
 	if err != nil {
 		return err
 	}
 	c.ContainerStatus.ContainerID = res.ID
-	fmt.Println(res.ID)
 	// 将容器信息写入etcd
 	return etcdutil.AddOne(l.svcCtx.Etcd, l.ctx, "/containers", c)
 }
