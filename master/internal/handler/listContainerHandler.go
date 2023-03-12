@@ -12,8 +12,14 @@ import (
 
 func ListContainerHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		var req types.ListContainerRequest
+		if err := httpx.Parse(r, &req); err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+			return
+		}
+
 		l := logic.NewListContainerLogic(r.Context(), svcCtx)
-		resp, err := l.ListContainer()
+		resp, err := l.ListContainer(&req)
 		var body types.Response
 		if err != nil {
 			body.Code = -1

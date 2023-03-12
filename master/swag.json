@@ -177,7 +177,7 @@
           {
             "name": "namespace",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
@@ -204,6 +204,14 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "requestBody": {},
         "tags": [
           "master-api"
@@ -1392,9 +1400,6 @@
         "node_name": {
           "type": "string"
         },
-        "node_namespace": {
-          "type": "string"
-        },
         "command": {
           "type": "string"
         },
@@ -1428,6 +1433,9 @@
         "name": {
           "type": "string"
         },
+        "namespace": {
+          "type": "string"
+        },
         "status": {
           "type": "string"
         },
@@ -1438,6 +1446,7 @@
       "title": "ContainerSimpleInfo",
       "required": [
         "name",
+        "namespace",
         "status",
         "node"
       ]
@@ -1451,9 +1460,6 @@
         "node": {
           "type": "string"
         },
-        "node_namespace": {
-          "type": "string"
-        },
         "container_id": {
           "type": "string"
         },
@@ -1465,7 +1471,6 @@
       "required": [
         "status",
         "node",
-        "node_namespace",
         "container_id",
         "info"
       ]
@@ -1952,6 +1957,7 @@
       },
       "title": "GetContainerRequest",
       "required": [
+        "namespace",
         "name"
       ]
     },
@@ -2262,6 +2268,18 @@
       "title": "JobStatus",
       "required": [
         "todo"
+      ]
+    },
+    "ListContainerRequest": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string"
+        }
+      },
+      "title": "ListContainerRequest",
+      "required": [
+        "namespace"
       ]
     },
     "ListContainerResponse": {

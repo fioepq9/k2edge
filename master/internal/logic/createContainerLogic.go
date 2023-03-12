@@ -32,6 +32,10 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	var worker *types.Node
 	var err error
 
+	if req.Container.Metadata.Namespace == "" {
+		return fmt.Errorf("container's namespace cannot be empty")
+	}
+
 	// 判断 container 的 Namespace 是否存在
 	isExist, err := etcdutil.IsExistNamespace(l.svcCtx.Etcd, l.ctx, req.Container.Metadata.Namespace)
 	if err != nil {
@@ -44,7 +48,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 
 	// 如果有指定结点，根据选择的结点创建容器
 	if req.Container.ContainerConfig.NodeName != "" {
-		w, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, req.Container.ContainerConfig.NodeNamespace, req.Container.ContainerConfig.NodeName)
+		w, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, req.Container.ContainerConfig.NodeName)
 		if err != nil {
 			return err
 		}
@@ -83,7 +87,6 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	c.Metadata.Kind = "container"
 	c.ContainerConfig = req.Container.ContainerConfig
 	c.ContainerStatus.Node = worker.Metadata.Name
-	c.ContainerStatus.NodeNamespace = worker.Metadata.Namespace
 
 	if c.Metadata.Name == "" {
 		c.Metadata.Name = strings.ReplaceAll(c.ContainerConfig.Image + uuid.New().String(), "-", "")

@@ -13,7 +13,7 @@ service master-api{
 	get /get(GetContainerRequest) returns (GetContainerResponse)
 	
 	@handler ListContainer
-	get /list returns (ListContainerResponse)
+	get /list(ListContainerRequest) returns (ListContainerResponse)
 	
 	@handler DeleteContainer
 	post /delete(DeleteContainerRequest)
@@ -39,7 +39,7 @@ type CreateContainerRequest {
 }
 
 type GetContainerRequest {
-	Namespace string `form:"namespace,optional"`
+	Namespace string `form:"namespace"`
 	Name      string `form:"name"`
 }
 
@@ -47,14 +47,19 @@ type GetContainerResponse {
 	Container Container `json:"container"`
 }
 
+type ListContainerRequest {
+	Namespace string `form:"namespace"`
+}
+
 type ListContainerResponse {
 	ContainerSimpleInfo []ContainerSimpleInfo `json:"containers"`
 }
 
 type ContainerSimpleInfo {
-	Name   string `json:"name"`
-	Status string `json:"status"`
-	Node   string `json:"node"`
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
+	Status    string `json:"status"`
+	Node      string `json:"node"`
 }
 
 type DeleteContainerRequest {

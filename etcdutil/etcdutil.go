@@ -186,7 +186,7 @@ func IsExistNamespace(cli *clientv3.Client, ctx context.Context, namespace strin
 }
 
 // 根据 nodeName 判断 node 是否存在且可用, 存在就返回
-func IsExistNode(cli *clientv3.Client, ctx context.Context, nodeNamespace string, nodeName string) (*Node, bool, error) {
+func IsExistNode(cli *clientv3.Client, ctx context.Context, nodeName string) (*Node, bool, error) {
 	nodes, err := GetOne[[]Node](cli, ctx, "/nodes")
 	if err != nil {
 		return nil, false, err
@@ -194,7 +194,7 @@ func IsExistNode(cli *clientv3.Client, ctx context.Context, nodeNamespace string
 
 	// 判断结点是否存在
 	for _, n := range *nodes {
-		if n.Metadata.Namespace == nodeNamespace && n.Metadata.Name == nodeName && n.Status == "active" {
+		if n.Metadata.Name == nodeName && n.Status == "active" {
 			ret := new(Node)
 			*ret = n
 			return ret, true, nil

@@ -48,7 +48,7 @@ func (l *GetContainerLogic) GetContainer(req *types.GetContainerRequest) (resp *
 	}
 
 	// 获取 node 的 BaseURL
-	worker, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, container.ContainerStatus.NodeNamespace, container.ContainerStatus.Node)
+	worker, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, container.ContainerStatus.Node)
 	if err != nil {
 		return nil, err
 	}

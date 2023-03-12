@@ -10,7 +10,7 @@ type CreateContainerRequest struct {
 }
 
 type GetContainerRequest struct {
-	Namespace string `form:"namespace,optional"`
+	Namespace string `form:"namespace"`
 	Name      string `form:"name"`
 }
 
@@ -18,14 +18,19 @@ type GetContainerResponse struct {
 	Container Container `json:"container"`
 }
 
+type ListContainerRequest struct {
+	Namespace string `form:"namespace"`
+}
+
 type ListContainerResponse struct {
 	ContainerSimpleInfo []ContainerSimpleInfo `json:"containers"`
 }
 
 type ContainerSimpleInfo struct {
-	Name   string `json:"name"`
-	Status string `json:"status"`
-	Node   string `json:"node"`
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
+	Status    string `json:"status"`
+	Node      string `json:"node"`
 }
 
 type DeleteContainerRequest struct {
@@ -101,13 +106,12 @@ type Container struct {
 }
 
 type ContainerConfig struct {
-	Image         string        `json:"image"`
-	NodeName      string        `json:"node_name,optional"`
-	NodeNamespace string        `json:"node_namespace,optional"`
-	Command       string        `json:"command,optional"`
-	Args          []string      `json:"args,optional"`
-	Expose        []ExposedPort `json:"expose,optional"`
-	Env           []string      `json:"env,optional"`
+	Image    string        `json:"image"`
+	NodeName string        `json:"node_name,optional"`
+	Command  string        `json:"command,optional"`
+	Args     []string      `json:"args,optional"`
+	Expose   []ExposedPort `json:"expose,optional"`
+	Env      []string      `json:"env,optional"`
 }
 
 type ExposedPort struct {
@@ -117,11 +121,10 @@ type ExposedPort struct {
 }
 
 type ContainerStatus struct {
-	Status        string      `json:"status"`
-	Node          string      `json:"node"`
-	NodeNamespace string      `json:"node_namespace"`
-	ContainerID   string      `json:"container_id"`
-	Info          interface{} `json:"info"`
+	Status      string      `json:"status"`
+	Node        string      `json:"node"`
+	ContainerID string      `json:"container_id"`
+	Info        interface{} `json:"info"`
 }
 
 type JobConfig struct {
