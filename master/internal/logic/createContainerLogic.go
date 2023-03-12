@@ -94,7 +94,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 
 	
 	// 判断容器是否已经存在
-	isExist, err = etcdutil.IsExist(l.svcCtx.Etcd, l.ctx, "/containers", etcdutil.Metadata{
+	found, err := etcdutil.IsExist(l.svcCtx.Etcd, l.ctx, "/containers", etcdutil.Metadata{
 		Namespace: c.Metadata.Namespace,
 		Kind: c.Metadata.Kind,
 		Name: c.Metadata.Name,
@@ -104,7 +104,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		return err
 	}
 
-	if isExist {
+	if found {
 		return fmt.Errorf("container %s already exist", c.Metadata.Name)
 	}
 

@@ -34,7 +34,11 @@ type ContainerSimpleInfo struct {
 }
 
 type DeleteContainerRequest struct {
-	Metadata Metadata `json:"metadata"`
+	Namespace      string `json:"namespace"`
+	Name           string `json:"name"`
+	RemoveVolumnes bool   `json:"remove_volumns,optional"`
+	RemoveLinks    bool   `json:"remoce_links,optional"`
+	Force          bool   `json:"force" default:"false"`
 }
 
 type ApplyContainerRequest struct {

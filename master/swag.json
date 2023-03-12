@@ -1678,13 +1678,31 @@
     "DeleteContainerRequest": {
       "type": "object",
       "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "remove_volumns": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "remoce_links": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "force": {
+          "type": "boolean",
+          "format": "boolean"
         }
       },
       "title": "DeleteContainerRequest",
       "required": [
-        "metadata"
+        "namespace",
+        "name",
+        "force",
+        "false"
       ]
     },
     "DeleteCronJobRequest": {

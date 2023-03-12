@@ -3,10 +3,11 @@ package handler
 import (
 	"net/http"
 
-	"github.com/zeromicro/go-zero/rest/httpx"
 	"k2edge/worker/internal/logic"
 	"k2edge/worker/internal/svc"
 	"k2edge/worker/internal/types"
+
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func StopContainerHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -19,10 +20,14 @@ func StopContainerHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := logic.NewStopContainerLogic(r.Context(), svcCtx)
 		err := l.StopContainer(&req)
+		var body types.Response
 		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			body.Code = -1
+			body.Msg = err.Error()
 		} else {
-			httpx.Ok(w)
+			body.Msg = "success"
+
 		}
+		httpx.OkJsonCtx(r.Context(), w, body)
 	}
 }

@@ -114,8 +114,11 @@ func DeleteOne[T any](cli *clientv3.Client, ctx context.Context, key string, fil
 		return err
 	}
 
+	f := func(item T, idx int) bool {
+		return !filter(item, idx)
+	}
 	// 删除特定值
-	value = lo.Filter(value, filter)
+	value = lo.Filter(value, f)
 	vbyte, err := json.Marshal(value)
 
 	if err != nil {
@@ -153,17 +156,11 @@ func IsExist(cli *clientv3.Client, ctx context.Context, key string, metadata Met
 		return false, err
 	}
 
-	if err != nil {
-		return false, err
-	}
-
 	// 判断是否已存在
-	for _, v := range value {
-		if v.Metadata.Name == metadata.Name && v.Metadata.Kind == metadata.Kind && v.Metadata.Namespace == metadata.Namespace {
-			return true, nil
-		}
-	}
-	return false, nil
+	_, found := lo.Find(value, func(item Source) bool {
+		return item.Metadata.Kind == metadata.Kind && item.Metadata.Name == metadata.Name && item.Metadata.Namespace == metadata.Namespace
+	})
+	return found, nil
 }
 
 // 判断 namespace 是否存在且可用, namespace 为""则直接返回true
@@ -171,7 +168,7 @@ func IsExistNamespace(cli *clientv3.Client, ctx context.Context, namespace strin
 	if namespace == "" {
 		return true, nil
 	}
-	
+
 	value, err := GetOne[[]Namespace](cli, ctx, "/namespaces")
 	if err != nil {
 		return false, err
@@ -222,7 +219,7 @@ type Namespace struct {
 	CreateTime int64  `json:"create_time"`
 }
 
-type Node  struct{
+type Node struct {
 	Metadata     Metadata `json:"metadata"`
 	Roles        []string `json:"roles"`
 	BaseURL      NodeURL  `json:"base_url"`
