@@ -72,7 +72,7 @@
       }
     },
     "/container/exec": {
-      "post": {
+      "get": {
         "summary": "runs a command in a container.",
         "operationId": "Exec",
         "responses": {
@@ -83,12 +83,17 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "container",
+            "in": "query",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/ExecRequest"
-            }
+            "type": "string"
+          },
+          {
+            "name": "config",
+            "in": "query",
+            "required": false,
+            "type": "invalid",
+            "format": "UNKNOWN"
           }
         ],
         "requestBody": {},
@@ -656,16 +661,6 @@
       },
       "title": "ExecConfig",
       "required": [
-        "user",
-        "privileged",
-        "tty",
-        "attach_stdin",
-        "attach_stderr",
-        "attach_stdout",
-        "detach",
-        "detach_keys",
-        "env",
-        "working_dir",
         "cmd"
       ]
     },

@@ -59,17 +59,17 @@ type ExecRequest struct {
 }
 
 type ExecConfig struct {
-	User         string   `json:"user"`          // User that will run the command
-	Privileged   bool     `json:"privileged"`    // Is the container in privileged mode
-	Tty          bool     `json:"tty"`           // Attach standard streams to a tty.
-	AttachStdin  bool     `json:"attach_stdin"`  // Attach the standard input, makes possible user interaction
-	AttachStderr bool     `json:"attach_stderr"` // Attach the standard error
-	AttachStdout bool     `json:"attach_stdout"` // Attach the standard output
-	Detach       bool     `json:"detach"`        // Execute in detach mode
-	DetachKeys   string   `json:"detach_keys"`   // Escape keys for detach
-	Env          []string `json:"env"`           // Environment variables
-	WorkingDir   string   `json:"working_dir"`   // Working directory
-	Cmd          []string `json:"cmd"`           // Execution commands and args
+	User         string   `json:"user,optional"`          // User that will run the command
+	Privileged   bool     `json:"privileged,optional"`    // Is the container in privileged mode
+	Tty          bool     `json:"tty,optional"`           // Attach standard streams to a tty.
+	AttachStdin  bool     `json:"attach_stdin,optional"`  // Attach the standard input, makes possible user interaction
+	AttachStderr bool     `json:"attach_stderr,optional"` // Attach the standard error
+	AttachStdout bool     `json:"attach_stdout,optional"` // Attach the standard output
+	Detach       bool     `json:"detach,optional"`        // Execute in detach mode
+	DetachKeys   string   `json:"detach_keys,optional"`   // Escape keys for detach
+	Env          []string `json:"env,optional"`           // Environment variables
+	WorkingDir   string   `json:"working_dir,optional"`   // Working directory
+	Cmd          []string `json:"cmd"`                    // Execution commands and args
 }
 
 type AttachRequest struct {
