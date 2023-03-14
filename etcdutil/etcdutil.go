@@ -12,6 +12,7 @@ import (
 
 var (
 	ErrKeyNotExist error = fmt.Errorf("key not exist")
+	SystemNamespace = "system"
 )
 
 func GenerateKey(kind string, namespace string, name string) string {
@@ -212,7 +213,7 @@ func IsExistNamespace(cli *clientv3.Client, ctx context.Context, namespace strin
 
 // 根据 nodeName 判断 node 是否存在且可用, 存在就返回
 func IsExistNode(cli *clientv3.Client, ctx context.Context, nodeName string) (*Node, bool, error) {
-	key := GenerateKey("node", "system", nodeName)
+	key := GenerateKey("node", SystemNamespace, nodeName)
 	
 	gresp, err := cli.KV.Get(ctx, key)
 

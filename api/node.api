@@ -31,7 +31,6 @@ service master-api{
 
 type RegisterRequest {
 	Name      string   `json:"name"`
-	Namespace string   `json:"namespace"`
 	Roles     []string `json:"roles"`
 	BaseURL   NodeURL  `json:"base_url"`
 }

@@ -21,7 +21,7 @@ import (
 )
 
 var configFile = flag.String("f", "etc/master-api.yaml", "the config file")
-var registerNamespace = "system" 
+var registerNamespace = etcdutil.SystemNamespace
 
 func main() {
 	flag.Parse()
