@@ -32,9 +32,9 @@ func TestCreatContainer(t *testing.T) {
 	err := l.CreateContainer(&types.CreateContainerRequest{
 		Container: types.Container{
 			Metadata: types.Metadata{
-				Namespace: "system",
+				Namespace: "default",
 				Kind: "container",
-				Name: "222",
+				Name: "111",
 			},
 			ContainerConfig: types.ContainerConfig{
 				Image: "nginx",
@@ -120,4 +120,30 @@ func TestListContainer(t *testing.T) {
 
 	t.Log(containers)
 	t.Log("create container success")
+}
+
+func TestApplyContainer(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	l := NewApplyContainerLogic(ctx, &testSvcCtx)
+	
+	err := l.ApplyContainer(&types.ApplyContainerRequest{
+		Container: types.Container{
+			Metadata: types.Metadata{
+				Namespace: "default",
+				Kind: "container",
+				Name: "111",
+			},
+			ContainerConfig: types.ContainerConfig{
+				Image: "nginx",
+				NodeName: "outlg",
+			},
+			ContainerStatus: types.ContainerStatus{
+			},
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("apply container success")
 }

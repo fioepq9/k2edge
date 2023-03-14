@@ -1219,13 +1219,13 @@
     "ApplyContainerRequest": {
       "type": "object",
       "properties": {
-        "todo": {
-          "type": "string"
+        "container": {
+          "$ref": "#/definitions/Container"
         }
       },
       "title": "ApplyContainerRequest",
       "required": [
-        "todo"
+        "container"
       ]
     },
     "ApplyCronJobRequest": {

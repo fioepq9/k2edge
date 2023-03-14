@@ -72,7 +72,7 @@ type DeleteContainerRequest {
 }
 
 type ApplyContainerRequest {
-	Todo string `json:"todo"`
+	Container Container `json:"container"`
 }
 
 type HistoryContainerRequest {

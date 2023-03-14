@@ -43,7 +43,7 @@ type DeleteContainerRequest struct {
 }
 
 type ApplyContainerRequest struct {
-	Todo string `json:"todo"`
+	Container Container `json:"container"`
 }
 
 type HistoryContainerRequest struct {
