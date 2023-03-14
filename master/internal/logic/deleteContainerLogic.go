@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"k2edge/etcdutil"
 	"k2edge/master/internal/svc"
@@ -27,29 +28,33 @@ func NewDeleteContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *D
 }
 
 func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest) error {
-	key := "/containers"
-	//根据 container 里 nodeName 去 etcd 里查询的 nodeBaseURL
-	containers, err := etcdutil.GetOne[[]types.Container](l.svcCtx.Etcd, l.ctx, key)
-	if err != nil {
-		return err
-	}
+	key := etcdutil.GenerateKey("container", req.Namespace, req.Name)
 
 	// 判断 container 是否存在, 存在则获取 container 信息
-	var container types.Container
-	found := false
-	for _, container = range *containers {
-		if container.Metadata.Namespace == req.Namespace && container.Metadata.Name == req.Name {
-			found = true
-			break
-		}
+	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
+	if err != nil {
+		return err
 	}
 
 	if !found {
 		return fmt.Errorf("container %s does not exist", req.Name)
 	}
 
+	container, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, key)
+	if err != nil {
+		return err
+	}
+	c := (*container)[0]
+
+	node, err := etcdutil.GetOne[types.Node](l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("node", "system", c.ContainerStatus.Node))
+
+	if err != nil {
+		return err
+	}
+
+	n := (*node)[0]
 	// 获取 node 的 BaseURL
-	worker, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, container.ContainerStatus.Node)
+	worker, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, n.Metadata.Name)
 	if err != nil {
 		return err
 	}
@@ -60,8 +65,8 @@ func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest
 	// 向特定的 worker 结点发送获取conatiner信息的请求
 	cli := client.NewClient(worker.BaseURL.WorkerURL)
 	err = cli.Containers().Stop(l.ctx, client.StopContainerRequest{
-		ID: container.ContainerStatus.ContainerID,
-		Timeout: req.Timeout,
+		ID: c.ContainerStatus.ContainerID,
+		Timeout: req.Timeout * int(time.Second),
 	})
 
 	if err != nil {
@@ -70,7 +75,7 @@ func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest
 
 
 	err = cli.Containers().Remove(l.ctx, client.RemoveContainerRequest{
-		ID:            container.ContainerStatus.ContainerID,
+		ID:            c.ContainerStatus.ContainerID,
 		RemoveVolumes: req.RemoveVolumnes,
 		RemoveLinks:   req.RemoveLinks,
 		Force:         req.Force,
@@ -80,9 +85,7 @@ func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest
 		return err
 	}
 
-	err = etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, key, func(item types.Container, index int) bool {
-		return item.Metadata.Namespace == req.Namespace && item.Metadata.Name == req.Name && item.Metadata.Kind == "container"
-	})
+	err = etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, key)
 
 	if err != nil {
 		return err

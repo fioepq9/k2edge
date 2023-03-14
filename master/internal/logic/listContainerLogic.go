@@ -27,6 +27,7 @@ func NewListContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Lis
 
 func (l *ListContainerLogic) ListContainer(req *types.ListContainerRequest) (resp *types.ListContainerResponse, err error) {
 	resp = new(types.ListContainerResponse)
+	key := "/container/" + req.Namespace 
 
 	found, err := etcdutil.IsExistNamespace(l.svcCtx.Etcd, l.ctx, req.Namespace)
 	if err != nil {
@@ -37,8 +38,7 @@ func (l *ListContainerLogic) ListContainer(req *types.ListContainerRequest) (res
 		return nil, fmt.Errorf("namespace %s does not exist", req.Namespace)
 	}
 
-	//根据 container 里 nodeName 去 etcd 里查询的 nodeBaseURL 
-	containers, err := etcdutil.GetOne[[]types.Container](l.svcCtx.Etcd, l.ctx, "/containers")
+	containers, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
 		return nil, err
 	}

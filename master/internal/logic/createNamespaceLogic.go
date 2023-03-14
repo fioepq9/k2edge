@@ -31,18 +31,22 @@ func (l *CreateNamespaceLogic) CreateNamespace(req *types.CreateNamespaceRequest
 	if req.Name == "" {
 		return fmt.Errorf("namespace's name cannot be empty")
 	}
-
-	namespace, err := etcdutil.GetOne[[]types.Namespace](l.svcCtx.Etcd, l.ctx, key)
+	// 判断是否已存在 namespace
+	value, err := etcdutil.GetArray[types.Namespace](l.svcCtx.Etcd, l.ctx, "/namespaces")
 	if err != nil {
 		return err
 	}
-
-	// 判断是否已存在 namespace
-	for _, n := range *namespace {
+	found := false
+	for _, n := range *value {
 		if n.Name == req.Name {
-			return fmt.Errorf("namespace %s already exists", req.Name)
+			found = true
 		}
 	}
+
+	if found {
+		return fmt.Errorf("namespace %s already exists", req.Name)
+	}
+
 
 	// 插入 namespace
 	newNamespace := types.Namespace{
@@ -52,7 +56,7 @@ func (l *CreateNamespaceLogic) CreateNamespace(req *types.CreateNamespaceRequest
 		CreateTime: time.Now().Unix(),
 	}
 
-	err = etcdutil.AddOne(l.svcCtx.Etcd, l.ctx, key, newNamespace)
+	err = etcdutil.AddOneValue(l.svcCtx.Etcd, l.ctx, key, newNamespace)
 	if err != nil {
 		return err
 	}

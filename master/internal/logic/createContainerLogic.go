@@ -41,7 +41,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	if err != nil {
 		return err
 	}
-	
+
 	if !isExist {
 		return fmt.Errorf("namespace %s does not exist", req.Container.Metadata.Namespace)
 	}
@@ -61,19 +61,19 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		*worker = types.Node{
 			Metadata: types.Metadata{
 				Namespace: w.Metadata.Namespace,
-				Kind: w.Metadata.Kind,
-				Name: w.Metadata.Name,
+				Kind:      w.Metadata.Kind,
+				Name:      w.Metadata.Name,
 			},
 			Roles: w.Roles,
 			BaseURL: types.NodeURL{
 				WorkerURL: w.BaseURL.WorkerURL,
 				MasterURL: w.BaseURL.MasterURL,
 			},
-			Status: w.Status,
+			Status:       w.Status,
 			RegisterTime: w.RegisterTime,
 		}
-	
-		} else {
+
+	} else {
 		// 从 etcd 中获取需要创建容器的 worker 结点，根据在线调度算法自动获取
 		worker, err = l.svcCtx.Worker()
 		if err != nil {
@@ -89,16 +89,12 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	c.ContainerStatus.Node = worker.Metadata.Name
 
 	if c.Metadata.Name == "" {
-		c.Metadata.Name = strings.ReplaceAll(c.ContainerConfig.Image + uuid.New().String(), "-", "")
+		c.Metadata.Name = strings.ReplaceAll(c.ContainerConfig.Image+uuid.New().String(), "-", "")
 	}
 
-	
 	// 判断容器是否已经存在
-	found, err := etcdutil.IsExist(l.svcCtx.Etcd, l.ctx, "/containers", etcdutil.Metadata{
-		Namespace: c.Metadata.Namespace,
-		Kind: c.Metadata.Kind,
-		Name: c.Metadata.Name,
-	})
+	key := etcdutil.GenerateKey("container", req.Container.Metadata.Namespace, req.Container.Metadata.Name)
+	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
 
 	if err != nil {
 		return err
@@ -121,19 +117,19 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	res, err := cli.Containers().Create(l.ctx, client.CreateContainerRequest{
 		ContainerName: c.Metadata.Name,
 		Config: client.ContainerConfig{
-			Image:   c.ContainerConfig.Image,
-			NodeName:    c.ContainerConfig.NodeName,
-			Command: c.ContainerConfig.Command,
-			Args:    c.ContainerConfig.Args,
-			Expose:  expose,
-			Env:     c.ContainerConfig.Env,
+			Image:    c.ContainerConfig.Image,
+			NodeName: c.ContainerConfig.NodeName,
+			Command:  c.ContainerConfig.Command,
+			Args:     c.ContainerConfig.Args,
+			Expose:   expose,
+			Env:      c.ContainerConfig.Env,
 		},
 	})
-	
+
 	if err != nil {
 		return err
 	}
 	c.ContainerStatus.ContainerID = res.ID
 	// 将容器信息写入etcd
-	return etcdutil.AddOne(l.svcCtx.Etcd, l.ctx, "/containers", c)
+	return etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, c)
 }

@@ -21,7 +21,7 @@ import (
 )
 
 var configFile = flag.String("f", "etc/master-api.yaml", "the config file")
-var registerNamespace = "" 
+var registerNamespace = "system" 
 
 func main() {
 	flag.Parse()
@@ -64,7 +64,8 @@ func RegisterMaster(ctx *svc.ServiceContext) (func() error, error) {
 	return func() error {
 		c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 		defer cancel()
-		nodesPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "/nodes")
+		key := "/node/" + registerNamespace + "/" + ctx.Config.Name
+		nodesPtr, err := etcdutil.GetOne[types.Node](ctx.Etcd, c, key)
 		if err != nil {
 			return err
 		}
@@ -74,47 +75,40 @@ func RegisterMaster(ctx *svc.ServiceContext) (func() error, error) {
 				nodes[i].Status = "closed"
 			}
 		})
-		return etcdutil.PutOne(ctx.Etcd, c, "/nodes", nodes)
+		return etcdutil.PutOne(ctx.Etcd, c, key, nodes[0])
 	}, nil
 }
 
 func doRegisterMaster(ctx *svc.ServiceContext) error {
+	key := "/node/" + registerNamespace + "/" + ctx.Config.Name
 	c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nodesPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "/nodes")
+	node, err := etcdutil.GetOne[types.Node](ctx.Etcd, c, key)
 	if err != nil && !errors.Is(err, etcdutil.ErrKeyNotExist) {
 		return err
 	}
-	nodes := make([]types.Node, 0)
-
-	if nodesPtr != nil {
-		nodes = *nodesPtr
-		item, idx, found := lo.FindIndexOf(nodes, func(item types.Node) bool {
-			return item.Metadata.Name == ctx.Config.Name && item.Metadata.Namespace == registerNamespace
-		})
-		
-		if found {
-			if item.Status == "active" {
-				// 结点原本被注册为 master
-				if lo.Contains(item.Roles, "master") {
-					return fmt.Errorf("master already exist")
-				}
-
-				// 结点原本被注册为 worker
-				nodes[idx].Roles = append(nodes[idx].Roles, "master")
-				nodes[idx].BaseURL.MasterURL = fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port)
-			} else {
-				nodes[idx].Status = "active"
-				nodes[idx].Roles = []string{"master"}
+	var n types.Node
+	if node != nil {
+		n := (*node)[0]
+		if n.Status == "active" {
+			// 结点原本被注册为 master
+			if lo.Contains(n.Roles, "master") {
+				return fmt.Errorf("master already exist")
 			}
-			etcdutil.PutOne(ctx.Etcd, c, "/nodes", nodes)
-			return nil
-		}
 
+			// 结点原本被注册为 worker
+			n.Roles = append(n.Roles, "master")
+			n.BaseURL.MasterURL = fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port)
+		} else {
+			n.Status = "active"
+			n.Roles = []string{"master"}
+		}
+		etcdutil.PutOne(ctx.Etcd, c, key, n)
+		return nil
 	}
 
 	// 结点原本没被注册过
-	node := types.Node{
+	n = types.Node{
 		Metadata: types.Metadata{
 			Namespace: registerNamespace,
 			Kind:      "node",
@@ -128,7 +122,6 @@ func doRegisterMaster(ctx *svc.ServiceContext) error {
 		Status:       "active",
 		RegisterTime: time.Now().Unix(),
 	}
-	nodes = append(nodes, node)
-	etcdutil.PutOne(ctx.Etcd, c, "/nodes", nodes)
+	etcdutil.PutOne(ctx.Etcd, c, "/node/system/" + n.Metadata.Name, n)
 	return nil
 }

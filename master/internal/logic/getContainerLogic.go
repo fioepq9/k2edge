@@ -27,26 +27,24 @@ func NewGetContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetC
 }
 
 func (l *GetContainerLogic) GetContainer(req *types.GetContainerRequest) (resp *types.GetContainerResponse, err error) {
-	//根据 container 里 nodeName 去 etcd 里查询的 nodeBaseURL 
-	containers, err := etcdutil.GetOne[[]types.Container](l.svcCtx.Etcd, l.ctx, "/containers")
+	key := etcdutil.GenerateKey("container", req.Namespace, req.Name)
+	// 判断 container 是否存在, 存在则获取 container 信息
+	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
 		return nil, err
-	}
-
-	// 判断 container 是否存在, 存在则获取 container 信息
-	var container types.Container
-	found := false
-	for _, container = range *containers {
-		if container.Metadata.Namespace == req.Namespace && container.Metadata.Name == req.Name {
-			found = true
-			break
-		}
 	}
 
 	if !found {
 		return nil, fmt.Errorf("container %s does not exist", req.Name)
 	}
+	
+	//根据 container 里 nodeName 去 etcd 里查询的 nodeBaseURL 
+	containers, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, key)
+	if err != nil {
+		return nil, err
+	}
 
+	container := (*containers)[0]
 	// 获取 node 的 BaseURL
 	worker, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, container.ContainerStatus.Node)
 	if err != nil {

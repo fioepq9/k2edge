@@ -21,7 +21,7 @@ import (
 )
 
 var configFile = flag.String("f", "etc/worker-api.yaml", "the config file")
-var registerNamespace = "" 
+var registerNamespace = "system" 
 
 func main() {
 	flag.Parse()
@@ -64,56 +64,53 @@ func RegisterWorker(ctx *svc.ServiceContext) (func() error, error) {
 	return func() error {
 		c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 		defer cancel()
-		workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "/nodes")
+		key := "/node/" + registerNamespace + "/" + ctx.Config.Name
+		nodesPtr, err := etcdutil.GetOne[types.Node](ctx.Etcd, c, key)
 		if err != nil {
 			return err
 		}
-		workers := *workersPtr
-		lo.ForEach(workers, func(_ types.Node, i int) {
-			if workers[i].Metadata.Name == ctx.Config.Name {
-				workers[i].Status = "closed"
+		nodes := *nodesPtr
+		lo.ForEach(nodes, func(_ types.Node, i int) {
+			if nodes[i].Metadata.Name == ctx.Config.Name {
+				nodes[i].Status = "closed"
 			}
 		})
-		return etcdutil.PutOne(ctx.Etcd, c, "/nodes", workers)
+		return etcdutil.PutOne(ctx.Etcd, c, key, nodes[0])
 	}, nil
 }
 
 func doRegisterWorker(ctx *svc.ServiceContext) error {
+	key := "/node/" + registerNamespace + "/" + ctx.Config.Name
 	c, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	workersPtr, err := etcdutil.GetOne[[]types.Node](ctx.Etcd, c, "/nodes")
+	node, err := etcdutil.GetOne[types.Node](ctx.Etcd, c, key)
 	if err != nil && !errors.Is(err, etcdutil.ErrKeyNotExist) {
 		return err
 	}
-	workers := make([]types.Node, 0)
-	if workersPtr != nil {
-		workers = *workersPtr
-		item, idx, found := lo.FindIndexOf(workers, func(item types.Node) bool {
-			return item.Metadata.Name == ctx.Config.Name && item.Metadata.Namespace == registerNamespace
-		})
-		if found {
-			if item.Status == "active" {
-				// 结点原本被注册为 worker
-				if lo.Contains(item.Roles, "worker") {
-					return fmt.Errorf("exist worker name: %s", ctx.Config.Name)
-				}
-				// 结点原本被注册为 master
-				workers[idx].Roles = append(workers[idx].Roles, "worker")
-				workers[idx].BaseURL.WorkerURL = fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port)
-			} else {
-				workers[idx].Status = "active"
-				workers[idx].Roles = []string{"worker"}
+	var n types.Node
+	if node != nil {
+		n := (*node)[0]
+		if n.Status == "active" {
+			// 结点原本被注册为 worker
+			if lo.Contains(n.Roles, "worker") {
+				return fmt.Errorf("worker already exist")
 			}
-			etcdutil.PutOne(ctx.Etcd, c, "/nodes", workers)
-			return nil
-		}
 
+			// 结点原本被注册为 master
+			n.Roles = append(n.Roles, "worker")
+			n.BaseURL.WorkerURL = fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port)
+		} else {
+			n.Status = "active"
+			n.Roles = []string{"worker"}
+		}
+		etcdutil.PutOne(ctx.Etcd, c, key, n)
+		return nil
 	}
-	
+
 	// 结点原本没被注册过
-	node := types.Node{
+	n = types.Node{
 		Metadata: types.Metadata{
-			Namespace: "",
+			Namespace: registerNamespace,
 			Kind:      "node",
 			Name:      ctx.Config.Name,
 		},
@@ -125,7 +122,6 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 		Status:       "active",
 		RegisterTime: time.Now().Unix(),
 	}
-	workers = append(workers, node)
-	etcdutil.PutOne(ctx.Etcd, c, "/nodes", workers)
+	etcdutil.PutOne(ctx.Etcd, c, "/node/system/" + n.Metadata.Name, n)
 	return nil
 }

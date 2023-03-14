@@ -27,35 +27,32 @@ func NewRegisterNodeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Regi
 }
 
 func (l *RegisterNodeLogic) RegisterNode(req *types.RegisterRequest) error {
-	key := "/nodes"
-	isExist, err := etcdutil.IsExist(l.svcCtx.Etcd, l.ctx, key, etcdutil.Metadata{
-		Namespace: req.Namespace,
-		Kind: "node",
-		Name: req.Name,
-	})
+	key := etcdutil.GenerateKey(req.Namespace, "node", req.Name)
+	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
 
 	if err != nil {
 		return err
 	}
 
-	if isExist {
+	if found {
 		return fmt.Errorf("node %s already exists", req.Name)
 	}
 
 	// 插入 node
 	newNode := types.Node{
-		Metadata : types.Metadata{
+		Metadata: types.Metadata{
 			Namespace: req.Namespace,
-			Kind: "node",
-			Name: req.Name,
-		}, 
-		Roles: req.Roles,
-		BaseURL: req.BaseURL,      
-		Status: "Active",     
-		RegisterTime: time.Now().Unix(), 
+			Kind:      "node",
+			Name:      req.Name,
+		},
+		Roles:        req.Roles,
+		BaseURL:      req.BaseURL,
+		Status:       "Active",
+		RegisterTime: time.Now().Unix(),
 	}
 
-	err = etcdutil.AddOne(l.svcCtx.Etcd, l.ctx, key, newNode)
+
+	err = etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, newNode)
 	if err != nil {
 		return err
 	}

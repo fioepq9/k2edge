@@ -46,7 +46,7 @@ func (s *ServiceContext) Worker(filters ...WorkerFilter) (*types.Node, error) {
 	//	负载均衡算法	
 	// }
 
-	nodes, err := etcdutil.GetOne[[]types.Node](s.Etcd, context.TODO(), "/nodes")
+	nodes, err := etcdutil.GetOne[types.Node](s.Etcd, context.TODO(), "/node/system")
 	if err != nil {
 		return nil, err
 	}

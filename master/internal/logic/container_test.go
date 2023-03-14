@@ -5,6 +5,7 @@ import (
 	"k2edge/master/internal/config"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
+
 	"os"
 	"testing"
 	"time"
@@ -31,9 +32,9 @@ func TestCreatContainer(t *testing.T) {
 	err := l.CreateContainer(&types.CreateContainerRequest{
 		Container: types.Container{
 			Metadata: types.Metadata{
-				Namespace: "default",
+				Namespace: "system",
 				Kind: "container",
-				Name: "333",
+				Name: "222",
 			},
 			ContainerConfig: types.ContainerConfig{
 				Image: "nginx",
@@ -44,7 +45,7 @@ func TestCreatContainer(t *testing.T) {
 		},
 	})
 	if err != nil {
-		t.Log(err)
+		t.Fatal(err)
 	}
 	t.Log("create container success")
 }
@@ -55,8 +56,8 @@ func TestDeleteContainerLogic(t *testing.T) {
 	l := NewDeleteContainerLogic(ctx, &testSvcCtx)
 	// l1 := NewCreateContainerLogic(ctx, &testSvcCtx)
 
-	namespace := "default"
-	containerName := "333"
+	namespace := "system"
+	containerName := "222"
 	// err := l1.CreateContainer(&types.CreateContainerRequest{
 	// 	Container: types.Container{
 	// 		Metadata: types.Metadata{
@@ -86,4 +87,37 @@ func TestDeleteContainerLogic(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log("delete container success")
+}
+
+func TestGetContainer(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	l := NewGetContainerLogic(ctx, &testSvcCtx)
+	
+	container, err := l.GetContainer(&types.GetContainerRequest{
+		Namespace: "system",
+		Name: "111",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(container)
+	t.Log("create container success")
+}
+
+func TestListContainer(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	l := NewListContainerLogic(ctx, &testSvcCtx)
+	
+	containers, err := l.ListContainer(&types.ListContainerRequest{
+		Namespace: "default",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(containers)
+	t.Log("create container success")
 }
