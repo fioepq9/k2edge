@@ -27,7 +27,7 @@ func NewRegisterNodeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Regi
 }
 
 func (l *RegisterNodeLogic) RegisterNode(req *types.RegisterRequest) error {
-	key := etcdutil.GenerateKey(req.Namespace, "node", req.Name)
+	key := etcdutil.GenerateKey("node", etcdutil.SystemNamespace, req.Name)
 	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
 
 	if err != nil {
@@ -41,7 +41,7 @@ func (l *RegisterNodeLogic) RegisterNode(req *types.RegisterRequest) error {
 	// 插入 node
 	newNode := types.Node{
 		Metadata: types.Metadata{
-			Namespace: req.Namespace,
+			Namespace: etcdutil.SystemNamespace,
 			Kind:      "node",
 			Name:      req.Name,
 		},
@@ -50,7 +50,6 @@ func (l *RegisterNodeLogic) RegisterNode(req *types.RegisterRequest) error {
 		Status:       "Active",
 		RegisterTime: time.Now().Unix(),
 	}
-
 
 	err = etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, newNode)
 	if err != nil {

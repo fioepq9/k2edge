@@ -46,7 +46,7 @@ func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest
 	}
 	c := (*container)[0]
 
-	node, err := etcdutil.GetOne[types.Node](l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("node", "system", c.ContainerStatus.Node))
+	node, err := etcdutil.GetOne[types.Node](l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("node", etcdutil.SystemNamespace, c.ContainerStatus.Node))
 
 	if err != nil {
 		return err

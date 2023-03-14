@@ -122,6 +122,6 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 		Status:       "active",
 		RegisterTime: time.Now().Unix(),
 	}
-	etcdutil.PutOne(ctx.Etcd, c, "/node/system/" + n.Metadata.Name, n)
+	etcdutil.PutOne(ctx.Etcd, c, "/node/" + registerNamespace + "/" + n.Metadata.Name, n)
 	return nil
 }

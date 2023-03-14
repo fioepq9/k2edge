@@ -419,10 +419,9 @@ type DeleteNamespaceRequest struct {
 }
 
 type RegisterRequest struct {
-	Name      string   `json:"name"`
-	Namespace string   `json:"namespace"`
-	Roles     []string `json:"roles"`
-	BaseURL   NodeURL  `json:"base_url"`
+	Name    string   `json:"name"`
+	Roles   []string `json:"roles"`
+	BaseURL NodeURL  `json:"base_url"`
 }
 
 type NodeTopRequest struct {

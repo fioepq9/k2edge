@@ -2628,9 +2628,6 @@
         "name": {
           "type": "string"
         },
-        "namespace": {
-          "type": "string"
-        },
         "roles": {
           "type": "array",
           "items": {
@@ -2644,7 +2641,6 @@
       "title": "RegisterRequest",
       "required": [
         "name",
-        "namespace",
         "roles",
         "base_url"
       ]
