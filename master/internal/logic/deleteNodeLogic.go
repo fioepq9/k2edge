@@ -26,7 +26,7 @@ func NewDeleteNodeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 }
 
 func (l *DeleteNodeLogic) DeleteNode(req *types.DeleteRequest) error {
-	key := etcdutil.GenerateKey(req.Metadata.Kind, req.Metadata.Namespace, req.Metadata.Name)
+	key := etcdutil.GenerateKey("node", etcdutil.SystemNamespace, req.Name)
 
 	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
 
@@ -35,11 +35,10 @@ func (l *DeleteNodeLogic) DeleteNode(req *types.DeleteRequest) error {
 	}
 
 	if !found {
-		return fmt.Errorf("node %s does not exists", req.Metadata.Name)
+		return fmt.Errorf("node %s does not exists", req.Name)
 	}
 
 	err = etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, key)
-
 
 	if err != nil {
 		return err

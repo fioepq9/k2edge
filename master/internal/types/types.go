@@ -453,7 +453,7 @@ type DrainRequest struct {
 }
 
 type DeleteRequest struct {
-	Metadata Metadata `json:"metadata"`
+	Name string `json:"name"`
 }
 
 type CreateTokenRequest struct {

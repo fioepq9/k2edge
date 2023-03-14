@@ -1823,13 +1823,13 @@
     "DeleteRequest": {
       "type": "object",
       "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
+        "name": {
+          "type": "string"
         }
       },
       "title": "DeleteRequest",
       "required": [
-        "metadata"
+        "name"
       ]
     },
     "DeleteTokenRequest": {

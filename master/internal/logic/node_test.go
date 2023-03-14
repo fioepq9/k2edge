@@ -23,3 +23,17 @@ func TestRegisterNode(t *testing.T) {
 	}
 	t.Log("register node success")
 }
+
+func TestDeleteNode(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	l := NewDeleteNodeLogic(ctx, &testSvcCtx)
+	
+	err := l.DeleteNode(&types.DeleteRequest{
+		Name: "test",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("delete node success")
+}
