@@ -2594,16 +2594,56 @@
     "NodeTopResponse": {
       "type": "object",
       "properties": {
-        "top_info": {
+        "images": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/TopInfo"
+            "type": "string"
           }
+        },
+        "memory_used": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "memory_available": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "memory_used_percent": {
+          "type": "number",
+          "format": "double"
+        },
+        "memory_total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "disk_used": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "disk_free": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "disk_used_percent": {
+          "type": "number",
+          "format": "double"
+        },
+        "disk_total": {
+          "type": "integer",
+          "format": "int64"
         }
       },
       "title": "NodeTopResponse",
       "required": [
-        "top_info"
+        "images",
+        "memory_used",
+        "memory_available",
+        "memory_used_percent",
+        "memory_total",
+        "disk_used",
+        "disk_free",
+        "disk_used_percent",
+        "disk_total"
       ]
     },
     "NodeURL": {
@@ -2711,34 +2751,6 @@
       "title": "TokenStatus",
       "required": [
         "todo"
-      ]
-    },
-    "TopInfo": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "CPU": {
-          "type": "string"
-        },
-        "CPU_prop": {
-          "type": "string"
-        },
-        "memory": {
-          "type": "string"
-        },
-        "memory_prop": {
-          "type": "string"
-        }
-      },
-      "title": "TopInfo",
-      "required": [
-        "name",
-        "CPU",
-        "CPU_prop",
-        "memory",
-        "memory_prop"
       ]
     },
     "UncordonRequest": {
