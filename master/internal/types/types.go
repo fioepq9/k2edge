@@ -46,36 +46,37 @@ type ApplyContainerRequest struct {
 	Container Container `json:"container"`
 }
 
-type HistoryContainerRequest struct {
-	Todo string `json:"todo"`
-}
-
-type HistoryContainerResponse struct {
-	Container Container `json:"container"`
-}
-
-type UndoContainerRequest struct {
-	Todo string `json:"todo"`
-}
-
-type UndoContainerResponse struct {
-	Error Error `json:"error,omitempty"`
-}
-
 type AttachContainerRequest struct {
-	Todo string `json:"todo"`
+	Metadata Metadata     `json:"metadata"`
+	Config   AttachConfig `json:"config,optional"`
 }
 
-type AttachContainerResponse struct {
-	Todo string `json:"todo"`
+type AttachConfig struct {
+	Stream     bool   `json:"stream" default:"false"`
+	Stdin      bool   `json:"stdin" default:"false"`
+	Stdout     bool   `json:"stdout" default:"true"`
+	Stderr     bool   `json:"stderr" default:"true"`
+	DetachKeys string `json:"detach_keys" default:"ctrl-p,ctrl-q"`
+	Logs       bool   `json:"logs" default:"false"`
 }
 
 type ExecContainerRequest struct {
-	Todo string `json:"todo"`
+	Metadata Metadata   `json:"metadata"`
+	Config   ExecConfig `json:"config,optional"`
 }
 
-type ExecContainerResponse struct {
-	Todo string `json:"todo"`
+type ExecConfig struct {
+	User         string   `json:"user,optional"`          // User that will run the command
+	Privileged   bool     `json:"privileged,optional"`    // Is the container in privileged mode
+	Tty          bool     `json:"tty,optional"`           // Attach standard streams to a tty.
+	AttachStdin  bool     `json:"attach_stdin,optional"`  // Attach the standard input, makes possible user interaction
+	AttachStderr bool     `json:"attach_stderr,optional"` // Attach the standard error
+	AttachStdout bool     `json:"attach_stdout,optional"` // Attach the standard output
+	Detach       bool     `json:"detach,optional"`        // Execute in detach mode
+	DetachKeys   string   `json:"detach_keys,optional"`   // Escape keys for detach
+	Env          []string `json:"env,optional"`           // Environment variables
+	WorkingDir   string   `json:"working_dir,optional"`   // Working directory
+	Cmd          []string `json:"cmd"`                    // Execution commands and args
 }
 
 type LogsContainerRequest struct {

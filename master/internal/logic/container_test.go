@@ -147,3 +147,25 @@ func TestApplyContainer(t *testing.T) {
 	}
 	t.Log("apply container success")
 }
+
+
+func TestExecContainer(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	l := NewExecContainerLogic(ctx, &testSvcCtx)
+	
+	err := l.ExecContainer(&types.ExecContainerRequest{
+		Metadata: types.Metadata{
+			Namespace: "default",
+			Name: "111",
+		},
+
+		Config: types.ExecConfig{
+			Cmd: []string{"ls"},
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("exec container success")
+}
