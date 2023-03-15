@@ -2,12 +2,12 @@ package logic
 
 import (
 	"context"
+	"io"
 
 	"k2edge/worker/internal/svc"
-	typesInternal "k2edge/worker/internal/types"
+	"k2edge/worker/internal/types"
 
-	"github.com/docker/docker/api/types"
-
+	dtypes "github.com/docker/docker/api/types"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,18 +25,18 @@ func NewAttachLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AttachLogi
 	}
 }
 
-func (l *AttachLogic) Attach(req *typesInternal.AttachRequest) error {
-	_, err := l.svcCtx.DockerClient.ContainerAttach(l.ctx, req.Container, types.ContainerAttachOptions{
-		Stream:     req.Config.Stream,
-		Stdin:      req.Config.Stdin,
-		Stdout:     req.Config.Stdout,
-		Stderr:     req.Config.Stderr,
-		DetachKeys: req.Config.DetachKeys,
-		Logs:       req.Config.Logs,
+func (l *AttachLogic) Attach(req *types.AttachRequest) (io.ReadWriteCloser, error) {
+	d := l.svcCtx.Docker
+	stream, err := d.ContainerAttach(l.ctx, req.Container, dtypes.ContainerAttachOptions{
+		Stream:     req.Stream,
+		Stdin:      req.Stdin,
+		Stdout:     req.Stdout,
+		Stderr:     req.Stderr,
+		DetachKeys: req.DetachKeys,
+		Logs:       req.Logs,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	// todo: websocket
-	return nil
+	return stream.Conn, nil
 }

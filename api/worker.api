@@ -67,39 +67,35 @@ type ListContainersResponse {
 }
 
 type ExecRequest {
-	Container string     `json:"container"`
-	Config    ExecConfig `json:"config,optional"`
-}
-type ExecConfig {
-	User         string   `json:"user,optional"`          // User that will run the command
-	Privileged   bool     `json:"privileged,optional"`    // Is the container in privileged mode
-	Tty          bool     `json:"tty,optional"`           // Attach standard streams to a tty.
-	AttachStdin  bool     `json:"attach_stdin,optional"`  // Attach the standard input, makes possible user interaction
-	AttachStderr bool     `json:"attach_stderr,optional"` // Attach the standard error
-	AttachStdout bool     `json:"attach_stdout,optional"` // Attach the standard output
-	Detach       bool     `json:"detach,optional"`        // Execute in detach mode
-	DetachKeys   string   `json:"detach_keys,optional"`   // Escape keys for detach
-	Env          []string `json:"env,optional"`           // Environment variables
-	WorkingDir   string   `json:"working_dir,optional"`   // Working directory
-	Cmd          []string `json:"cmd"`                    // Execution commands and args
+	Container    string   `form:"container"`
+	User         string   `form:"user,optional"`          // User that will run the command
+	Privileged   bool     `form:"privileged,optional"`    // Is the container in privileged mode
+	Tty          bool     `form:"tty,optional"`           // Attach standard streams to a tty.
+	AttachStdin  bool     `form:"attach_stdin,optional"`  // Attach the standard input, makes possible user interaction
+	AttachStderr bool     `form:"attach_stderr,optional"` // Attach the standard error
+	AttachStdout bool     `form:"attach_stdout,optional"` // Attach the standard output
+	Detach       bool     `form:"detach,optional"`        // Execute in detach mode
+	DetachKeys   string   `form:"detach_keys,optional"`   // Escape keys for detach
+	Env          []string `form:"env,optional"`           // Environment variables
+	WorkingDir   string   `form:"working_dir,optional"`   // Working directory
+	Cmd          []string `form:"cmd"`                    // Execution commands and args
 }
 
 type AttachRequest {
-	Container string       `json:"container"`
-	Config    AttachConfig `json:"config,optional"`
-}
-type AttachConfig {
-	Stream     bool   `json:"stream"`
-	Stdin      bool   `json:"stdin"`
-	Stdout     bool   `json:"stdout"`
-	Stderr     bool   `json:"stderr"`
-	DetachKeys string `json:"detach_keys"`
-	Logs       bool   `json:"logs"`
+	Container  string `form:"container"`
+	Stream     bool   `form:"stream,default=true"`
+	Stdin      bool   `form:"stdin,default=true"`
+	Stdout     bool   `form:"stdout,default=true"`
+	Stderr     bool   `form:"stderr,default=true"`
+	DetachKeys string `form:"detach_keys,optional"`
+	Logs       bool   `form:"logs,optional"`
 }
 
 type NodeTopResponse {
 	// 当前节点存在的镜像列表
 	Images []string `json:"images"`
+	// CPU
+	CPU []CPUInfo `json:"cpu"`
 	// 内存
 	MemoryUsed        uint64  `json:"memory_used"`
 	MemoryAvailable   uint64  `json:"memory_available"`
@@ -110,6 +106,18 @@ type NodeTopResponse {
 	DiskFree        uint64  `json:"disk_free"`
 	DiskUsedPercent float64 `json:"disk_used_percent"`
 	DiskTotal       uint64  `json:"disk_total"`
+}
+
+type CPUInfo {
+	CPU int32 `json:"cpu"`
+	// cpu 逻辑核心数
+	Cores int32 `json:"cores"`
+	// cpu 频率
+	Mhz float64 `json:"mhz"`
+	// cpu 架构
+	ModelName string `json:"model_name"`
+	// cpu 使用率
+	Percent float64 `json:"percent"`
 }
 
 @server(

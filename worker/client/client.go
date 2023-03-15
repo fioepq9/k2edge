@@ -4,19 +4,48 @@ import (
 	"encoding/json"
 	"fmt"
 	"k2edge/worker/internal/types"
+	"strings"
 	"time"
 
 	"github.com/imroc/req/v3"
 )
 
 type Client struct {
-	*req.Client
+	opt *ClientOption
+	req *req.Client
+
+	Container containerAPI
+	Node      nodeAPI
 }
 
-func NewClient(BaseURL string) *Client {
-	var cli Client
-	cli.Client = req.C().
-		SetBaseURL(BaseURL).
+type ClientOption struct {
+	httpBaseURL string
+}
+
+func (o *ClientOption) HttpBaseURL() string {
+	return o.httpBaseURL
+}
+
+func (o *ClientOption) WebsocketBaseURL() string {
+	base := strings.TrimPrefix(o.httpBaseURL, "http://")
+	return fmt.Sprintf("ws://%s", base)
+}
+
+type Option func(*ClientOption)
+
+func NewClient(baseurl string, opt ...Option) *Client {
+	if !strings.HasPrefix(baseurl, "http://") {
+		panic("unsupported protocol")
+	}
+	var c Client
+	c.opt = &ClientOption{
+		httpBaseURL: baseurl,
+	}
+	for _, o := range opt {
+		o(c.opt)
+	}
+	c.req = req.C().
+		SetBaseURL(c.opt.HttpBaseURL()).
 		SetCommonRetryCount(2).
 		SetCommonRetryBackoffInterval(time.Second, 5*time.Second).
 		AddCommonRetryCondition(func(resp *req.Response, err error) bool {
@@ -45,5 +74,14 @@ func NewClient(BaseURL string) *Client {
 			transformedBody, err = json.Marshal(r.Data)
 			return
 		})
-	return &cli
+
+	c.Container = containerAPI{
+		req: c.req,
+		opt: c.opt,
+	}
+	c.Node = nodeAPI{
+		req: c.req,
+		opt: c.opt,
+	}
+	return &c
 }

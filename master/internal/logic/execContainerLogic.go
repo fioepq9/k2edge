@@ -37,8 +37,8 @@ func (l *ExecContainerLogic) ExecContainer(req *types.ExecContainerRequest) erro
 	if !found {
 		return fmt.Errorf("container %s does not exist", req.Metadata.Name)
 	}
-	
-	//根据 container 里 nodeName 去 etcd 里查询的 nodeBaseURL 
+
+	//根据 container 里 nodeName 去 etcd 里查询的 nodeBaseURL
 	containers, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
 		return err
@@ -50,32 +50,31 @@ func (l *ExecContainerLogic) ExecContainer(req *types.ExecContainerRequest) erro
 	if err != nil {
 		return err
 	}
-	
+
 	if !found {
 		return fmt.Errorf("cannot find container %s info", req.Metadata.Name)
 	}
-	
+
 	// 向特定的 work 结点发送获取conatiner信息的请求
 	cli := client.NewClient(worker.BaseURL.WorkerURL)
-	err = cli.Containers().Exec(l.ctx, client.ExecRequest{
-		Container: container.ContainerStatus.ContainerID,
-		Config: client.ExecConfig{
-			User: req.Config.User, 
-			Privileged: req.Config.Privileged,
-			Tty: req.Config.Tty,
-			AttachStdin: req.Config.AttachStdin,
-			AttachStderr: req.Config.AttachStderr,
-			AttachStdout: req.Config.AttachStdout,
-			Detach: req.Config.Detach,
-			DetachKeys: req.Config.DetachKeys,
-			Env: req.Config.Env,
-			WorkingDir: req.Config.WorkingDir,
-			Cmd: req.Config.Cmd,
-		},
+	rw, err := cli.Container.Exec(l.ctx, client.ExecRequest{
+		Container:    container.ContainerStatus.ContainerID,
+		User:         req.Config.User,
+		Privileged:   req.Config.Privileged,
+		Tty:          req.Config.Tty,
+		AttachStdin:  req.Config.AttachStdin,
+		AttachStderr: req.Config.AttachStderr,
+		AttachStdout: req.Config.AttachStdout,
+		Detach:       req.Config.Detach,
+		DetachKeys:   req.Config.DetachKeys,
+		Env:          req.Config.Env,
+		WorkingDir:   req.Config.WorkingDir,
+		Cmd:          req.Config.Cmd,
 	})
 	if err != nil {
 		return err
 	}
+	defer rw.Close()
 
 	return nil
 }

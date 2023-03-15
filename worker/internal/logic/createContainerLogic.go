@@ -9,7 +9,7 @@ import (
 	"k2edge/worker/internal/svc"
 	"k2edge/worker/internal/types"
 
-	dockerTypes "github.com/docker/docker/api/types"
+	dtypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/go-connections/nat"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -30,17 +30,22 @@ func NewCreateContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 }
 
 func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest) (resp *types.CreateContainerResponse, err error) {
-	d := l.svcCtx.DockerClient
-	var conf container.Config
-	if len(req.Config.Command) != 0 {
-		conf.Cmd = []string{req.Config.Command}
-		conf.Cmd = append(conf.Cmd, req.Config.Args...)
+	d := l.svcCtx.Docker
+	// 构建 docker 中的 container config
+	conf := container.Config{
+		Image: req.Config.Image,
+		Env:   req.Config.Env,
 	}
-	
-	//conf.Hostname = "0.0.0.0"
-	conf.Image = req.Config.Image
-	conf.Env = req.Config.Env
-	rd, err := d.ImagePull(l.ctx, conf.Image, dockerTypes.ImagePullOptions{})
+	if len(req.Config.Command) != 0 {
+		conf.Cmd = append([]string{req.Config.Command}, req.Config.Args...)
+	}
+	// 构建 docker 中的 container host config
+	hostConf := container.HostConfig{
+		PortBindings: exposedPortToPortMap(req.Config.Expose),
+	}
+
+	// 拉取镜像
+	rd, err := d.ImagePull(l.ctx, conf.Image, dtypes.ImagePullOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -49,20 +54,12 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	if err != nil {
 		return nil, err
 	}
-	pbs := make(nat.PortMap)
-	for _, e := range req.Config.Expose {
-		port := nat.Port(fmt.Sprintf("%d/%s", e.Port, e.Protocol))
-		pb := []nat.PortBinding{
-			{HostPort: fmt.Sprint(e.HostPort)},
-		}
-		pbs[port] = pb
-	}
-	res, err := l.svcCtx.DockerClient.ContainerCreate(
+
+	// 创建镜像
+	res, err := d.ContainerCreate(
 		l.ctx,
 		&conf,
-		&container.HostConfig{
-			PortBindings: pbs,
-		},
+		&hostConf,
 		nil,
 		nil,
 		fmt.Sprintf("%s-%d", req.ContainerName, time.Now().Unix()),
@@ -70,11 +67,27 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	if err != nil {
 		return nil, err
 	}
-	err = d.ContainerStart(l.ctx, res.ID, dockerTypes.ContainerStartOptions{})
+
+	// 启动镜像
+	err = d.ContainerStart(l.ctx, res.ID, dtypes.ContainerStartOptions{})
 	if err != nil {
 		return nil, err
 	}
+
+	// 返回镜像 ID
 	resp = new(types.CreateContainerResponse)
 	resp.ID = res.ID
 	return resp, nil
+}
+
+func exposedPortToPortMap(ep []types.ExposedPort) nat.PortMap {
+	pbs := make(nat.PortMap)
+	for _, e := range ep {
+		port := nat.Port(fmt.Sprintf("%d/%s", e.Port, e.Protocol))
+		pb := []nat.PortBinding{
+			{HostPort: fmt.Sprint(e.HostPort)},
+		}
+		pbs[port] = pb
+	}
+	return pbs
 }

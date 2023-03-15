@@ -37,8 +37,8 @@ func (l *AttachContainerLogic) AttachContainer(req *types.AttachContainerRequest
 	if !found {
 		return fmt.Errorf("container %s does not exist", req.Metadata.Name)
 	}
-	
-	//根据 container 里 nodeName 去 etcd 里查询的 nodeBaseURL 
+
+	//根据 container 里 nodeName 去 etcd 里查询的 nodeBaseURL
 	containers, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
 		return err
@@ -50,27 +50,26 @@ func (l *AttachContainerLogic) AttachContainer(req *types.AttachContainerRequest
 	if err != nil {
 		return err
 	}
-	
+
 	if !found {
 		return fmt.Errorf("cannot find container %s info", req.Metadata.Name)
 	}
-	
+
 	// 向特定的 work 结点发送获取conatiner信息的请求
 	cli := client.NewClient(worker.BaseURL.WorkerURL)
-	err = cli.Containers().Attach(l.ctx, client.AttachRequest{
-		Container: container.ContainerStatus.ContainerID,
-		Config: client.AttachConfig{
-			Stream: req.Config.Stream,
-			Stdin: req.Config.Stdin,
-			Stdout: req.Config.Stdout,
-			Stderr: req.Config.Stderr,
-			DetachKeys: req.Config.DetachKeys,
-			Logs: req.Config.Logs,
-		},
+	rw, err := cli.Container.Attach(l.ctx, client.AttachRequest{
+		Container:  container.ContainerStatus.ContainerID,
+		Stream:     req.Config.Stream,
+		Stdin:      req.Config.Stdin,
+		Stdout:     req.Config.Stdout,
+		Stderr:     req.Config.Stderr,
+		DetachKeys: req.Config.DetachKeys,
+		Logs:       req.Config.Logs,
 	})
 	if err != nil {
 		return err
 	}
+	defer rw.Close()
 
 	return nil
 }

@@ -54,48 +54,49 @@ type ListContainersResponse struct {
 }
 
 type ExecRequest struct {
-	Container string     `json:"container"`
-	Config    ExecConfig `json:"config,optional"`
-}
-
-type ExecConfig struct {
-	User         string   `json:"user,optional"`          // User that will run the command
-	Privileged   bool     `json:"privileged,optional"`    // Is the container in privileged mode
-	Tty          bool     `json:"tty,optional"`           // Attach standard streams to a tty.
-	AttachStdin  bool     `json:"attach_stdin,optional"`  // Attach the standard input, makes possible user interaction
-	AttachStderr bool     `json:"attach_stderr,optional"` // Attach the standard error
-	AttachStdout bool     `json:"attach_stdout,optional"` // Attach the standard output
-	Detach       bool     `json:"detach,optional"`        // Execute in detach mode
-	DetachKeys   string   `json:"detach_keys,optional"`   // Escape keys for detach
-	Env          []string `json:"env,optional"`           // Environment variables
-	WorkingDir   string   `json:"working_dir,optional"`   // Working directory
-	Cmd          []string `json:"cmd"`                    // Execution commands and args
+	Container    string   `form:"container"`
+	User         string   `form:"user,optional"`          // User that will run the command
+	Privileged   bool     `form:"privileged,optional"`    // Is the container in privileged mode
+	Tty          bool     `form:"tty,optional"`           // Attach standard streams to a tty.
+	AttachStdin  bool     `form:"attach_stdin,optional"`  // Attach the standard input, makes possible user interaction
+	AttachStderr bool     `form:"attach_stderr,optional"` // Attach the standard error
+	AttachStdout bool     `form:"attach_stdout,optional"` // Attach the standard output
+	Detach       bool     `form:"detach,optional"`        // Execute in detach mode
+	DetachKeys   string   `form:"detach_keys,optional"`   // Escape keys for detach
+	Env          []string `form:"env,optional"`           // Environment variables
+	WorkingDir   string   `form:"working_dir,optional"`   // Working directory
+	Cmd          []string `form:"cmd"`                    // Execution commands and args
 }
 
 type AttachRequest struct {
-	Container string       `json:"container"`
-	Config    AttachConfig `json:"config,optional"`
-}
-
-type AttachConfig struct {
-	Stream     bool   `json:"stream"`
-	Stdin      bool   `json:"stdin"`
-	Stdout     bool   `json:"stdout"`
-	Stderr     bool   `json:"stderr"`
-	DetachKeys string `json:"detach_keys"`
-	Logs       bool   `json:"logs"`
+	Container  string `form:"container"`
+	Stream     bool   `form:"stream,default=true"`
+	Stdin      bool   `form:"stdin,default=true"`
+	Stdout     bool   `form:"stdout,default=true"`
+	Stderr     bool   `form:"stderr,default=true"`
+	DetachKeys string `form:"detach_keys,optional"`
+	Logs       bool   `form:"logs,optional"`
 }
 
 type NodeTopResponse struct {
-	Images            []string `json:"images"`
-	MemoryUsed        uint64   `json:"memory_used"`
-	MemoryAvailable   uint64   `json:"memory_available"`
-	MemoryUsedPercent float64  `json:"memory_used_percent"`
-	MemoryTotal       uint64   `json:"memory_total"`
-	DiskUsed          uint64   `json:"disk_used"`
-	DiskFree          uint64   `json:"disk_free"`
-	DiskUsedPercent   float64  `json:"disk_used_percent"`
-	DiskTotal         uint64   `json:"disk_total"`
+	Images            []string  `json:"images"`
+	CPU               []CPUInfo `json:"cpu"`
+	MemoryUsed        uint64    `json:"memory_used"`
+	MemoryAvailable   uint64    `json:"memory_available"`
+	MemoryUsedPercent float64   `json:"memory_used_percent"`
+	MemoryTotal       uint64    `json:"memory_total"`
+	DiskUsed          uint64    `json:"disk_used"`
+	DiskFree          uint64    `json:"disk_free"`
+	DiskUsedPercent   float64   `json:"disk_used_percent"`
+	DiskTotal         uint64    `json:"disk_total"`
+}
+
+type CPUInfo struct {
+	CPU       int32   `json:"cpu"`
+	Cores     int32   `json:"cores"`
+	Mhz       float64 `json:"mhz"`
+	ModelName string  `json:"model_name"`
+	Percent   float64 `json:"percent"`
 }
 
 type Metadata struct {

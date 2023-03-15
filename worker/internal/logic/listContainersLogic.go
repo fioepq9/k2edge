@@ -6,7 +6,7 @@ import (
 	"k2edge/worker/internal/svc"
 	"k2edge/worker/internal/types"
 
-	dockerTypes "github.com/docker/docker/api/types"
+	dtypes "github.com/docker/docker/api/types"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,7 +25,7 @@ func NewListContainersLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Li
 }
 
 func (l *ListContainersLogic) ListContainers(req *types.ListContainersRequest) (resp *types.ListContainersResponse, err error) {
-	containers, err := l.svcCtx.DockerClient.ContainerList(context.Background(), dockerTypes.ContainerListOptions{
+	containers, err := l.svcCtx.Docker.ContainerList(l.ctx, dtypes.ContainerListOptions{
 		Size:   req.Size,
 		All:    req.All,
 		Latest: req.Latest,

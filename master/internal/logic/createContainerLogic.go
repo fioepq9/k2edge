@@ -114,7 +114,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	}
 
 	// 访问 worker 结点并创建容器
-	res, err := cli.Containers().Create(l.ctx, client.CreateContainerRequest{
+	res, err := cli.Container.Create(l.ctx, client.CreateContainerRequest{
 		ContainerName: c.Metadata.Name,
 		Config: client.ContainerConfig{
 			Image:    c.ContainerConfig.Image,

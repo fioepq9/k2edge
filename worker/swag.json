@@ -89,11 +89,87 @@
             "type": "string"
           },
           {
-            "name": "config",
+            "name": "user",
+            "description": " User that will run the command",
             "in": "query",
             "required": false,
-            "type": "invalid",
-            "format": "UNKNOWN"
+            "type": "string"
+          },
+          {
+            "name": "privileged",
+            "description": " Is the container in privileged mode",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "tty",
+            "description": " Attach standard streams to a tty.",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "attach_stdin",
+            "description": " Attach the standard input, makes possible user interaction",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "attach_stderr",
+            "description": " Attach the standard error",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "attach_stdout",
+            "description": " Attach the standard output",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "detach",
+            "description": " Execute in detach mode",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "detach_keys",
+            "description": " Escape keys for detach",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "env",
+            "description": " Environment variables",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "working_dir",
+            "description": " Working directory",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "cmd",
+            "description": " Execution commands and args",
+            "in": "query",
+            "required": true,
+            "type": "string"
           }
         ],
         "requestBody": {},
@@ -304,24 +380,31 @@
     }
   },
   "definitions": {
-    "AttachConfig": {
+    "AttachRequest": {
       "type": "object",
       "properties": {
+        "container": {
+          "type": "string"
+        },
         "stream": {
           "type": "boolean",
-          "format": "boolean"
+          "format": "boolean",
+          "default": "true"
         },
         "stdin": {
           "type": "boolean",
-          "format": "boolean"
+          "format": "boolean",
+          "default": "true"
         },
         "stdout": {
           "type": "boolean",
-          "format": "boolean"
+          "format": "boolean",
+          "default": "true"
         },
         "stderr": {
           "type": "boolean",
-          "format": "boolean"
+          "format": "boolean",
+          "default": "true"
         },
         "detach_keys": {
           "type": "string"
@@ -331,29 +414,45 @@
           "format": "boolean"
         }
       },
-      "title": "AttachConfig",
+      "title": "AttachRequest",
       "required": [
+        "container",
         "stream",
         "stdin",
         "stdout",
-        "stderr",
-        "detach_keys",
-        "logs"
+        "stderr"
       ]
     },
-    "AttachRequest": {
+    "CPUInfo": {
       "type": "object",
       "properties": {
-        "container": {
+        "cpu": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "cores": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "mhz": {
+          "type": "number",
+          "format": "double"
+        },
+        "model_name": {
           "type": "string"
         },
-        "config": {
-          "$ref": "#/definitions/AttachConfig"
+        "percent": {
+          "type": "number",
+          "format": "double"
         }
       },
-      "title": "AttachRequest",
+      "title": "CPUInfo",
       "required": [
-        "container"
+        "cpu",
+        "cores",
+        "mhz",
+        "model_name",
+        "percent"
       ]
     },
     "Command": {
@@ -599,9 +698,12 @@
         "todo"
       ]
     },
-    "ExecConfig": {
+    "ExecRequest": {
       "type": "object",
       "properties": {
+        "container": {
+          "type": "string"
+        },
         "user": {
           "type": "string",
           "description": " User that will run the command"
@@ -659,24 +761,10 @@
           "description": " Execution commands and args"
         }
       },
-      "title": "ExecConfig",
-      "required": [
-        "cmd"
-      ]
-    },
-    "ExecRequest": {
-      "type": "object",
-      "properties": {
-        "container": {
-          "type": "string"
-        },
-        "config": {
-          "$ref": "#/definitions/ExecConfig"
-        }
-      },
       "title": "ExecRequest",
       "required": [
-        "container"
+        "container",
+        "cmd"
       ]
     },
     "ExposedPort": {
@@ -920,6 +1008,12 @@
             "type": "string"
           }
         },
+        "cpu": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CPUInfo"
+          }
+        },
         "memory_used": {
           "type": "integer",
           "format": "int64"
@@ -956,6 +1050,7 @@
       "title": "NodeTopResponse",
       "required": [
         "images",
+        "cpu",
         "memory_used",
         "memory_available",
         "memory_used_percent",

@@ -7,7 +7,7 @@ require (
 	github.com/docker/go-connections v0.4.0
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0
-	github.com/imroc/req/v3 v3.32.3
+	github.com/imroc/req/v3 v3.33.1
 	github.com/samber/lo v1.37.0
 	github.com/shirou/gopsutil/v3 v3.23.2
 	github.com/zeromicro/go-zero v1.4.4
