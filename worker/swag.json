@@ -30,6 +30,7 @@
         "parameters": [
           {
             "name": "body",
+            "description": " type ExecConfig {, }",
             "in": "body",
             "required": true,
             "schema": {
@@ -89,11 +90,87 @@
             "type": "string"
           },
           {
-            "name": "config",
+            "name": "user",
+            "description": " User that will run the command",
             "in": "query",
             "required": false,
-            "type": "invalid",
-            "format": "UNKNOWN"
+            "type": "string"
+          },
+          {
+            "name": "privileged",
+            "description": " Is the container in privileged mode",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "tty",
+            "description": " Attach standard streams to a tty.",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "attach_stdin",
+            "description": " Attach the standard input, makes possible user interaction",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "attach_stderr",
+            "description": " Attach the standard error",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "attach_stdout",
+            "description": " Attach the standard output",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "detach",
+            "description": " Execute in detach mode",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "detach_keys",
+            "description": " Escape keys for detach",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "env",
+            "description": " Environment variables",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "working_dir",
+            "description": " Working directory",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "cmd",
+            "description": " Execution commands and args",
+            "in": "query",
+            "required": true,
+            "type": "string"
           }
         ],
         "requestBody": {},
@@ -602,9 +679,12 @@
         "todo"
       ]
     },
-    "ExecConfig": {
+    "ExecRequest": {
       "type": "object",
       "properties": {
+        "container": {
+          "type": "string"
+        },
         "user": {
           "type": "string",
           "description": " User that will run the command"
@@ -662,24 +742,10 @@
           "description": " Execution commands and args"
         }
       },
-      "title": "ExecConfig",
-      "required": [
-        "cmd"
-      ]
-    },
-    "ExecRequest": {
-      "type": "object",
-      "properties": {
-        "container": {
-          "type": "string"
-        },
-        "config": {
-          "$ref": "#/definitions/ExecConfig"
-        }
-      },
       "title": "ExecRequest",
       "required": [
-        "container"
+        "container",
+        "cmd"
       ]
     },
     "ExposedPort": {

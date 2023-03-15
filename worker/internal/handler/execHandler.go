@@ -7,6 +7,8 @@ import (
 	"k2edge/worker/internal/svc"
 	"k2edge/worker/internal/types"
 
+	"github.com/gorilla/websocket"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
@@ -14,6 +16,7 @@ func ExecHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.ExecRequest
 		if err := httpx.Parse(r, &req); err != nil {
+			logx.Error(err)
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
@@ -23,13 +26,16 @@ func ExecHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
+		defer conn.Close()
 
 		l := logic.NewExecLogic(r.Context(), svcCtx, conn)
 		err = l.Exec(&req)
+		var msg []byte
 		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			msg = websocket.FormatCloseMessage(websocket.CloseAbnormalClosure, err.Error())
 		} else {
-			httpx.Ok(w)
+			msg = websocket.FormatCloseMessage(websocket.CloseNormalClosure, "close")
 		}
+		conn.WriteMessage(websocket.CloseMessage, msg)
 	}
 }

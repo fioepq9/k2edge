@@ -7,13 +7,8 @@ import (
 	"github.com/imroc/req/v3"
 )
 
-func (c *Client) Nodes() nodes {
-	return nodes{
-		cli: c.Client,
-	}
-}
-
 type nodes struct {
+	opt *ClientOption
 	cli *req.Client
 }
 

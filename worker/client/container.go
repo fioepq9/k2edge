@@ -3,6 +3,8 @@ package client
 import (
 	"context"
 	"fmt"
+	"io"
+	"net/url"
 	"reflect"
 	"strings"
 
@@ -10,14 +12,34 @@ import (
 	"github.com/imroc/req/v3"
 )
 
-func (c *Client) Containers() containers {
-	return containers{
-		cli: c.Client,
-	}
+type containers struct {
+	opt *ClientOption
+	cli *req.Client
 }
 
-type containers struct {
-	cli *req.Client
+type containerExecSession struct {
+	ws *websocket.Conn
+}
+
+func (s *containerExecSession) Read(p []byte) (n int, err error) {
+	_, rd, err := s.ws.NextReader()
+	if err != nil {
+		return 0, err
+	}
+	return rd.Read(p)
+}
+
+func (s *containerExecSession) Write(p []byte) (n int, err error) {
+	wt, err := s.ws.NextWriter(websocket.BinaryMessage)
+	if err != nil {
+		return 0, err
+	}
+	defer wt.Close()
+	return wt.Write(p)
+}
+
+func (s *containerExecSession) Close() error {
+	return s.ws.Close()
 }
 
 func (c containers) Create(ctx context.Context, req CreateContainerRequest) (resp *CreateContainerResponse, err error) {
@@ -74,19 +96,31 @@ func (c containers) List(ctx context.Context, req ListContainersRequest) (resp *
 	return resp, nil
 }
 
-func (c containers) Exec(ctx context.Context, req ExecRequest) error {
-	conn, _, err := websocket.DefaultDialer.DialContext(ctx, "ws://localhost:8888/container/exec", nil)
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
-	for {
-		_, p, err := conn.ReadMessage()
-		if err != nil {
-			return err
+func (c containers) Exec(ctx context.Context, req ExecRequest) (io.ReadWriteCloser, error) {
+	vals := make(url.Values)
+	rv := reflect.ValueOf(req)
+	rt := rv.Type()
+	for i := 0; i < rv.NumField(); i++ {
+		tagslice := strings.Split(rt.Field(i).Tag.Get("form"), ",")
+		if len(tagslice) == 0 {
+			continue
 		}
-		fmt.Printf("%s", string(p))
+		tagName := tagslice[0]
+		if !rv.Field(i).IsZero() {
+			vals.Add(tagName, fmt.Sprint(rv.Field(i).Interface()))
+		}
 	}
+	conn, _, err := websocket.DefaultDialer.DialContext(
+		ctx,
+		fmt.Sprintf("ws://%s:%d/container/exec?%s", c.opt.host, c.opt.port, vals.Encode()),
+		nil,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &containerExecSession{
+		ws: conn,
+	}, nil
 }
 
 func (c containers) Attach(ctx context.Context, req AttachRequest) error {

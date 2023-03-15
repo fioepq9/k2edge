@@ -54,22 +54,18 @@ type ListContainersResponse struct {
 }
 
 type ExecRequest struct {
-	Container string     `json:"container"`
-	Config    ExecConfig `json:"config,optional"`
-}
-
-type ExecConfig struct {
-	User         string   `json:"user,optional"`          // User that will run the command
-	Privileged   bool     `json:"privileged,optional"`    // Is the container in privileged mode
-	Tty          bool     `json:"tty,optional"`           // Attach standard streams to a tty.
-	AttachStdin  bool     `json:"attach_stdin,optional"`  // Attach the standard input, makes possible user interaction
-	AttachStderr bool     `json:"attach_stderr,optional"` // Attach the standard error
-	AttachStdout bool     `json:"attach_stdout,optional"` // Attach the standard output
-	Detach       bool     `json:"detach,optional"`        // Execute in detach mode
-	DetachKeys   string   `json:"detach_keys,optional"`   // Escape keys for detach
-	Env          []string `json:"env,optional"`           // Environment variables
-	WorkingDir   string   `json:"working_dir,optional"`   // Working directory
-	Cmd          []string `json:"cmd"`                    // Execution commands and args
+	Container    string   `form:"container"`
+	User         string   `form:"user,optional"`          // User that will run the command
+	Privileged   bool     `form:"privileged,optional"`    // Is the container in privileged mode
+	Tty          bool     `form:"tty,optional"`           // Attach standard streams to a tty.
+	AttachStdin  bool     `form:"attach_stdin,optional"`  // Attach the standard input, makes possible user interaction
+	AttachStderr bool     `form:"attach_stderr,optional"` // Attach the standard error
+	AttachStdout bool     `form:"attach_stdout,optional"` // Attach the standard output
+	Detach       bool     `form:"detach,optional"`        // Execute in detach mode
+	DetachKeys   string   `form:"detach_keys,optional"`   // Escape keys for detach
+	Env          []string `form:"env,optional"`           // Environment variables
+	WorkingDir   string   `form:"working_dir,optional"`   // Working directory
+	Cmd          []string `form:"cmd"`                    // Execution commands and args
 }
 
 type AttachRequest struct {

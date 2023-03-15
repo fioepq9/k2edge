@@ -33,37 +33,37 @@ func NewExecLogic(ctx context.Context, svcCtx *svc.ServiceContext, ws *websocket
 func (l *ExecLogic) Exec(req *typesInternal.ExecRequest) error {
 	d := l.svcCtx.DockerClient
 	cresp, err := d.ContainerExecCreate(l.ctx, req.Container, types.ExecConfig{
-		User:         req.Config.User,
-		Privileged:   req.Config.Privileged,
-		Tty:          req.Config.Tty,
-		AttachStdin:  req.Config.AttachStdin,
-		AttachStderr: req.Config.AttachStderr,
-		AttachStdout: req.Config.AttachStdout,
-		Detach:       req.Config.Detach,
-		DetachKeys:   req.Config.DetachKeys,
-		Env:          req.Config.Env,
-		WorkingDir:   req.Config.WorkingDir,
-		Cmd:          req.Config.Cmd,
+		User:         req.User,
+		Privileged:   req.Privileged,
+		Tty:          req.Tty,
+		AttachStdin:  req.AttachStdin,
+		AttachStderr: req.AttachStderr,
+		AttachStdout: req.AttachStdout,
+		Detach:       req.Detach,
+		DetachKeys:   req.DetachKeys,
+		Env:          req.Env,
+		WorkingDir:   req.WorkingDir,
+		Cmd:          req.Cmd,
 	})
 	if err != nil {
 		return err
 	}
 	aresp, err := d.ContainerExecAttach(l.ctx, cresp.ID, types.ExecStartCheck{
-		Detach: req.Config.Detach,
-		Tty:    req.Config.Tty,
+		Detach: req.Detach,
+		Tty:    req.Tty,
 	})
 	if err != nil {
 		return err
 	}
-	if !req.Config.Tty {
+	if !req.Tty {
 		resp, err := io.ReadAll(aresp.Reader)
 		if err != nil {
 			return err
 		}
-		l.ws.WriteMessage(websocket.BinaryMessage, resp)
-		l.ws.WriteMessage(websocket.CloseMessage, []byte("finish"))
+		l.ws.WriteMessage(websocket.TextMessage, resp)
 		return nil
 	}
+	defer aresp.Close()
 	var wg sync.WaitGroup
 	wg.Add(2)
 	go l.Write(aresp.Conn, &wg)
@@ -75,11 +75,11 @@ func (l *ExecLogic) Exec(req *typesInternal.ExecRequest) error {
 func (l *ExecLogic) Read(conn net.Conn, wg *sync.WaitGroup) error {
 	defer wg.Done()
 	for {
-		wt, err := l.ws.NextWriter(websocket.BinaryMessage)
+		wt, err := l.ws.NextWriter(websocket.TextMessage)
 		if err != nil {
 			return err
 		}
-		if _, err = io.Copy(wt, conn); err != nil {
+		if _, err = io.CopyN(wt, conn, 1); err != nil {
 			return err
 		}
 	}

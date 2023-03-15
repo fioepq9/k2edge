@@ -10,13 +10,47 @@ import (
 )
 
 type Client struct {
-	*req.Client
+	opt *ClientOption
+	c   *req.Client
+
+	Container containers
+	Node      nodes
 }
 
-func NewClient(BaseURL string) *Client {
+type ClientOption struct {
+	host string
+	port int
+}
+
+type Option func(*ClientOption)
+
+func WithHost(host string) Option {
+	return func(co *ClientOption) {
+		co.host = host
+	}
+}
+
+func WithPort(port int) Option {
+	return func(co *ClientOption) {
+		co.port = port
+	}
+}
+
+func NewClient(opt ...Option) *Client {
+	var co ClientOption
+	for _, o := range opt {
+		o(&co)
+	}
+	if co.host == "" {
+		co.host = "localhost"
+	}
+	if co.port == 0 {
+		co.port = 8888
+	}
 	var cli Client
-	cli.Client = req.C().
-		SetBaseURL(BaseURL).
+	cli.opt = &co
+	cli.c = req.C().
+		SetBaseURL(fmt.Sprintf("http://%s:%d", co.host, co.port)).
 		SetCommonRetryCount(2).
 		SetCommonRetryBackoffInterval(time.Second, 5*time.Second).
 		AddCommonRetryCondition(func(resp *req.Response, err error) bool {
@@ -45,5 +79,14 @@ func NewClient(BaseURL string) *Client {
 			transformedBody, err = json.Marshal(r.Data)
 			return
 		})
+
+	cli.Container = containers{
+		cli: cli.c,
+		opt: cli.opt,
+	}
+	cli.Node = nodes{
+		cli: cli.c,
+		opt: cli.opt,
+	}
 	return &cli
 }
