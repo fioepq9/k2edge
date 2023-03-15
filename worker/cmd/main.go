@@ -11,7 +11,7 @@ import (
 func main() {
 	cli := client.NewClient("http://localhost:8888")
 	rw, err := cli.Container.Exec(context.Background(), client.ExecRequest{
-		Container:    "f3",
+		Container:    "30d387624fb20507c044c0db859fd3da88e3e6fb277cc788a974007dc5e0c10d",
 		Tty:          true,
 		AttachStdin:  true,
 		AttachStderr: true,

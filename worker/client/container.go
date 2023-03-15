@@ -85,6 +85,7 @@ func (c containerAPI) Exec(ctx context.Context, req ExecRequest) (io.ReadWriteCl
 			vals.Add(tagName, fmt.Sprint(rv.Field(i).Interface()))
 		}
 	}
+	fmt.Println(vals.Encode())
 	conn, _, err := websocket.DefaultDialer.DialContext(
 		ctx,
 		fmt.Sprintf("%s/container/exec?%s", c.opt.WebsocketBaseURL(), vals.Encode()),

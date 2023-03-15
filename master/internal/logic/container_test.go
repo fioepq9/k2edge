@@ -30,20 +30,19 @@ func TestCreatContainer(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	l := NewCreateContainerLogic(ctx, &testSvcCtx)
-	
+
 	err := l.CreateContainer(&types.CreateContainerRequest{
 		Container: types.Container{
 			Metadata: types.Metadata{
 				Namespace: "default",
-				Kind: "container",
-				Name: "111",
+				Kind:      "container",
+				Name:      "222",
 			},
 			ContainerConfig: types.ContainerConfig{
-				Image: "nginx",
+				Image:    "nginx",
 				NodeName: "outlg",
 			},
-			ContainerStatus: types.ContainerStatus{
-			},
+			ContainerStatus: types.ContainerStatus{},
 		},
 	})
 	if err != nil {
@@ -82,8 +81,8 @@ func TestDeleteContainerLogic(t *testing.T) {
 
 	err := l.DeleteContainer(&types.DeleteContainerRequest{
 		Namespace: namespace,
-		Name: containerName,
-		Timeout: 1,
+		Name:      containerName,
+		Timeout:   1,
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -95,10 +94,10 @@ func TestGetContainer(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	l := NewGetContainerLogic(ctx, &testSvcCtx)
-	
+
 	container, err := l.GetContainer(&types.GetContainerRequest{
 		Namespace: "system",
-		Name: "111",
+		Name:      "111",
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -112,7 +111,7 @@ func TestListContainer(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	l := NewListContainerLogic(ctx, &testSvcCtx)
-	
+
 	containers, err := l.ListContainer(&types.ListContainerRequest{
 		Namespace: "default",
 	})
@@ -128,20 +127,19 @@ func TestApplyContainer(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	l := NewApplyContainerLogic(ctx, &testSvcCtx)
-	
+
 	err := l.ApplyContainer(&types.ApplyContainerRequest{
 		Container: types.Container{
 			Metadata: types.Metadata{
 				Namespace: "default",
-				Kind: "container",
-				Name: "111",
+				Kind:      "container",
+				Name:      "111",
 			},
 			ContainerConfig: types.ContainerConfig{
-				Image: "nginx",
+				Image:    "nginx",
 				NodeName: "outlg",
 			},
-			ContainerStatus: types.ContainerStatus{
-			},
+			ContainerStatus: types.ContainerStatus{},
 		},
 	})
 	if err != nil {
@@ -150,19 +148,18 @@ func TestApplyContainer(t *testing.T) {
 	t.Log("apply container success")
 }
 
-
 func TestExecContainer(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 	l := NewExecContainerLogic(ctx, &testSvcCtx)
 	rw, err := l.ExecContainer(&types.ExecContainerRequest{
-			Namespace: "default",
-			Name: "111",
-			Tty:          true,
-			AttachStdin:  true,
-			AttachStderr: true,
-			AttachStdout: true,
-			Cmd:          []string{`"/bin/bash"`},
+		Namespace:    "default",
+		Name:         "111",
+		Tty:          true,
+		AttachStdin:  true,
+		AttachStderr: true,
+		AttachStdout: true,
+		Cmd:          []string{`"/bin/bash"`},
 	})
 
 	t.Log("调用完成")

@@ -10,6 +10,7 @@ import (
 	"k2edge/master/internal/types"
 
 	"github.com/gorilla/websocket"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
@@ -20,6 +21,7 @@ func ExecContainerHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
+		logx.Info(req)
 		ws, err := svcCtx.Websocket.Upgrade(w, r, nil)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
@@ -78,7 +80,7 @@ func (s *AttachSession) Write() error {
 	if err != nil {
 		return err
 	}
-	_, err = io.Copy(w, s.stream)
+	_, err = io.CopyN(w, s.stream, 1)
 	if err != nil {
 		return err
 	}

@@ -11,13 +11,13 @@ import (
 func main() {
 	cli := client.NewClient("http://localhost:8080")
 	rw, err := cli.Container.Exec(context.Background(), client.ExecContainerRequest{
-		Namespace: "default",
-		Name: "111",
+		Namespace:    "default",
+		Name:         "222",
 		Tty:          true,
 		AttachStdin:  true,
 		AttachStderr: true,
 		AttachStdout: true,
-		Cmd:          []string{`"/bin/bash"`},
+		Cmd:          []string{`"\"/bin/bash\""`},
 	})
 	if err != nil {
 		panic(err)

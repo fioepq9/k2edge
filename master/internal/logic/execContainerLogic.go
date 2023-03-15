@@ -28,14 +28,12 @@ func NewExecContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Exe
 }
 
 func (l *ExecContainerLogic) ExecContainer(req *types.ExecContainerRequest) (io.ReadWriteCloser, error) {
-	log := l.Logger
 	key := etcdutil.GenerateKey("container", req.Namespace, req.Name)
 	// 判断 container 是否存在, 存在则获取 container 信息
 	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
 		return nil, err
 	}
-	log.Debug("found key", found)
 
 	if !found {
 		return nil, fmt.Errorf("container %s does not exist", req.Name)
@@ -48,7 +46,6 @@ func (l *ExecContainerLogic) ExecContainer(req *types.ExecContainerRequest) (io.
 	}
 
 	container := (*containers)[0]
-	log.Debug(container)
 	// 获取 node 的 BaseURL
 	worker, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, container.ContainerStatus.Node)
 	if err != nil {
@@ -78,7 +75,6 @@ func (l *ExecContainerLogic) ExecContainer(req *types.ExecContainerRequest) (io.
 	if err != nil {
 		return nil, err
 	}
-	log.Debug("???")
 
 	return rw, nil
 }
