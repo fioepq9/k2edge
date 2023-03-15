@@ -56,7 +56,7 @@ func (l *GetContainerLogic) GetContainer(req *types.GetContainerRequest) (resp *
 	}
 
 	// 向特定的 work 结点发送获取conatiner信息的请求
-	cli := client.NewClient(client.WithBaseURL(worker.BaseURL.WorkerURL))
+	cli := client.NewClient(worker.BaseURL.WorkerURL)
 	containerInfo, err := cli.Container.Status(l.ctx, client.ContainerStatusRequest{
 		ID: container.ContainerStatus.ContainerID,
 	})

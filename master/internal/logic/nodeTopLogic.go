@@ -78,7 +78,7 @@ func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopRe
 
 	if len(node.Roles) > 0 {
 		if lo.Contains(node.Roles, "worker") {
-			cli := client.NewClient(client.WithBaseURL(node.BaseURL.WorkerURL))
+			cli := client.NewClient(node.BaseURL.WorkerURL)
 			topInfo, err := cli.Node.Top(l.ctx)
 			if err != nil {
 				return nil, err

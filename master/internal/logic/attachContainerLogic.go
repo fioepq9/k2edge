@@ -56,21 +56,20 @@ func (l *AttachContainerLogic) AttachContainer(req *types.AttachContainerRequest
 	}
 
 	// 向特定的 work 结点发送获取conatiner信息的请求
-	cli := client.NewClient(client.WithBaseURL(worker.BaseURL.WorkerURL))
-	err = cli.Container.Attach(l.ctx, client.AttachRequest{
-		Container: container.ContainerStatus.ContainerID,
-		Config: client.AttachConfig{
-			Stream:     req.Config.Stream,
-			Stdin:      req.Config.Stdin,
-			Stdout:     req.Config.Stdout,
-			Stderr:     req.Config.Stderr,
-			DetachKeys: req.Config.DetachKeys,
-			Logs:       req.Config.Logs,
-		},
+	cli := client.NewClient(worker.BaseURL.WorkerURL)
+	rw, err := cli.Container.Attach(l.ctx, client.AttachRequest{
+		Container:  container.ContainerStatus.ContainerID,
+		Stream:     req.Config.Stream,
+		Stdin:      req.Config.Stdin,
+		Stdout:     req.Config.Stdout,
+		Stderr:     req.Config.Stderr,
+		DetachKeys: req.Config.DetachKeys,
+		Logs:       req.Config.Logs,
 	})
 	if err != nil {
 		return err
 	}
+	defer rw.Close()
 
 	return nil
 }

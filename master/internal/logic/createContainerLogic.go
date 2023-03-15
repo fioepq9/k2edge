@@ -81,7 +81,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		}
 	}
 
-	cli := client.NewClient(client.WithBaseURL(worker.BaseURL.WorkerURL))
+	cli := client.NewClient(worker.BaseURL.WorkerURL)
 	var c types.Container
 	c.Metadata = req.Container.Metadata
 	c.Metadata.Kind = "container"

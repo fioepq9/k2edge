@@ -56,7 +56,7 @@ func (l *ExecContainerLogic) ExecContainer(req *types.ExecContainerRequest) erro
 	}
 
 	// 向特定的 work 结点发送获取conatiner信息的请求
-	cli := client.NewClient(client.WithBaseURL(worker.BaseURL.WorkerURL))
+	cli := client.NewClient(worker.BaseURL.WorkerURL)
 	rw, err := cli.Container.Exec(l.ctx, client.ExecRequest{
 		Container:    container.ContainerStatus.ContainerID,
 		User:         req.Config.User,
@@ -74,6 +74,7 @@ func (l *ExecContainerLogic) ExecContainer(req *types.ExecContainerRequest) erro
 	if err != nil {
 		return err
 	}
+	defer rw.Close()
 
 	return nil
 }

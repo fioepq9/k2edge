@@ -63,7 +63,7 @@ func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest
 		return fmt.Errorf("cannot find container %s info", req.Name)
 	}
 	// 向特定的 worker 结点发送获取conatiner信息的请求
-	cli := client.NewClient(client.WithBaseURL(worker.BaseURL.WorkerURL))
+	cli := client.NewClient(worker.BaseURL.WorkerURL)
 	err = cli.Container.Stop(l.ctx, client.StopContainerRequest{
 		ID:      c.ContainerStatus.ContainerID,
 		Timeout: req.Timeout * int(time.Second),
