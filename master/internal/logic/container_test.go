@@ -2,9 +2,11 @@ package logic
 
 import (
 	"context"
+	"io"
 	"k2edge/master/internal/config"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
+	"sync"
 
 	"os"
 	"testing"
@@ -150,22 +152,42 @@ func TestApplyContainer(t *testing.T) {
 
 
 func TestExecContainer(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 	l := NewExecContainerLogic(ctx, &testSvcCtx)
-	
-	err := l.ExecContainer(&types.ExecContainerRequest{
-		Metadata: types.Metadata{
+	rw, err := l.ExecContainer(&types.ExecContainerRequest{
 			Namespace: "default",
 			Name: "111",
-		},
-
-		Config: types.ExecConfig{
-			Cmd: []string{"ls"},
-		},
+			Tty:          true,
+			AttachStdin:  true,
+			AttachStderr: true,
+			AttachStdout: true,
+			Cmd:          []string{`"/bin/bash"`},
 	})
+
+	t.Log("调用完成")
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log("exec container success")
+	defer rw.Close()
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		for {
+			if _, err := io.Copy(rw, os.Stdin); err != nil {
+				break
+			}
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		for {
+			if _, err := io.Copy(os.Stdout, rw); err != nil {
+				break
+			}
+		}
+	}()
+	wg.Wait()
+	t.Log("exec container command success")
 }

@@ -54,7 +54,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: AttachContainerHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPost,
+				Method:  http.MethodGet,
 				Path:    "/exec",
 				Handler: ExecContainerHandler(serverCtx),
 			},
@@ -62,11 +62,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/logs",
 				Handler: LogsContainerHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/top",
-				Handler: ContainerTopHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/container"),

@@ -52,7 +52,6 @@ type NodeTopResponse {
 }
 
 type CordonRequest {
-	Name 
 }
 
 type UncordonRequest {

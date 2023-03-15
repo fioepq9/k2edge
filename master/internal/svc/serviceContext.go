@@ -6,9 +6,10 @@ import (
 	"k2edge/etcdutil"
 	"k2edge/master/internal/config"
 	"k2edge/master/internal/types"
-	"time"
 	"os"
+	"time"
 
+	"github.com/gorilla/websocket"
 	"github.com/samber/lo"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
@@ -16,6 +17,7 @@ import (
 type ServiceContext struct {
 	Config config.Config
 	Etcd   *clientv3.Client
+	Websocket      websocket.Upgrader
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -33,9 +35,15 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		c.Name = "MyHost"
 	}
 
+	u := websocket.Upgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+	}
+
 	return &ServiceContext{
 		Config: c,
 		Etcd:   etcd,
+		Websocket: u,
 	}
 }
 

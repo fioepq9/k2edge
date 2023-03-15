@@ -25,13 +25,10 @@ service master-api{
 	post /attach(AttachContainerRequest)
 	
 	@handler ExecContainer
-	post /exec(ExecContainerRequest)
+	get /exec(ExecContainerRequest)
 	
 	@handler LogsContainer
 	post /logs(LogsContainerRequest) returns (LogsContainerResponse)
-	
-	@handler ContainerTop
-	get /top(ContainerTopRequest) returns (ContainerTopResponse)
 }
 
 type CreateContainerRequest {
@@ -67,7 +64,7 @@ type DeleteContainerRequest {
 	Name           string `json:"name"`
 	RemoveVolumnes bool   `json:"remove_volumns,optional"`
 	RemoveLinks    bool   `json:"remoce_links,optional"`
-	Force          bool   `json:"force" default:"false"`
+	Force          bool   `json:"force,optional"`
 	Timeout        int    `json:"timeout,optional"`
 }
 
@@ -76,36 +73,30 @@ type ApplyContainerRequest {
 }
 
 type AttachContainerRequest {
-	Metadata Metadata     `json:"metadata"`
-	Config   AttachConfig `json:"config,optional"`
-}
-
-type AttachConfig {
-	Stream     bool   `json:"stream" default:"false"`
-	Stdin      bool   `json:"stdin" default:"false"`
-	Stdout     bool   `json:"stdout" default:"true"`
-	Stderr     bool   `json:"stderr" default:"true"`
-	DetachKeys string `json:"detach_keys" default:"ctrl-p,ctrl-q"`
-	Logs       bool   `json:"logs" default:"false"`
+	Namespace  string `form:"namespace"`
+	Name       string `form:"name"`
+	Stream     bool   `form:"stream,optional"`
+	Stdin      bool   `form:"stdin,optional"`
+	Stdout     bool   `form:"stdout,optional"`
+	Stderr     bool   `form:"stderr,optional"`
+	DetachKeys string `form:"detach_keys,optional"`
+	Logs       bool   `form:"logs,optional"`
 }
 
 type ExecContainerRequest {
-	Metadata Metadata   `json:"metadata"`
-	Config   ExecConfig `json:"config,optional"`
-}
-
-type ExecConfig {
-	User         string   `json:"user,optional"`          // User that will run the command
-	Privileged   bool     `json:"privileged,optional"`    // Is the container in privileged mode
-	Tty          bool     `json:"tty,optional"`           // Attach standard streams to a tty.
-	AttachStdin  bool     `json:"attach_stdin,optional"`  // Attach the standard input, makes possible user interaction
-	AttachStderr bool     `json:"attach_stderr,optional"` // Attach the standard error
-	AttachStdout bool     `json:"attach_stdout,optional"` // Attach the standard output
-	Detach       bool     `json:"detach,optional"`        // Execute in detach mode
-	DetachKeys   string   `json:"detach_keys,optional"`   // Escape keys for detach
-	Env          []string `json:"env,optional"`           // Environment variables
-	WorkingDir   string   `json:"working_dir,optional"`   // Working directory
-	Cmd          []string `json:"cmd"`                    // Execution commands and args
+	Namespace    string   `form:"namespace"`
+	Name         string   `form:"name"`
+	User         string   `form:"user,optional"`          // User that will run the command
+	Privileged   bool     `form:"privileged,optional"`    // Is the container in privileged mode
+	Tty          bool     `form:"tty,optional"`           // Attach standard streams to a tty.
+	AttachStdin  bool     `form:"attach_stdin,optional"`  // Attach the standard input, makes possible user interaction
+	AttachStderr bool     `form:"attach_stderr,optional"` // Attach the standard error
+	AttachStdout bool     `form:"attach_stdout,optional"` // Attach the standard output
+	Detach       bool     `form:"detach,optional"`        // Execute in detach mode
+	DetachKeys   string   `form:"detach_keys,optional"`   // Escape keys for detach
+	Env          []string `form:"env,optional"`           // Environment variables
+	WorkingDir   string   `form:"working_dir,optional"`   // Working directory
+	Cmd          []string `form:"cmd"`                    // Execution commands and args
 }
 
 type LogsContainerRequest {
@@ -114,12 +105,4 @@ type LogsContainerRequest {
 
 type LogsContainerResponse {
 	Todo string `json:"todo"`
-}
-
-type ContainerTopRequest {
-	Selector Metadata `json:"selector"`
-}
-
-type ContainerTopResponse {
-	Error Error `json:"error,omitempty"`
 }

@@ -134,7 +134,7 @@
       }
     },
     "/container/exec": {
-      "post": {
+      "get": {
         "operationId": "ExecContainer",
         "responses": {
           "200": {
@@ -144,12 +144,99 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "namespace",
+            "in": "query",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/ExecContainerRequest"
-            }
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "description": " User that will run the command",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "privileged",
+            "description": " Is the container in privileged mode",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "tty",
+            "description": " Attach standard streams to a tty.",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "attach_stdin",
+            "description": " Attach the standard input, makes possible user interaction",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "attach_stderr",
+            "description": " Attach the standard error",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "attach_stdout",
+            "description": " Attach the standard output",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "detach",
+            "description": " Execute in detach mode",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "detach_keys",
+            "description": " Escape keys for detach",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "env",
+            "description": " Environment variables",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "working_dir",
+            "description": " Working directory",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "cmd",
+            "description": " Execution commands and args",
+            "in": "query",
+            "required": true,
+            "type": "string"
           }
         ],
         "requestBody": {},
@@ -233,32 +320,6 @@
             "schema": {
               "$ref": "#/definitions/LogsContainerRequest"
             }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
-    "/container/top": {
-      "get": {
-        "operationId": "ContainerTop",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/ContainerTopResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "selector",
-            "in": "query",
-            "required": true,
-            "type": "invalid",
-            "format": "UNKNOWN"
           }
         ],
         "requestBody": {},
@@ -1296,9 +1357,15 @@
         "error"
       ]
     },
-    "AttachConfig": {
+    "AttachContainerRequest": {
       "type": "object",
       "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
         "stream": {
           "type": "boolean",
           "format": "boolean"
@@ -1323,32 +1390,10 @@
           "format": "boolean"
         }
       },
-      "title": "AttachConfig",
-      "required": [
-        "stream",
-        "false",
-        "stdin",
-        "stdout",
-        "true",
-        "stderr",
-        "detach_keys",
-        "ctrl-p",
-        "logs"
-      ]
-    },
-    "AttachContainerRequest": {
-      "type": "object",
-      "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
-        },
-        "config": {
-          "$ref": "#/definitions/AttachConfig"
-        }
-      },
       "title": "AttachContainerRequest",
       "required": [
-        "metadata"
+        "namespace",
+        "name"
       ]
     },
     "AttachDeploymentRequest": {
@@ -1502,41 +1547,9 @@
         "info"
       ]
     },
-    "ContainerTopRequest": {
-      "type": "object",
-      "properties": {
-        "selector": {
-          "$ref": "#/definitions/Metadata"
-        }
-      },
-      "title": "ContainerTopRequest",
-      "required": [
-        "selector"
-      ]
-    },
-    "ContainerTopResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "ContainerTopResponse",
-      "required": [
-        "error"
-      ]
-    },
     "CordonRequest": {
       "type": "object",
-      "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
-        }
-      },
-      "title": "CordonRequest",
-      "required": [
-        "metadata"
-      ]
+      "title": "CordonRequest"
     },
     "CreateContainerRequest": {
       "type": "object",
@@ -1731,9 +1744,7 @@
       "title": "DeleteContainerRequest",
       "required": [
         "namespace",
-        "name",
-        "force",
-        "false"
+        "name"
       ]
     },
     "DeleteCronJobRequest": {
@@ -1924,9 +1935,15 @@
         "todo"
       ]
     },
-    "ExecConfig": {
+    "ExecContainerRequest": {
       "type": "object",
       "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
         "user": {
           "type": "string",
           "description": " User that will run the command"
@@ -1984,24 +2001,11 @@
           "description": " Execution commands and args"
         }
       },
-      "title": "ExecConfig",
-      "required": [
-        "cmd"
-      ]
-    },
-    "ExecContainerRequest": {
-      "type": "object",
-      "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
-        },
-        "config": {
-          "$ref": "#/definitions/ExecConfig"
-        }
-      },
       "title": "ExecContainerRequest",
       "required": [
-        "metadata"
+        "namespace",
+        "name",
+        "cmd"
       ]
     },
     "ExecDeploymentRequest": {
