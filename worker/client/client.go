@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"k2edge/worker/internal/types"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/imroc/req/v3"
@@ -18,8 +20,9 @@ type Client struct {
 }
 
 type ClientOption struct {
-	host string
-	port int
+	host    string
+	port    int
+	baseurl string
 }
 
 type Option func(*ClientOption)
@@ -27,12 +30,31 @@ type Option func(*ClientOption)
 func WithHost(host string) Option {
 	return func(co *ClientOption) {
 		co.host = host
+		co.baseurl = fmt.Sprintf("http://%s:%d", co.host, co.port)
 	}
 }
 
 func WithPort(port int) Option {
 	return func(co *ClientOption) {
 		co.port = port
+		co.baseurl = fmt.Sprintf("http://%s:%d", co.host, co.port)
+	}
+}
+
+func WithBaseURL(url string) Option {
+	return func(co *ClientOption) {
+		var err error
+		if !strings.HasPrefix(url, "http://") {
+			panic("unsupported protocol")
+		}
+		co.baseurl = url
+		hostportToken := strings.TrimPrefix(url, "http://")
+		hostport := strings.Split(hostportToken, ":")
+		co.host = hostport[0]
+		co.port, err = strconv.Atoi(hostport[1])
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 

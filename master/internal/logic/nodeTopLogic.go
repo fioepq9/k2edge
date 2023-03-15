@@ -10,9 +10,9 @@ import (
 	"k2edge/worker/client"
 
 	"github.com/samber/lo"
-	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/disk"
+	"github.com/shirou/gopsutil/v3/mem"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type NodeTopLogic struct {
@@ -52,7 +52,7 @@ func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopRe
 	node := (*nodes)[0]
 	resp = new(types.NodeTopResponse)
 	if len(node.Roles) == 1 {
-		if lo.Contains( node.Roles, "master") {
+		if lo.Contains(node.Roles, "master") {
 			// Memory
 			memStat, err := mem.VirtualMemoryWithContext(l.ctx)
 			if err != nil {
@@ -75,11 +75,11 @@ func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopRe
 			return resp, nil
 		}
 	}
-	
-	if len(node.Roles) >0 {
-		if lo.Contains( node.Roles, "worker") {
-			cli := client.NewClient(node.BaseURL.WorkerURL)
-			topInfo, err := cli.Nodes().Top(l.ctx)
+
+	if len(node.Roles) > 0 {
+		if lo.Contains(node.Roles, "worker") {
+			cli := client.NewClient(client.WithBaseURL(node.BaseURL.WorkerURL))
+			topInfo, err := cli.Node.Top(l.ctx)
 			if err != nil {
 				return nil, err
 			}

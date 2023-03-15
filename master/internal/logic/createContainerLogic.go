@@ -81,7 +81,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		}
 	}
 
-	cli := client.NewClient(worker.BaseURL.WorkerURL)
+	cli := client.NewClient(client.WithBaseURL(worker.BaseURL.WorkerURL))
 	var c types.Container
 	c.Metadata = req.Container.Metadata
 	c.Metadata.Kind = "container"
@@ -114,7 +114,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	}
 
 	// 访问 worker 结点并创建容器
-	res, err := cli.Containers().Create(l.ctx, client.CreateContainerRequest{
+	res, err := cli.Container.Create(l.ctx, client.CreateContainerRequest{
 		ContainerName: c.Metadata.Name,
 		Config: client.ContainerConfig{
 			Image:    c.ContainerConfig.Image,

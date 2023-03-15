@@ -37,8 +37,8 @@ func (l *GetContainerLogic) GetContainer(req *types.GetContainerRequest) (resp *
 	if !found {
 		return nil, fmt.Errorf("container %s does not exist", req.Name)
 	}
-	
-	//根据 container 里 nodeName 去 etcd 里查询的 nodeBaseURL 
+
+	//根据 container 里 nodeName 去 etcd 里查询的 nodeBaseURL
 	containers, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
 		return nil, err
@@ -50,14 +50,14 @@ func (l *GetContainerLogic) GetContainer(req *types.GetContainerRequest) (resp *
 	if err != nil {
 		return nil, err
 	}
-	
+
 	if !found {
 		return nil, fmt.Errorf("cannot find container %s info", req.Name)
 	}
-	
+
 	// 向特定的 work 结点发送获取conatiner信息的请求
-	cli := client.NewClient(worker.BaseURL.WorkerURL)
-	containerInfo, err := cli.Containers().Status(l.ctx, client.ContainerStatusRequest{
+	cli := client.NewClient(client.WithBaseURL(worker.BaseURL.WorkerURL))
+	containerInfo, err := cli.Container.Status(l.ctx, client.ContainerStatusRequest{
 		ID: container.ContainerStatus.ContainerID,
 	})
 	if err != nil {
