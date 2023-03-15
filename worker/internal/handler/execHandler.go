@@ -2,13 +2,13 @@ package handler
 
 import (
 	"net/http"
+	"sync"
 
 	"k2edge/worker/internal/logic"
 	"k2edge/worker/internal/svc"
 	"k2edge/worker/internal/types"
 
 	"github.com/gorilla/websocket"
-	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
@@ -16,26 +16,41 @@ func ExecHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.ExecRequest
 		if err := httpx.Parse(r, &req); err != nil {
-			logx.Error(err)
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
-
-		conn, err := svcCtx.WebsocketUpgrader.Upgrade(w, r, nil)
+		ws, err := svcCtx.Websocket.Upgrade(w, r, nil)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
-		defer conn.Close()
-
-		l := logic.NewExecLogic(r.Context(), svcCtx, conn)
-		err = l.Exec(&req)
-		var msg []byte
+		defer ws.Close()
+		l := logic.NewExecLogic(r.Context(), svcCtx)
+		rw, err := l.Exec(&req)
 		if err != nil {
-			msg = websocket.FormatCloseMessage(websocket.CloseAbnormalClosure, err.Error())
-		} else {
-			msg = websocket.FormatCloseMessage(websocket.CloseNormalClosure, "close")
+			msg := websocket.FormatCloseMessage(websocket.CloseAbnormalClosure, err.Error())
+			ws.WriteMessage(websocket.CloseMessage, msg)
+			return
 		}
-		conn.WriteMessage(websocket.CloseMessage, msg)
+		defer rw.Close()
+		session := AttachSession{
+			ws:     ws,
+			stream: rw,
+		}
+		var wg sync.WaitGroup
+		wg.Add(2)
+		go func() {
+			defer wg.Done()
+			for session.Read() == nil {
+			}
+		}()
+		go func() {
+			defer wg.Done()
+			for session.Write() == nil {
+			}
+		}()
+		wg.Wait()
+		msg := websocket.FormatCloseMessage(websocket.CloseNormalClosure, "close")
+		ws.WriteMessage(websocket.CloseMessage, msg)
 	}
 }

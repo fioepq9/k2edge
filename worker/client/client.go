@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"k2edge/worker/internal/types"
-	"strconv"
 	"strings"
 	"time"
 
@@ -13,66 +12,40 @@ import (
 
 type Client struct {
 	opt *ClientOption
-	c   *req.Client
+	req *req.Client
 
-	Container containers
-	Node      nodes
+	Container containerAPI
+	Node      nodeAPI
 }
 
 type ClientOption struct {
-	host    string
-	port    int
-	baseurl string
+	httpBaseURL string
+}
+
+func (o *ClientOption) HttpBaseURL() string {
+	return o.httpBaseURL
+}
+
+func (o *ClientOption) WebsocketBaseURL() string {
+	base := strings.TrimPrefix(o.httpBaseURL, "http://")
+	return fmt.Sprintf("ws://%s", base)
 }
 
 type Option func(*ClientOption)
 
-func WithHost(host string) Option {
-	return func(co *ClientOption) {
-		co.host = host
-		co.baseurl = fmt.Sprintf("http://%s:%d", co.host, co.port)
+func NewClient(baseurl string, opt ...Option) *Client {
+	if !strings.HasPrefix(baseurl, "http://") {
+		panic("unsupported protocol")
 	}
-}
-
-func WithPort(port int) Option {
-	return func(co *ClientOption) {
-		co.port = port
-		co.baseurl = fmt.Sprintf("http://%s:%d", co.host, co.port)
+	var c Client
+	c.opt = &ClientOption{
+		httpBaseURL: baseurl,
 	}
-}
-
-func WithBaseURL(url string) Option {
-	return func(co *ClientOption) {
-		var err error
-		if !strings.HasPrefix(url, "http://") {
-			panic("unsupported protocol")
-		}
-		co.baseurl = url
-		hostportToken := strings.TrimPrefix(url, "http://")
-		hostport := strings.Split(hostportToken, ":")
-		co.host = hostport[0]
-		co.port, err = strconv.Atoi(hostport[1])
-		if err != nil {
-			panic(err)
-		}
-	}
-}
-
-func NewClient(opt ...Option) *Client {
-	var co ClientOption
 	for _, o := range opt {
-		o(&co)
+		o(c.opt)
 	}
-	if co.host == "" {
-		co.host = "localhost"
-	}
-	if co.port == 0 {
-		co.port = 8888
-	}
-	var cli Client
-	cli.opt = &co
-	cli.c = req.C().
-		SetBaseURL(fmt.Sprintf("http://%s:%d", co.host, co.port)).
+	c.req = req.C().
+		SetBaseURL(c.opt.HttpBaseURL()).
 		SetCommonRetryCount(2).
 		SetCommonRetryBackoffInterval(time.Second, 5*time.Second).
 		AddCommonRetryCondition(func(resp *req.Response, err error) bool {
@@ -102,13 +75,13 @@ func NewClient(opt ...Option) *Client {
 			return
 		})
 
-	cli.Container = containers{
-		cli: cli.c,
-		opt: cli.opt,
+	c.Container = containerAPI{
+		req: c.req,
+		opt: c.opt,
 	}
-	cli.Node = nodes{
-		cli: cli.c,
-		opt: cli.opt,
+	c.Node = nodeAPI{
+		req: c.req,
+		opt: c.opt,
 	}
-	return &cli
+	return &c
 }

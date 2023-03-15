@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	cli := client.NewClient(client.WithHost("localhost"), client.WithPort(8888))
+	cli := client.NewClient("http://localhost:8888")
 	rw, err := cli.Container.Exec(context.Background(), client.ExecRequest{
 		Container:    "f3",
 		Tty:          true,

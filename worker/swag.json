@@ -30,7 +30,6 @@
         "parameters": [
           {
             "name": "body",
-            "description": " type ExecConfig {, }",
             "in": "body",
             "required": true,
             "schema": {
@@ -381,24 +380,31 @@
     }
   },
   "definitions": {
-    "AttachConfig": {
+    "AttachRequest": {
       "type": "object",
       "properties": {
+        "container": {
+          "type": "string"
+        },
         "stream": {
           "type": "boolean",
-          "format": "boolean"
+          "format": "boolean",
+          "default": "true"
         },
         "stdin": {
           "type": "boolean",
-          "format": "boolean"
+          "format": "boolean",
+          "default": "true"
         },
         "stdout": {
           "type": "boolean",
-          "format": "boolean"
+          "format": "boolean",
+          "default": "true"
         },
         "stderr": {
           "type": "boolean",
-          "format": "boolean"
+          "format": "boolean",
+          "default": "true"
         },
         "detach_keys": {
           "type": "string"
@@ -408,29 +414,45 @@
           "format": "boolean"
         }
       },
-      "title": "AttachConfig",
+      "title": "AttachRequest",
       "required": [
+        "container",
         "stream",
         "stdin",
         "stdout",
-        "stderr",
-        "detach_keys",
-        "logs"
+        "stderr"
       ]
     },
-    "AttachRequest": {
+    "CPUInfo": {
       "type": "object",
       "properties": {
-        "container": {
+        "cpu": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "cores": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "mhz": {
+          "type": "number",
+          "format": "double"
+        },
+        "model_name": {
           "type": "string"
         },
-        "config": {
-          "$ref": "#/definitions/AttachConfig"
+        "percent": {
+          "type": "number",
+          "format": "double"
         }
       },
-      "title": "AttachRequest",
+      "title": "CPUInfo",
       "required": [
-        "container"
+        "cpu",
+        "cores",
+        "mhz",
+        "model_name",
+        "percent"
       ]
     },
     "Command": {
@@ -986,6 +1008,12 @@
             "type": "string"
           }
         },
+        "cpu": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CPUInfo"
+          }
+        },
         "memory_used": {
           "type": "integer",
           "format": "int64"
@@ -1022,6 +1050,7 @@
       "title": "NodeTopResponse",
       "required": [
         "images",
+        "cpu",
         "memory_used",
         "memory_available",
         "memory_used_percent",

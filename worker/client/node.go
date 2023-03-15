@@ -7,13 +7,13 @@ import (
 	"github.com/imroc/req/v3"
 )
 
-type nodes struct {
+type nodeAPI struct {
 	opt *ClientOption
-	cli *req.Client
+	req *req.Client
 }
 
-func (n nodes) Top(ctx context.Context) (resp *types.NodeTopResponse, err error) {
-	err = n.cli.
+func (n nodeAPI) Top(ctx context.Context) (resp *types.NodeTopResponse, err error) {
+	err = n.req.
 		Get("/node/top").
 		Do(ctx).Into(&resp)
 	return

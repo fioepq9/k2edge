@@ -30,5 +30,5 @@ func (l *StopContainerLogic) StopContainer(req *types.StopContainerRequest) erro
 		timeout = new(time.Duration)
 		*timeout = time.Duration(req.Timeout)
 	}
-	return l.svcCtx.DockerClient.ContainerStop(l.ctx, req.ID, timeout)
+	return l.svcCtx.Docker.ContainerStop(l.ctx, req.ID, timeout)
 }

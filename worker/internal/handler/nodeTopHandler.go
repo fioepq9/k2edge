@@ -22,7 +22,6 @@ func NodeTopHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			body.Msg = "success"
 			body.Data = resp
 		}
-		
 		httpx.OkJsonCtx(r.Context(), w, body)
 	}
 }

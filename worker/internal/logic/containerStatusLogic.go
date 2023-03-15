@@ -26,7 +26,7 @@ func NewContainerStatusLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 }
 
 func (l *ContainerStatusLogic) ContainerStatus(req *types.ContainerStatusRequest) (resp *types.ContainerStatusResponse, err error) {
-	res, err := l.svcCtx.DockerClient.ContainerStats(l.ctx, req.ID, false)
+	res, err := l.svcCtx.Docker.ContainerStats(l.ctx, req.ID, false)
 	if err != nil {
 		return nil, err
 	}
