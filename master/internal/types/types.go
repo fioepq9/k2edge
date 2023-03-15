@@ -10,11 +10,16 @@ type CreateContainerRequest struct {
 }
 
 type GetContainerRequest struct {
-	Metadata Metadata `json:"metadata"`
+	Namespace string `form:"namespace"`
+	Name      string `form:"name"`
 }
 
 type GetContainerResponse struct {
 	Container Container `json:"container"`
+}
+
+type ListContainerRequest struct {
+	Namespace string `form:"namespace"`
 }
 
 type ListContainerResponse struct {
@@ -22,49 +27,56 @@ type ListContainerResponse struct {
 }
 
 type ContainerSimpleInfo struct {
-	Name   string `json:"name"`
-	Status string `json:"status"`
-	Node   string `json:"node"`
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
+	Status    string `json:"status"`
+	Node      string `json:"node"`
 }
 
 type DeleteContainerRequest struct {
-	Metadata Metadata `json:"metadata"`
+	Namespace      string `json:"namespace"`
+	Name           string `json:"name"`
+	RemoveVolumnes bool   `json:"remove_volumns,optional"`
+	RemoveLinks    bool   `json:"remoce_links,optional"`
+	Force          bool   `json:"force" default:"false"`
+	Timeout        int    `json:"timeout,optional"`
 }
 
 type ApplyContainerRequest struct {
-	Todo string `json:"todo"`
-}
-
-type HistoryContainerRequest struct {
-	Todo string `json:"todo"`
-}
-
-type HistoryContainerResponse struct {
 	Container Container `json:"container"`
 }
 
-type UndoContainerRequest struct {
-	Todo string `json:"todo"`
-}
-
-type UndoContainerResponse struct {
-	Error Error `json:"error,omitempty"`
-}
-
 type AttachContainerRequest struct {
-	Todo string `json:"todo"`
+	Metadata Metadata     `json:"metadata"`
+	Config   AttachConfig `json:"config,optional"`
 }
 
-type AttachContainerResponse struct {
-	Todo string `json:"todo"`
+type AttachConfig struct {
+	Stream     bool   `json:"stream" default:"false"`
+	Stdin      bool   `json:"stdin" default:"false"`
+	Stdout     bool   `json:"stdout" default:"true"`
+	Stderr     bool   `json:"stderr" default:"true"`
+	DetachKeys string `json:"detach_keys" default:"ctrl-p,ctrl-q"`
+	Logs       bool   `json:"logs" default:"false"`
 }
 
 type ExecContainerRequest struct {
-	Todo string `json:"todo"`
+	Metadata Metadata   `json:"metadata"`
+	Config   ExecConfig `json:"config,optional"`
 }
 
-type ExecContainerResponse struct {
-	Todo string `json:"todo"`
+type ExecConfig struct {
+	User         string   `json:"user,optional"`          // User that will run the command
+	Privileged   bool     `json:"privileged,optional"`    // Is the container in privileged mode
+	Tty          bool     `json:"tty,optional"`           // Attach standard streams to a tty.
+	AttachStdin  bool     `json:"attach_stdin,optional"`  // Attach the standard input, makes possible user interaction
+	AttachStderr bool     `json:"attach_stderr,optional"` // Attach the standard error
+	AttachStdout bool     `json:"attach_stdout,optional"` // Attach the standard output
+	Detach       bool     `json:"detach,optional"`        // Execute in detach mode
+	DetachKeys   string   `json:"detach_keys,optional"`   // Escape keys for detach
+	Env          []string `json:"env,optional"`           // Environment variables
+	WorkingDir   string   `json:"working_dir,optional"`   // Working directory
+	Cmd          []string `json:"cmd"`                    // Execution commands and args
 }
 
 type LogsContainerRequest struct {
@@ -100,13 +112,12 @@ type Container struct {
 }
 
 type ContainerConfig struct {
-	Image         string        `json:"image"`
-	NodeName      string        `json:"node_name,optional"`
-	NodeNamespace string        `json:"node_namespace,optional"`
-	Command       string        `json:"command,optional"`
-	Args          []string      `json:"args,optional"`
-	Expose        []ExposedPort `json:"expose,optional"`
-	Env           []string      `json:"env,optional"`
+	Image    string        `json:"image"`
+	NodeName string        `json:"node_name,optional"`
+	Command  string        `json:"command,optional"`
+	Args     []string      `json:"args,optional"`
+	Expose   []ExposedPort `json:"expose,optional"`
+	Env      []string      `json:"env,optional"`
 }
 
 type ExposedPort struct {
@@ -408,10 +419,9 @@ type DeleteNamespaceRequest struct {
 }
 
 type RegisterRequest struct {
-	Name      string   `json:"name"`
-	Namespace string   `json:"namespace"`
-	Roles     []string `json:"roles"`
-	BaseURL   NodeURL  `json:"base_url"`
+	Name    string   `json:"name"`
+	Roles   []string `json:"roles"`
+	BaseURL NodeURL  `json:"base_url"`
 }
 
 type NodeTopRequest struct {
@@ -419,15 +429,15 @@ type NodeTopRequest struct {
 }
 
 type NodeTopResponse struct {
-	TopInfo []TopInfo `json:"top_info"`
-}
-
-type TopInfo struct {
-	Name       string `json:"name"`
-	CPU        string `json:"CPU"`
-	CPUProp    string `json:"CPU_prop"`
-	Memory     string `json:"memory"`
-	MemoryProp string `json:"memory_prop"`
+	Images            []string `json:"images"`
+	MemoryUsed        uint64   `json:"memory_used"`
+	MemoryAvailable   uint64   `json:"memory_available"`
+	MemoryUsedPercent float64  `json:"memory_used_percent"`
+	MemoryTotal       uint64   `json:"memory_total"`
+	DiskUsed          uint64   `json:"disk_used"`
+	DiskFree          uint64   `json:"disk_free"`
+	DiskUsedPercent   float64  `json:"disk_used_percent"`
+	DiskTotal         uint64   `json:"disk_total"`
 }
 
 type CordonRequest struct {
@@ -443,7 +453,7 @@ type DrainRequest struct {
 }
 
 type DeleteRequest struct {
-	Metadata Metadata `json:"metadata"`
+	Name string `json:"name"`
 }
 
 type CreateTokenRequest struct {

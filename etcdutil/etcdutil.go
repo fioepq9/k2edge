@@ -12,11 +12,42 @@ import (
 
 var (
 	ErrKeyNotExist error = fmt.Errorf("key not exist")
+	SystemNamespace = "system"
 )
 
-// 获取对应 key 的 value,将得到的 Json 解析并返回, T 类型为 []value
-func GetOne[T any](cli *clientv3.Client, ctx context.Context, key string) (result *T, err error) {
+func GenerateKey(kind string, namespace string, name string) string {
+	return "/" + kind + "/" + namespace + "/" + name
+}
+
+// 获取对应 key 的 value,将得到的 Json 解析并返回, T 类型为 value
+func GetOne[T any](cli *clientv3.Client, ctx context.Context, key string) (result *[]T, err error) {
+	gresp, err := cli.KV.Get(ctx, key, clientv3.WithPrefix())
+
+	if err != nil {
+		return nil, err
+	}
+
+	if gresp.Count == 0 {
+		return nil, ErrKeyNotExist
+	}
+
+	ret := new([]T)
+	for _, v := range gresp.Kvs {
+		var elem T
+		err = json.Unmarshal(v.Value, &elem)
+		if err != nil {
+			return nil, err
+		}
+
+		*ret = append(*ret, elem)
+	}
+	return ret, nil
+}
+
+// 获取对应 key 的值, 且内容为 value[],将得到的 Json 解析并返回, T 类型为 value
+func GetArray[T any](cli *clientv3.Client, ctx context.Context, key string) (result *[]T, err error) {
 	gresp, err := cli.KV.Get(ctx, key)
+
 	if err != nil {
 		return nil, err
 	}
@@ -26,11 +57,12 @@ func GetOne[T any](cli *clientv3.Client, ctx context.Context, key string) (resul
 	}
 
 	val := gresp.Kvs[0].Value
-	var ret T
+	var ret []T
 	err = json.Unmarshal(val, &ret)
 	if err != nil {
 		return nil, err
 	}
+
 	return &ret, nil
 }
 
@@ -48,8 +80,23 @@ func PutOne[T any](cli *clientv3.Client, ctx context.Context, key string, val T)
 	return nil
 }
 
-// 将 val 值添加到 key 对应的 []val 中，T 类型为 value
-func AddOne[T any](cli *clientv3.Client, ctx context.Context, key string, val T) error {
+// 删除某个对应的 key 值
+func DeleteOne(cli *clientv3.Client, ctx context.Context, key string) error {
+	dresp, err := cli.KV.Delete(ctx, key)
+
+	if err != nil {
+		return err
+	}
+
+	if dresp.Deleted  == 0 {
+		return ErrKeyNotExist
+	}
+
+	return nil
+}
+
+// 在 key 下添加 value 值，T 类型为 value
+func AddOneValue[T any](cli *clientv3.Client, ctx context.Context, key string, val T) error {
 	// 获取旧值
 	gresp, err := cli.KV.Get(ctx, key)
 	if err != nil {
@@ -96,7 +143,7 @@ func AddOne[T any](cli *clientv3.Client, ctx context.Context, key string, val T)
 }
 
 // 删除 key 下的某个 value 值，通过 lo.filter 来进行过滤, T 类型为 value
-func DeleteOne[T any](cli *clientv3.Client, ctx context.Context, key string, filter func(item T, index int) bool) error {
+func DeleteOneValue[T any](cli *clientv3.Client, ctx context.Context, key string, filter func(item T, index int) bool) error {
 	// 获取旧值
 	gresp, err := cli.KV.Get(ctx, key)
 	if err != nil {
@@ -114,8 +161,11 @@ func DeleteOne[T any](cli *clientv3.Client, ctx context.Context, key string, fil
 		return err
 	}
 
+	f := func(item T, idx int) bool {
+		return !filter(item, idx)
+	}
 	// 删除特定值
-	value = lo.Filter(value, filter)
+	value = lo.Filter(value, f)
 	vbyte, err := json.Marshal(value)
 
 	if err != nil {
@@ -136,39 +186,19 @@ func DeleteOne[T any](cli *clientv3.Client, ctx context.Context, key string, fil
 	return nil
 }
 
-// 根据 metadata 判断资源在是否已经存在
-func IsExist(cli *clientv3.Client, ctx context.Context, key string, metadata Metadata) (bool, error) {
+// 根据 metadata 生成的 key 值判断资源在是否已经存在
+func IsExistKey(cli *clientv3.Client, ctx context.Context, key string) (bool, error) {
 	gresp, err := cli.KV.Get(ctx, key)
 	if err != nil {
 		return false, err
 	}
 
-	if gresp.Count == 0 {
-		return false, ErrKeyNotExist
-	}
-
-	var value []Source
-	err = json.Unmarshal(gresp.Kvs[0].Value, &value)
-	if err != nil {
-		return false, err
-	}
-
-	if err != nil {
-		return false, err
-	}
-
-	// 判断是否已存在
-	for _, v := range value {
-		if v.Metadata.Name == metadata.Name && v.Metadata.Kind == metadata.Kind && v.Metadata.Namespace == metadata.Namespace {
-			return true, nil
-		}
-	}
-	return false, nil
+	return gresp.Count > 0, nil
 }
 
-// 判断 namespace 是否存在且可用
+// 判断 namespace 是否存在且可用, namespace 为""则直接返回true
 func IsExistNamespace(cli *clientv3.Client, ctx context.Context, namespace string) (bool, error) {
-	value, err := GetOne[[]Namespace](cli, ctx, "/namespaces")
+	value, err := GetArray[Namespace](cli, ctx, "/namespaces")
 	if err != nil {
 		return false, err
 	}
@@ -182,23 +212,27 @@ func IsExistNamespace(cli *clientv3.Client, ctx context.Context, namespace strin
 }
 
 // 根据 nodeName 判断 node 是否存在且可用, 存在就返回
-func IsExistNode(cli *clientv3.Client, ctx context.Context, nodeNamespace string, nodeName string) (*Node, bool, error) {
-	nodes, err := GetOne[[]Node](cli, ctx, "/nodes")
+func IsExistNode(cli *clientv3.Client, ctx context.Context, nodeName string) (*Node, bool, error) {
+	key := GenerateKey("node", SystemNamespace, nodeName)
+	
+	gresp, err := cli.KV.Get(ctx, key)
+
 	if err != nil {
 		return nil, false, err
 	}
 
-	// 判断结点是否存在
-	for _, n := range *nodes {
-		if n.Metadata.Namespace == nodeNamespace && n.Metadata.Name == nodeName && n.Status == "active" {
-			ret := new(Node)
-			*ret = n
-			return ret, true, nil
-		}
+	// 找不到结点
+	if gresp.Count == 0 {
+		return nil, false, nil
 	}
 
-	// 未找到结点
-	return nil, false, fmt.Errorf("cannot find node %s", nodeName)
+	var elem Node
+	err = json.Unmarshal(gresp.Kvs[0].Value, &elem)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return &elem, true, nil
 }
 
 type Metadata struct {
@@ -218,7 +252,7 @@ type Namespace struct {
 	CreateTime int64  `json:"create_time"`
 }
 
-type Node  struct{
+type Node struct {
 	Metadata     Metadata `json:"metadata"`
 	Roles        []string `json:"roles"`
 	BaseURL      NodeURL  `json:"base_url"`

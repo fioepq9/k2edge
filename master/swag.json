@@ -64,9 +64,7 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/AttachContainerResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
@@ -141,9 +139,7 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/ExecContainerResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
@@ -163,7 +159,7 @@
       }
     },
     "/container/get": {
-      "post": {
+      "get": {
         "operationId": "GetContainer",
         "responses": {
           "200": {
@@ -175,12 +171,16 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "namespace",
+            "in": "query",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/GetContainerRequest"
-            }
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
           }
         ],
         "requestBody": {},
@@ -200,6 +200,14 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "requestBody": {},
         "tags": [
           "master-api"
@@ -1207,13 +1215,13 @@
     "ApplyContainerRequest": {
       "type": "object",
       "properties": {
-        "todo": {
-          "type": "string"
+        "container": {
+          "$ref": "#/definitions/Container"
         }
       },
       "title": "ApplyContainerRequest",
       "required": [
-        "todo"
+        "container"
       ]
     },
     "ApplyCronJobRequest": {
@@ -1288,28 +1296,59 @@
         "error"
       ]
     },
+    "AttachConfig": {
+      "type": "object",
+      "properties": {
+        "stream": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "stdin": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "stdout": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "stderr": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "detach_keys": {
+          "type": "string"
+        },
+        "logs": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "AttachConfig",
+      "required": [
+        "stream",
+        "false",
+        "stdin",
+        "stdout",
+        "true",
+        "stderr",
+        "detach_keys",
+        "ctrl-p",
+        "logs"
+      ]
+    },
     "AttachContainerRequest": {
       "type": "object",
       "properties": {
-        "todo": {
-          "type": "string"
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "config": {
+          "$ref": "#/definitions/AttachConfig"
         }
       },
       "title": "AttachContainerRequest",
       "required": [
-        "todo"
-      ]
-    },
-    "AttachContainerResponse": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "AttachContainerResponse",
-      "required": [
-        "todo"
+        "metadata"
       ]
     },
     "AttachDeploymentRequest": {
@@ -1388,9 +1427,6 @@
         "node_name": {
           "type": "string"
         },
-        "node_namespace": {
-          "type": "string"
-        },
         "command": {
           "type": "string"
         },
@@ -1424,6 +1460,9 @@
         "name": {
           "type": "string"
         },
+        "namespace": {
+          "type": "string"
+        },
         "status": {
           "type": "string"
         },
@@ -1434,6 +1473,7 @@
       "title": "ContainerSimpleInfo",
       "required": [
         "name",
+        "namespace",
         "status",
         "node"
       ]
@@ -1665,13 +1705,35 @@
     "DeleteContainerRequest": {
       "type": "object",
       "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "remove_volumns": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "remoce_links": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "force": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "timeout": {
+          "type": "integer",
+          "format": "int32"
         }
       },
       "title": "DeleteContainerRequest",
       "required": [
-        "metadata"
+        "namespace",
+        "name",
+        "force",
+        "false"
       ]
     },
     "DeleteCronJobRequest": {
@@ -1761,13 +1823,13 @@
     "DeleteRequest": {
       "type": "object",
       "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
+        "name": {
+          "type": "string"
         }
       },
       "title": "DeleteRequest",
       "required": [
-        "metadata"
+        "name"
       ]
     },
     "DeleteTokenRequest": {
@@ -1862,28 +1924,84 @@
         "todo"
       ]
     },
+    "ExecConfig": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "string",
+          "description": " User that will run the command"
+        },
+        "privileged": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " Is the container in privileged mode"
+        },
+        "tty": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " Attach standard streams to a tty."
+        },
+        "attach_stdin": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " Attach the standard input, makes possible user interaction"
+        },
+        "attach_stderr": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " Attach the standard error"
+        },
+        "attach_stdout": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " Attach the standard output"
+        },
+        "detach": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": " Execute in detach mode"
+        },
+        "detach_keys": {
+          "type": "string",
+          "description": " Escape keys for detach"
+        },
+        "env": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " Environment variables"
+        },
+        "working_dir": {
+          "type": "string",
+          "description": " Working directory"
+        },
+        "cmd": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": " Execution commands and args"
+        }
+      },
+      "title": "ExecConfig",
+      "required": [
+        "cmd"
+      ]
+    },
     "ExecContainerRequest": {
       "type": "object",
       "properties": {
-        "todo": {
-          "type": "string"
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "config": {
+          "$ref": "#/definitions/ExecConfig"
         }
       },
       "title": "ExecContainerRequest",
       "required": [
-        "todo"
-      ]
-    },
-    "ExecContainerResponse": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "ExecContainerResponse",
-      "required": [
-        "todo"
+        "metadata"
       ]
     },
     "ExecDeploymentRequest": {
@@ -1935,13 +2053,17 @@
     "GetContainerRequest": {
       "type": "object",
       "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       },
       "title": "GetContainerRequest",
       "required": [
-        "metadata"
+        "namespace",
+        "name"
       ]
     },
     "GetContainerResponse": {
@@ -2088,30 +2210,6 @@
         "token"
       ]
     },
-    "HistoryContainerRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "HistoryContainerRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "HistoryContainerResponse": {
-      "type": "object",
-      "properties": {
-        "container": {
-          "$ref": "#/definitions/Container"
-        }
-      },
-      "title": "HistoryContainerResponse",
-      "required": [
-        "container"
-      ]
-    },
     "HistoryCronJobRequest": {
       "type": "object",
       "properties": {
@@ -2251,6 +2349,18 @@
       "title": "JobStatus",
       "required": [
         "todo"
+      ]
+    },
+    "ListContainerRequest": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string"
+        }
+      },
+      "title": "ListContainerRequest",
+      "required": [
+        "namespace"
       ]
     },
     "ListContainerResponse": {
@@ -2484,16 +2594,56 @@
     "NodeTopResponse": {
       "type": "object",
       "properties": {
-        "top_info": {
+        "images": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/TopInfo"
+            "type": "string"
           }
+        },
+        "memory_used": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "memory_available": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "memory_used_percent": {
+          "type": "number",
+          "format": "double"
+        },
+        "memory_total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "disk_used": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "disk_free": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "disk_used_percent": {
+          "type": "number",
+          "format": "double"
+        },
+        "disk_total": {
+          "type": "integer",
+          "format": "int64"
         }
       },
       "title": "NodeTopResponse",
       "required": [
-        "top_info"
+        "images",
+        "memory_used",
+        "memory_available",
+        "memory_used_percent",
+        "memory_total",
+        "disk_used",
+        "disk_free",
+        "disk_used_percent",
+        "disk_total"
       ]
     },
     "NodeURL": {
@@ -2518,9 +2668,6 @@
         "name": {
           "type": "string"
         },
-        "namespace": {
-          "type": "string"
-        },
         "roles": {
           "type": "array",
           "items": {
@@ -2534,7 +2681,6 @@
       "title": "RegisterRequest",
       "required": [
         "name",
-        "namespace",
         "roles",
         "base_url"
       ]
@@ -2607,34 +2753,6 @@
         "todo"
       ]
     },
-    "TopInfo": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "CPU": {
-          "type": "string"
-        },
-        "CPU_prop": {
-          "type": "string"
-        },
-        "memory": {
-          "type": "string"
-        },
-        "memory_prop": {
-          "type": "string"
-        }
-      },
-      "title": "TopInfo",
-      "required": [
-        "name",
-        "CPU",
-        "CPU_prop",
-        "memory",
-        "memory_prop"
-      ]
-    },
     "UncordonRequest": {
       "type": "object",
       "properties": {
@@ -2645,30 +2763,6 @@
       "title": "UncordonRequest",
       "required": [
         "metadata"
-      ]
-    },
-    "UndoContainerRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "UndoContainerRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "UndoContainerResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "UndoContainerResponse",
-      "required": [
-        "error"
       ]
     },
     "UndoCronJobRequest": {

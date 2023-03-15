@@ -27,26 +27,24 @@ func NewDeleteNamespaceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *D
 
 func (l *DeleteNamespaceLogic) DeleteNamespace(req *types.DeleteNamespaceRequest) error {
 	key := "/namespaces"
-	namespace, err := etcdutil.GetOne[[]types.Namespace](l.svcCtx.Etcd, l.ctx, key)
+	// 判断原本是否存在 namespace
+	value, err := etcdutil.GetArray[types.Namespace](l.svcCtx.Etcd, l.ctx, "/namespaces")
 	if err != nil {
 		return err
 	}
-
-	// 判断原本是否存在 namespace
-	flag := false
-	for _, n := range *namespace {
-		if n.Name == req.Name {
-			flag = true
-			break
+	found := false
+	for _, n := range *value {
+		if n.Name == req.Name{
+			found = true
 		}
 	}
 
-	if !flag {
-		return fmt.Errorf("namespace %s does no exists", req.Name)
+	if !found {
+		return fmt.Errorf("namespace %s does exists", req.Name)
 	}
 
-	err = etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, key, func(item types.Namespace, index int) bool {
-		return item.Name != req.Name 
+	err = etcdutil.DeleteOneValue(l.svcCtx.Etcd, l.ctx, key, func(item types.Namespace, index int) bool {
+		return item.Name == req.Name 
 	})
 	
 	if err != nil {

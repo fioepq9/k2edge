@@ -473,9 +473,6 @@
         "node_name": {
           "type": "string"
         },
-        "node_namespace": {
-          "type": "string"
-        },
         "command": {
           "type": "string"
         },
