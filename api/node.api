@@ -52,7 +52,7 @@ type NodeTopResponse {
 }
 
 type CordonRequest {
-	Metadata Metadata `json:"metadata"`
+	Name 
 }
 
 type UncordonRequest {
