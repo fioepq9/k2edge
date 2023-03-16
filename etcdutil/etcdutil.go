@@ -211,32 +211,8 @@ func IsExistNamespace(cli *clientv3.Client, ctx context.Context, namespace strin
 	return false, nil
 }
 
-// 根据 nodeName 判断 node 是否存在, 存在就返回
+// 根据 nodeName 判断 node 是否存在, 存在就返回 node 对象
 func IsExistNode(cli *clientv3.Client, ctx context.Context, nodeName string) (*Node, bool, error) {
-	key := GenerateKey("node", SystemNamespace, nodeName)
-	
-	gresp, err := cli.KV.Get(ctx, key)
-
-	if err != nil {
-		return nil, false, err
-	}
-
-	// 找不到结点
-	if gresp.Count == 0 {
-		return nil, false, nil
-	}
-
-	var elem Node
-	err = json.Unmarshal(gresp.Kvs[0].Value, &elem)
-	if err != nil {
-		return nil, false, err
-	}
-
-	return &elem, true, nil
-}
-
-// 根据 nodeName 判断 node 是否存在, 存在就返回
-func IsExistRunningNode(cli *clientv3.Client, ctx context.Context, nodeName string) (*Node, bool, error) {
 	key := GenerateKey("node", SystemNamespace, nodeName)
 	
 	gresp, err := cli.KV.Get(ctx, key)

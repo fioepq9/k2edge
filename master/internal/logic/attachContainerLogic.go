@@ -56,6 +56,10 @@ func (l *AttachContainerLogic) AttachContainer(req *types.AttachContainerRequest
 		return nil, fmt.Errorf("cannot find container %s info", req.Name)
 	}
 
+	if worker.Status != "active" {
+		return nil, fmt.Errorf("the node where the container is located is not active")
+	}
+
 	// 向特定的 work 结点发送获取conatiner信息的请求
 	cli := client.NewClient(worker.BaseURL.WorkerURL)
 	rw, err := cli.Container.Attach(l.ctx, client.AttachRequest{

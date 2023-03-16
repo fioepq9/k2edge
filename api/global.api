@@ -122,6 +122,14 @@ type NodeURL {
 	MasterURL string `json:"master_url"`
 }
 
+type Condition {
+	Ready ConditionInfo `json:"ready"`
+}
+
+type ConditionInfo {
+	Status            bool   `json:"status"`
+	LastHeartbeatTime string `json:"LastHeartbeatTime"`
+}
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Other <<<<<<<<<<<<<<<<<<<<<<<<<<
 type Command {
 	Todo string `json:"todo"`

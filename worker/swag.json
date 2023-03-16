@@ -510,6 +510,35 @@
         "todo"
       ]
     },
+    "Condition": {
+      "type": "object",
+      "properties": {
+        "ready": {
+          "$ref": "#/definitions/ConditionInfo"
+        }
+      },
+      "title": "Condition",
+      "required": [
+        "ready"
+      ]
+    },
+    "ConditionInfo": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "LastHeartbeatTime": {
+          "type": "string"
+        }
+      },
+      "title": "ConditionInfo",
+      "required": [
+        "status",
+        "LastHeartbeatTime"
+      ]
+    },
     "Container": {
       "type": "object",
       "properties": {

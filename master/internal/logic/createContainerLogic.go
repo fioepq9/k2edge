@@ -57,6 +57,10 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 			return fmt.Errorf("node %s does not exist", req.Container.ContainerConfig.NodeName)
 		}
 
+		if worker.Status != "active" {
+			return fmt.Errorf("the node %s is not active", req.Container.Metadata.Name)
+		}
+
 		worker = new(types.Node)
 		*worker = types.Node{
 			Metadata: types.Metadata{

@@ -198,6 +198,15 @@ type NodeURL struct {
 	MasterURL string `json:"master_url"`
 }
 
+type Condition struct {
+	Ready ConditionInfo `json:"ready"`
+}
+
+type ConditionInfo struct {
+	Status            bool   `json:"status"`
+	LastHeartbeatTime string `json:"LastHeartbeatTime"`
+}
+
 type Command struct {
 	Todo string `json:"todo"`
 }
