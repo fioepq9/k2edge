@@ -63,7 +63,7 @@ func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest
 		return fmt.Errorf("cannot find container %s info", req.Name)
 	}
 
-	if worker.Status != "active" {
+	if !worker.Status.Working {
 		return fmt.Errorf("the node where the container is located is not active")
 	}
 

@@ -56,7 +56,7 @@ func (l *AttachContainerLogic) AttachContainer(req *types.AttachContainerRequest
 		return nil, fmt.Errorf("cannot find container %s info", req.Name)
 	}
 
-	if worker.Status != "active" {
+	if !worker.Status.Working {
 		return nil, fmt.Errorf("the node where the container is located is not active")
 	}
 

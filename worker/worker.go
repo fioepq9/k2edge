@@ -72,7 +72,7 @@ func RegisterWorker(ctx *svc.ServiceContext) (func() error, error) {
 		nodes := *nodesPtr
 		lo.ForEach(nodes, func(_ types.Node, i int) {
 			if nodes[i].Metadata.Name == ctx.Config.Name {
-				nodes[i].Status = "closed"
+				nodes[i].Status.Working = false
 			}
 		})
 		return etcdutil.PutOne(ctx.Etcd, c, key, nodes[0])
@@ -90,7 +90,7 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 	var n types.Node
 	if node != nil {
 		n := (*node)[0]
-		if n.Status == "active" {
+		if n.Status.Working {
 			// 结点原本被注册为 worker
 			if lo.Contains(n.Roles, "worker") {
 				return fmt.Errorf("worker already exist")
@@ -100,7 +100,7 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 			n.Roles = append(n.Roles, "worker")
 			n.BaseURL.WorkerURL = fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port)
 		} else {
-			n.Status = "active"
+			n.Status.Working = true
 			n.Roles = []string{"worker"}
 		}
 		etcdutil.PutOne(ctx.Etcd, c, key, n)
@@ -119,8 +119,13 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 			WorkerURL:	fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port),
 			MasterURL: 	"",
 		},
-		Status:       "active",
+		Spec: types.Spec{
+			Unschedulable: false,	
+		},
 		RegisterTime: time.Now().Unix(),
+		Status:      types.Status{
+			Working: true,
+		},
 	}
 	etcdutil.PutOne(ctx.Etcd, c, "/node/" + registerNamespace + "/" + n.Metadata.Name, n)
 	return nil

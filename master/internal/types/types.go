@@ -189,13 +189,35 @@ type Node struct {
 	Metadata     Metadata `json:"metadata"`
 	Roles        []string `json:"roles"`
 	BaseURL      NodeURL  `json:"base_url"`
-	Status       string   `json:"status"`
+	Spec         Spec     `json:"spec"`
 	RegisterTime int64    `json:"register_time"`
+	Status       Status   `json:"status"`
 }
 
 type NodeURL struct {
 	WorkerURL string `json:"worker_url"`
 	MasterURL string `json:"master_url"`
+}
+
+type Spec struct {
+	Unschedulable bool `json:"unschedulable"`
+}
+
+type Status struct {
+	Working     bool        `json:"working"`
+	Capacity    Capacity    `json:"capacity"`
+	Allocatable Allocatable `json:"allocatable"`
+	Condition   Condition   `json:"condition"`
+}
+
+type Capacity struct {
+	CPU    float64 `json:"cpu"`
+	Memory float64 `json:"memory"`
+}
+
+type Allocatable struct {
+	CPU    float64 `json:"cpu"`
+	Memory float64 `json:"memory"`
 }
 
 type Condition struct {
@@ -420,19 +442,19 @@ type RegisterRequest struct {
 }
 
 type NodeTopRequest struct {
-	Name string `json:"name"`
+	Name string `form:"name"`
 }
 
 type NodeTopResponse struct {
-	Images            []string `json:"images"`
-	MemoryUsed        uint64   `json:"memory_used"`
-	MemoryAvailable   uint64   `json:"memory_available"`
-	MemoryUsedPercent float64  `json:"memory_used_percent"`
-	MemoryTotal       uint64   `json:"memory_total"`
-	DiskUsed          uint64   `json:"disk_used"`
-	DiskFree          uint64   `json:"disk_free"`
-	DiskUsedPercent   float64  `json:"disk_used_percent"`
-	DiskTotal         uint64   `json:"disk_total"`
+	Images            []string `form:"images"`
+	MemoryUsed        uint64   `form:"memory_used"`
+	MemoryAvailable   uint64   `form:"memory_available"`
+	MemoryUsedPercent float64  `form:"memory_used_percent"`
+	MemoryTotal       uint64   `form:"memory_total"`
+	DiskUsed          uint64   `form:"disk_used"`
+	DiskFree          uint64   `form:"disk_free"`
+	DiskUsedPercent   float64  `form:"disk_used_percent"`
+	DiskTotal         uint64   `form:"disk_total"`
 }
 
 type CordonRequest struct {

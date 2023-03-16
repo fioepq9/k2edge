@@ -113,13 +113,35 @@ type Node {
 	Metadata     Metadata `json:"metadata"`
 	Roles        []string `json:"roles"`
 	BaseURL      NodeURL  `json:"base_url"`
-	Status       string   `json:"status"`
+	Spec         Spec     `json:"spec"`
 	RegisterTime int64    `json:"register_time"`
+	Status       Status   `json:"status"`
 }
 
 type NodeURL {
 	WorkerURL string `json:"worker_url"`
 	MasterURL string `json:"master_url"`
+}
+
+type Spec {
+	Unschedulable bool `json:"unschedulable"`
+}
+
+type Status {
+	Working     bool        `json:"working"`
+	Capacity    Capacity    `json:"capacity"`
+	Allocatable Allocatable `json:"allocatable"`
+	Condition   Condition   `json:"condition"`
+}
+
+type Capacity {
+	CPU    float64 `json:"cpu"`
+	Memory float64 `json:"memory"`
+}
+
+type Allocatable {
+	CPU    float64 `json:"cpu"`
+	Memory float64 `json:"memory"`
 }
 
 type Condition {
@@ -130,6 +152,7 @@ type ConditionInfo {
 	Status            bool   `json:"status"`
 	LastHeartbeatTime string `json:"LastHeartbeatTime"`
 }
+
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Other <<<<<<<<<<<<<<<<<<<<<<<<<<
 type Command {
 	Todo string `json:"todo"`

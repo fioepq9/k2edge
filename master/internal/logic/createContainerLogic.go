@@ -57,7 +57,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 			return fmt.Errorf("node %s does not exist", req.Container.ContainerConfig.NodeName)
 		}
 
-		if worker.Status != "active" {
+		if !worker.Status.Working {
 			return fmt.Errorf("the node %s is not active", req.Container.Metadata.Name)
 		}
 
@@ -73,8 +73,6 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 				WorkerURL: w.BaseURL.WorkerURL,
 				MasterURL: w.BaseURL.MasterURL,
 			},
-			Status:       w.Status,
-			RegisterTime: w.RegisterTime,
 		}
 
 	} else {

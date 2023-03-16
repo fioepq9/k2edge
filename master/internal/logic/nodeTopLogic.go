@@ -33,7 +33,7 @@ func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopRe
 	key := etcdutil.GenerateKey("node", etcdutil.SystemNamespace, req.Name)
 
 	// 判断结点是否存在
-	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
+	node, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, key)
 
 	if err != nil {
 		return nil, err
@@ -43,37 +43,33 @@ func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopRe
 		return nil, fmt.Errorf("node %s does not exists", req.Name)
 	}
 
-	// 获取结点 WorkerURL 或 MasterURL
-	nodes, err := etcdutil.GetOne[types.Node](l.svcCtx.Etcd, l.ctx, key)
-	if err != nil {
-		return nil, err
+	if !node.Status.Working {
+		return nil, fmt.Errorf("node %s is not active", req.Name)
 	}
 
-	node := (*nodes)[0]
+	// 获取结点 WorkerURL 或 MasterURL
 	resp = new(types.NodeTopResponse)
-	if len(node.Roles) == 1 {
-		if lo.Contains(node.Roles, "master") {
-			// Memory
-			memStat, err := mem.VirtualMemoryWithContext(l.ctx)
-			if err != nil {
-				return nil, err
-			}
-			resp.MemoryAvailable = memStat.Available
-			resp.MemoryUsed = memStat.Used
-			resp.MemoryUsedPercent = memStat.UsedPercent
-			resp.MemoryTotal = memStat.Total
-			// Disk
-			diskStat, err := disk.UsageWithContext(l.ctx, "/")
-			if err != nil {
-				return nil, err
-			}
-			resp.DiskFree = diskStat.Free
-			resp.DiskUsed = diskStat.Used
-			resp.DiskUsedPercent = diskStat.UsedPercent
-			resp.DiskTotal = diskStat.Total
-
-			return resp, nil
+	if len(node.Roles) == 1 && lo.Contains(node.Roles, "master") {
+		// Memory
+		memStat, err := mem.VirtualMemoryWithContext(l.ctx)
+		if err != nil {
+			return nil, err
 		}
+		resp.MemoryAvailable = memStat.Available
+		resp.MemoryUsed = memStat.Used
+		resp.MemoryUsedPercent = memStat.UsedPercent
+		resp.MemoryTotal = memStat.Total
+		// Disk
+		diskStat, err := disk.UsageWithContext(l.ctx, "/")
+		if err != nil {
+			return nil, err
+		}
+		resp.DiskFree = diskStat.Free
+		resp.DiskUsed = diskStat.Used
+		resp.DiskUsedPercent = diskStat.UsedPercent
+		resp.DiskTotal = diskStat.Total
+
+		return resp, nil
 	}
 
 	if len(node.Roles) > 0 {
@@ -91,6 +87,7 @@ func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopRe
 			resp.MemoryTotal = topInfo.MemoryTotal
 			resp.MemoryUsed = topInfo.MemoryUsed
 			resp.MemoryUsedPercent = topInfo.MemoryUsedPercent
+			
 		}
 	}
 

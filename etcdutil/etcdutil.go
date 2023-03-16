@@ -252,15 +252,47 @@ type Namespace struct {
 	CreateTime int64  `json:"create_time"`
 }
 
+// >>>>>>>>>>>>>>>>>>>>>>> node <<<<<<<<<<<<<<<<<<<<
 type Node struct {
 	Metadata     Metadata `json:"metadata"`
 	Roles        []string `json:"roles"`
 	BaseURL      NodeURL  `json:"base_url"`
-	Status       string   `json:"status"`
+	Spec         Spec     `json:"spec"`
 	RegisterTime int64    `json:"register_time"`
+	Status       Status   `json:"status"`
 }
 
 type NodeURL struct {
 	WorkerURL string `json:"worker_url"`
 	MasterURL string `json:"master_url"`
+}
+
+type Spec struct {
+	Unschedulable bool `json:"unschedulable"`
+}
+
+type Status struct {
+	Working     bool        `json:"working"`
+	Capacity    Capacity    `json:"capacity"`
+	Allocatable Allocatable `json:"allocatable"`
+	Condition   Condition   `json:"condition"`
+}
+
+type Capacity struct {
+	CPU    float64 `json:"cpu"`
+	Memory float64 `json:"memory"`
+}
+
+type Allocatable struct {
+	CPU    float64 `json:"cpu"`
+	Memory float64 `json:"memory"`
+}
+
+type Condition struct {
+	Ready ConditionInfo `json:"ready"`
+}
+
+type ConditionInfo struct {
+	Status            bool   `json:"status"`
+	LastHeartbeatTime string `json:"LastHeartbeatTime"`
 }

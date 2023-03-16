@@ -423,6 +423,24 @@
     }
   },
   "definitions": {
+    "Allocatable": {
+      "type": "object",
+      "properties": {
+        "cpu": {
+          "type": "number",
+          "format": "double"
+        },
+        "memory": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "Allocatable",
+      "required": [
+        "cpu",
+        "memory"
+      ]
+    },
     "AttachRequest": {
       "type": "object",
       "properties": {
@@ -496,6 +514,24 @@
         "mhz",
         "model_name",
         "percent"
+      ]
+    },
+    "Capacity": {
+      "type": "object",
+      "properties": {
+        "cpu": {
+          "type": "number",
+          "format": "double"
+        },
+        "memory": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "Capacity",
+      "required": [
+        "cpu",
+        "memory"
       ]
     },
     "Command": {
@@ -1054,12 +1090,15 @@
         "base_url": {
           "$ref": "#/definitions/NodeURL"
         },
-        "status": {
-          "type": "string"
+        "spec": {
+          "$ref": "#/definitions/Spec"
         },
         "register_time": {
           "type": "integer",
           "format": "int64"
+        },
+        "status": {
+          "$ref": "#/definitions/Status"
         }
       },
       "title": "Node",
@@ -1067,8 +1106,9 @@
         "metadata",
         "roles",
         "base_url",
-        "status",
-        "register_time"
+        "spec",
+        "register_time",
+        "status"
       ]
     },
     "NodeTopResponse": {
@@ -1174,6 +1214,19 @@
         "force"
       ]
     },
+    "Spec": {
+      "type": "object",
+      "properties": {
+        "unschedulable": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "Spec",
+      "required": [
+        "unschedulable"
+      ]
+    },
     "StartContainerRequest": {
       "type": "object",
       "properties": {
@@ -1190,6 +1243,31 @@
       "title": "StartContainerRequest",
       "required": [
         "id"
+      ]
+    },
+    "Status": {
+      "type": "object",
+      "properties": {
+        "working": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "capacity": {
+          "$ref": "#/definitions/Capacity"
+        },
+        "allocatable": {
+          "$ref": "#/definitions/Allocatable"
+        },
+        "condition": {
+          "$ref": "#/definitions/Condition"
+        }
+      },
+      "title": "Status",
+      "required": [
+        "working",
+        "capacity",
+        "allocatable",
+        "condition"
       ]
     },
     "StopContainerRequest": {

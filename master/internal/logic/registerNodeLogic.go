@@ -28,7 +28,7 @@ func NewRegisterNodeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Regi
 
 func (l *RegisterNodeLogic) RegisterNode(req *types.RegisterRequest) error {
 	key := etcdutil.GenerateKey("node", etcdutil.SystemNamespace, req.Name)
-	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
+	_, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, key)
 
 	if err != nil {
 		return err
@@ -47,8 +47,13 @@ func (l *RegisterNodeLogic) RegisterNode(req *types.RegisterRequest) error {
 		},
 		Roles:        req.Roles,
 		BaseURL:      req.BaseURL,
-		Status:       "Active",
+		Spec: types.Spec{
+			Unschedulable: false,	
+		},
 		RegisterTime: time.Now().Unix(),
+		Status:      types.Status{
+			Working: true,
+		},
 	}
 
 	err = etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, newNode)

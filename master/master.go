@@ -72,7 +72,7 @@ func RegisterMaster(ctx *svc.ServiceContext) (func() error, error) {
 		nodes := *nodesPtr
 		lo.ForEach(nodes, func(_ types.Node, i int) {
 			if nodes[i].Metadata.Name == ctx.Config.Name {
-				nodes[i].Status = "closed"
+				nodes[i].Status.Working = false
 			}
 		})
 		return etcdutil.PutOne(ctx.Etcd, c, key, nodes[0])
@@ -90,7 +90,7 @@ func doRegisterMaster(ctx *svc.ServiceContext) error {
 	var n types.Node
 	if node != nil {
 		n := (*node)[0]
-		if n.Status == "active" {
+		if n.Status.Working {
 			// 结点原本被注册为 master
 			if lo.Contains(n.Roles, "master") {
 				return fmt.Errorf("master already exist")
@@ -100,7 +100,7 @@ func doRegisterMaster(ctx *svc.ServiceContext) error {
 			n.Roles = append(n.Roles, "master")
 			n.BaseURL.MasterURL = fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port)
 		} else {
-			n.Status = "active"
+			n.Status.Working = true
 			n.Roles = []string{"master"}
 		}
 		etcdutil.PutOne(ctx.Etcd, c, key, n)
@@ -119,8 +119,13 @@ func doRegisterMaster(ctx *svc.ServiceContext) error {
 			WorkerURL:	"",
 			MasterURL: 	fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port),
 		},
-		Status:       "active",
+		Spec: types.Spec{
+			Unschedulable: false,	
+		},
 		RegisterTime: time.Now().Unix(),
+		Status:      types.Status{
+			Working: true,
+		},
 	}
 	etcdutil.PutOne(ctx.Etcd, c, "/node/" + etcdutil.SystemNamespace + "/" + n.Metadata.Name, n)
 	return nil
