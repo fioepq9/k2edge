@@ -59,7 +59,7 @@
       }
     },
     "/container/attach": {
-      "post": {
+      "get": {
         "operationId": "AttachContainer",
         "responses": {
           "200": {
@@ -69,12 +69,57 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "namespace",
+            "in": "query",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/AttachContainerRequest"
-            }
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "stream",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "stdin",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "stdout",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "stderr",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "detach_keys",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "logs",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
           }
         ],
         "requestBody": {},

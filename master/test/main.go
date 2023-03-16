@@ -10,19 +10,25 @@ import (
 
 func main() {
 	cli := client.NewClient("http://localhost:8080")
-	rw, err := cli.Container.Exec(context.Background(), client.ExecContainerRequest{
-		Namespace:    "default",
-		Name:         "222",
-		Tty:          true,
-		AttachStdin:  true,
-		AttachStderr: true,
-		AttachStdout: true,
-		Cmd:          []string{`"\"/bin/bash\""`},
+	// rw, err := cli.Container.Exec(context.Background(), client.ExecContainerRequest{
+	// 	Namespace:    "default",
+	// 	Name:         "333",
+	// 	Tty:          true,
+	// 	AttachStdin:  true,
+	// 	AttachStderr: true,
+	// 	AttachStdout: true,
+	// 	Cmd:          []string{`"\"/bin/bash\""`},
+	// })
+
+	rw, err := cli.Container.Attach(context.Background(), client.AttachContainerRequest{
+		Namespace: "default",
+		Name: "ccc",
 	})
 	if err != nil {
 		panic(err)
 	}
 	defer rw.Close()
+
 	var wg sync.WaitGroup
 	wg.Add(2)
 	go func() {

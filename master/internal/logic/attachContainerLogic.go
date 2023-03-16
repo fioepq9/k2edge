@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"k2edge/etcdutil"
 	"k2edge/master/internal/svc"
@@ -26,50 +27,49 @@ func NewAttachContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *A
 	}
 }
 
-func (l *AttachContainerLogic) AttachContainer(req *types.AttachContainerRequest) error {
+func (l *AttachContainerLogic) AttachContainer(req *types.AttachContainerRequest)(io.ReadWriteCloser, error) {
 	key := etcdutil.GenerateKey("container", req.Namespace, req.Name)
-	// 判断 container 是否存在, 存在则获取 container 信息
+	//判断 container 在 etcd 是否存在, 存在则获取 container 信息
 	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if !found {
-		return fmt.Errorf("container %s does not exist", req.Name)
+		return nil, fmt.Errorf("container %s does not exist", req.Name)
 	}
 
 	//根据 container 里 nodeName 去 etcd 里查询的 nodeBaseURL
 	containers, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	container := (*containers)[0]
 	// 获取 node 的 BaseURL
 	worker, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, container.ContainerStatus.Node)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if !found {
-		return fmt.Errorf("cannot find container %s info", req.Name)
+		return nil, fmt.Errorf("cannot find container %s info", req.Name)
 	}
 
 	// 向特定的 work 结点发送获取conatiner信息的请求
 	cli := client.NewClient(worker.BaseURL.WorkerURL)
 	rw, err := cli.Container.Attach(l.ctx, client.AttachRequest{
-		Container:  container.ContainerStatus.ContainerID,
-		Stream:     req.Stream,
-		Stdin:      req.Stdin,
-		Stdout:     req.Stdout,
-		Stderr:     req.Stderr,
+		Container: container.ContainerStatus.ContainerID,
+		Stream: req.Stream,
+		Stdin: req.Stdin,
+		Stdout: req.Stdout,
+		Stderr: req.Stderr,
 		DetachKeys: req.DetachKeys,
-		Logs:       req.Logs,
+		Logs: req.Logs,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	defer rw.Close()
 
-	return nil
+	return rw, nil
 }

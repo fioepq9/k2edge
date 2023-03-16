@@ -10,13 +10,17 @@ import (
 
 func main() {
 	cli := client.NewClient("http://localhost:8888")
-	rw, err := cli.Container.Exec(context.Background(), client.ExecRequest{
-		Container:    "30d387624fb20507c044c0db859fd3da88e3e6fb277cc788a974007dc5e0c10d",
-		Tty:          true,
-		AttachStdin:  true,
-		AttachStderr: true,
-		AttachStdout: true,
-		Cmd:          []string{`"/bin/bash"`},
+	// rw, err := cli.Container.Exec(context.Background(), client.ExecRequest{
+	// 	Container:    "20ccbaf512101616125e981b2b623028c92a41dd1268982dba7e81ab1a41acb7",
+	// 	Tty:          true,
+	// 	AttachStdin:  true,
+	// 	AttachStderr: true,
+	// 	AttachStdout: true,
+	// 	Cmd:          []string{`"/bin/bash"`},
+	// })
+
+	rw, err := cli.Container.Attach(context.Background(), client.AttachRequest{
+		Container: "e6",
 	})
 	if err != nil {
 		panic(err)

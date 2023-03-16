@@ -22,7 +22,7 @@ service master-api{
 	post /apply(ApplyContainerRequest)
 	
 	@handler AttachContainer
-	post /attach(AttachContainerRequest)
+	get /attach(AttachContainerRequest)
 	
 	@handler ExecContainer
 	get /exec(ExecContainerRequest)

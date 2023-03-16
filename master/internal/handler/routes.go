@@ -49,7 +49,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: ApplyContainerHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPost,
+				Method:  http.MethodGet,
 				Path:    "/attach",
 				Handler: AttachContainerHandler(serverCtx),
 			},

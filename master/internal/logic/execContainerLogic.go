@@ -29,7 +29,7 @@ func NewExecContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Exe
 
 func (l *ExecContainerLogic) ExecContainer(req *types.ExecContainerRequest) (io.ReadWriteCloser, error) {
 	key := etcdutil.GenerateKey("container", req.Namespace, req.Name)
-	// 判断 container 是否存在, 存在则获取 container 信息
+	//判断 container 在 etcd 是否存在, 存在则获取 container 信息
 	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
 		return nil, err

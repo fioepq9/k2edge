@@ -164,7 +164,7 @@ service worker-api {
 		summary: "prepares a streaming endpoint to attach to a running container"
 	)
 	@handler Attach
-	post /container/attach(AttachRequest)
+	get /container/attach(AttachRequest)
 	@doc(
 		summary: "node top"
 	)

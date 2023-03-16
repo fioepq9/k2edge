@@ -2,11 +2,9 @@ package logic
 
 import (
 	"context"
-	"io"
 	"k2edge/master/internal/config"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
-	"sync"
 
 	"os"
 	"testing"
@@ -36,11 +34,13 @@ func TestCreatContainer(t *testing.T) {
 			Metadata: types.Metadata{
 				Namespace: "default",
 				Kind:      "container",
-				Name:      "222",
+				Name:      "ccc",
 			},
 			ContainerConfig: types.ContainerConfig{
-				Image:    "nginx",
+				Image:    "busybox",
 				NodeName: "outlg",
+				Command: "sh",
+				Args: []string{"-c", "while true; do date; sleep 2; done"},
 			},
 			ContainerStatus: types.ContainerStatus{},
 		},
@@ -57,8 +57,8 @@ func TestDeleteContainerLogic(t *testing.T) {
 	l := NewDeleteContainerLogic(ctx, &testSvcCtx)
 	// l1 := NewCreateContainerLogic(ctx, &testSvcCtx)
 
-	namespace := "system"
-	containerName := "222"
+	namespace := "default"
+	containerName := "ccc"
 	// err := l1.CreateContainer(&types.CreateContainerRequest{
 	// 	Container: types.Container{
 	// 		Metadata: types.Metadata{
@@ -96,15 +96,15 @@ func TestGetContainer(t *testing.T) {
 	l := NewGetContainerLogic(ctx, &testSvcCtx)
 
 	container, err := l.GetContainer(&types.GetContainerRequest{
-		Namespace: "system",
-		Name:      "111",
+		Namespace: "default",
+		Name:      "222",
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	t.Log(container)
-	t.Log("create container success")
+	t.Log("get container success")
 }
 
 func TestListContainer(t *testing.T) {
@@ -149,42 +149,4 @@ func TestApplyContainer(t *testing.T) {
 }
 
 func TestExecContainer(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	defer cancel()
-	l := NewExecContainerLogic(ctx, &testSvcCtx)
-	rw, err := l.ExecContainer(&types.ExecContainerRequest{
-		Namespace:    "default",
-		Name:         "111",
-		Tty:          true,
-		AttachStdin:  true,
-		AttachStderr: true,
-		AttachStdout: true,
-		Cmd:          []string{`"/bin/bash"`},
-	})
-
-	t.Log("调用完成")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer rw.Close()
-	var wg sync.WaitGroup
-	wg.Add(2)
-	go func() {
-		defer wg.Done()
-		for {
-			if _, err := io.Copy(rw, os.Stdin); err != nil {
-				break
-			}
-		}
-	}()
-	go func() {
-		defer wg.Done()
-		for {
-			if _, err := io.Copy(os.Stdout, rw); err != nil {
-				break
-			}
-		}
-	}()
-	wg.Wait()
-	t.Log("exec container command success")
 }

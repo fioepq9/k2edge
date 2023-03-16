@@ -18,7 +18,7 @@
   ],
   "paths": {
     "/container/attach": {
-      "post": {
+      "get": {
         "summary": "prepares a streaming endpoint to attach to a running container",
         "operationId": "Attach",
         "responses": {
@@ -29,12 +29,55 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "container",
+            "in": "query",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/AttachRequest"
-            }
+            "type": "string"
+          },
+          {
+            "name": "stream",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean",
+            "default": "true"
+          },
+          {
+            "name": "stdin",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean",
+            "default": "true"
+          },
+          {
+            "name": "stdout",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean",
+            "default": "true"
+          },
+          {
+            "name": "stderr",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean",
+            "default": "true"
+          },
+          {
+            "name": "detach_keys",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "logs",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
           }
         ],
         "requestBody": {},
