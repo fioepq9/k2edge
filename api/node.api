@@ -52,14 +52,15 @@ type NodeTopResponse {
 }
 
 type CordonRequest {
+	Name string `json:"name"`
 }
 
 type UncordonRequest {
-	Metadata Metadata `json:"metadata"`
+	Name string `json:"name"`
 }
 
 type DrainRequest {
-	Metadata Metadata `json:"metadata"`
+	Name string `json:"name"`
 }
 
 type DeleteRequest {

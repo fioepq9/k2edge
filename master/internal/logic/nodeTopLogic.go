@@ -30,10 +30,8 @@ func NewNodeTopLogic(ctx context.Context, svcCtx *svc.ServiceContext) *NodeTopLo
 }
 
 func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopResponse, err error) {
-	key := etcdutil.GenerateKey("node", etcdutil.SystemNamespace, req.Name)
-
 	// 判断结点是否存在
-	node, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, key)
+	node, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, req.Name)
 
 	if err != nil {
 		return nil, err

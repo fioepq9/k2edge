@@ -1659,7 +1659,15 @@
     },
     "CordonRequest": {
       "type": "object",
-      "title": "CordonRequest"
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "CordonRequest",
+      "required": [
+        "name"
+      ]
     },
     "CreateContainerRequest": {
       "type": "object",
@@ -2024,13 +2032,13 @@
     "DrainRequest": {
       "type": "object",
       "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
+        "name": {
+          "type": "string"
         }
       },
       "title": "DrainRequest",
       "required": [
-        "metadata"
+        "name"
       ]
     },
     "Error": {
@@ -2912,13 +2920,13 @@
     "UncordonRequest": {
       "type": "object",
       "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
+        "name": {
+          "type": "string"
         }
       },
       "title": "UncordonRequest",
       "required": [
-        "metadata"
+        "name"
       ]
     },
     "UndoCronJobRequest": {

@@ -211,7 +211,7 @@ func IsExistNamespace(cli *clientv3.Client, ctx context.Context, namespace strin
 	return false, nil
 }
 
-// 根据 nodeName 判断 node 是否存在, 存在就返回 node 对象
+// 根据 nodeName 判断 node 是否存在, 存在就返回 node 对象, 没有就返回 nil, false
 func IsExistNode(cli *clientv3.Client, ctx context.Context, nodeName string) (*Node, bool, error) {
 	key := GenerateKey("node", SystemNamespace, nodeName)
 	

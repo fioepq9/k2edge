@@ -28,7 +28,7 @@ func NewRegisterNodeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Regi
 
 func (l *RegisterNodeLogic) RegisterNode(req *types.RegisterRequest) error {
 	key := etcdutil.GenerateKey("node", etcdutil.SystemNamespace, req.Name)
-	_, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, key)
+	_, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, req.Name)
 
 	if err != nil {
 		return err

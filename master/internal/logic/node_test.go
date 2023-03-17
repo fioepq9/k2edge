@@ -13,7 +13,7 @@ func TestRegisterNode(t *testing.T) {
 	l := NewRegisterNodeLogic(ctx, &testSvcCtx)
 	
 	err := l.RegisterNode(&types.RegisterRequest{
-		Name: "test1",
+		Name: "ljf",
 		Roles: []string{"master"},
 		BaseURL: types.NodeURL{
 			MasterURL: "43.138.169.60",
@@ -31,7 +31,7 @@ func TestDeleteNode(t *testing.T) {
 	l := NewDeleteNodeLogic(ctx, &testSvcCtx)
 	
 	err := l.DeleteNode(&types.DeleteRequest{
-		Name: "test",
+		Name: "ljf",
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -52,4 +52,34 @@ func TestNodeTop(t *testing.T) {
 	}
 	t.Log(info)
 	t.Log("get node top info success")
+}
+
+func TestCordon(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	l := NewCordonLogic(ctx, &testSvcCtx)
+	
+	err := l.Cordon(&types.CordonRequest{
+		Name: "outlg",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(err)
+	t.Log("cordon node success")
+}
+
+func TestUncordon(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	l := NewUncordonLogic(ctx, &testSvcCtx)
+	
+	err := l.Uncordon(&types.UncordonRequest{
+		Name: "outlg",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(err)
+	t.Log("cordon node success")
 }

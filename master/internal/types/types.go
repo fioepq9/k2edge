@@ -458,14 +458,15 @@ type NodeTopResponse struct {
 }
 
 type CordonRequest struct {
+	Name string `json:"name"`
 }
 
 type UncordonRequest struct {
-	Metadata Metadata `json:"metadata"`
+	Name string `json:"name"`
 }
 
 type DrainRequest struct {
-	Metadata Metadata `json:"metadata"`
+	Name string `json:"name"`
 }
 
 type DeleteRequest struct {
