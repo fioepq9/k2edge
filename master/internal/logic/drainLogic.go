@@ -2,7 +2,9 @@ package logic
 
 import (
 	"context"
+	"fmt"
 
+	"k2edge/etcdutil"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
 
@@ -24,7 +26,49 @@ func NewDrainLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DrainLogic 
 }
 
 func (l *DrainLogic) Drain(req *types.DrainRequest) error {
-	// todo: add your logic here and delete this line
+	key := etcdutil.GenerateKey("node", etcdutil.SystemNamespace, req.Name)
+
+	// 查看 node 存不存在
+	node, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, req.Name)
+
+	if err != nil {
+		return err
+	}
+
+	if !found {
+		return fmt.Errorf("node %s does not exists", req.Name)
+	}
+
+	if !node.Status.Working {
+		return fmt.Errorf("the node %s is not active", req.Name)
+	}
+
+	node.Spec.Unschedulable = true
+
+	/*驱逐所有容器*/
+
+	
+	/**/
+
+	err = etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, types.Node{
+		Metadata: types.Metadata(node.Metadata),
+		Roles: node.Roles,
+		BaseURL: types.NodeURL(node.BaseURL),
+		Spec: types.Spec(node.Spec),
+		RegisterTime: node.RegisterTime,
+		Status: types.Status{
+			Working: node.Status.Working,
+			Capacity: types.Capacity(node.Status.Capacity),
+			Allocatable: types.Allocatable(node.Status.Allocatable),
+			Condition: types.Condition{
+				Ready: types.ConditionInfo(node.Status.Condition.Ready),
+			},
+		},
+	})
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

@@ -10,8 +10,6 @@ import (
 	"k2edge/worker/client"
 
 	"github.com/samber/lo"
-	"github.com/shirou/gopsutil/v3/disk"
-	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -45,48 +43,67 @@ func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopRe
 		return nil, fmt.Errorf("node %s is not active", req.Name)
 	}
 
-	// 获取结点 WorkerURL 或 MasterURL
+	// 结点角色只有master
 	resp = new(types.NodeTopResponse)
 	if len(node.Roles) == 1 && lo.Contains(node.Roles, "master") {
-		// Memory
-		memStat, err := mem.VirtualMemoryWithContext(l.ctx)
+		cli := client.NewClient(node.BaseURL.MasterURL)
+		topInfo, err := cli.Node.Top(l.ctx)
 		if err != nil {
 			return nil, err
 		}
-		resp.MemoryAvailable = memStat.Available
-		resp.MemoryUsed = memStat.Used
-		resp.MemoryUsedPercent = memStat.UsedPercent
-		resp.MemoryTotal = memStat.Total
-		// Disk
-		diskStat, err := disk.UsageWithContext(l.ctx, "/")
-		if err != nil {
-			return nil, err
+		var cpu []types.CPUInfo
+		for _, c := range topInfo.CPU  {
+			cpu = append(cpu, types.CPUInfo{
+				CPU: c.CPU,
+				Cores: c.Cores, 
+				Mhz : c.Mhz,
+				ModelName: c.ModelName,
+				Percent: c.Percent,
+			})
 		}
-		resp.DiskFree = diskStat.Free
-		resp.DiskUsed = diskStat.Used
-		resp.DiskUsedPercent = diskStat.UsedPercent
-		resp.DiskTotal = diskStat.Total
+
+		resp.CPU = cpu
+		resp.DiskFree = topInfo.DiskFree
+		resp.DiskTotal = topInfo.DiskTotal
+		resp.DiskUsed = topInfo.DiskUsed
+		resp.DiskUsedPercent = topInfo.DiskUsedPercent
+		resp.MemoryAvailable = topInfo.MemoryAvailable
+		resp.MemoryTotal = topInfo.MemoryTotal
+		resp.MemoryUsed = topInfo.MemoryUsed
+		resp.MemoryUsedPercent = topInfo.MemoryUsedPercent
 
 		return resp, nil
 	}
 
-	if len(node.Roles) > 0 {
-		if lo.Contains(node.Roles, "worker") {
-			cli := client.NewClient(node.BaseURL.WorkerURL)
-			topInfo, err := cli.Node.Top(l.ctx)
-			if err != nil {
-				return nil, err
-			}
-			resp.DiskFree = topInfo.DiskFree
-			resp.DiskTotal = topInfo.DiskTotal
-			resp.DiskUsed = topInfo.DiskUsed
-			resp.DiskUsedPercent = topInfo.DiskUsedPercent
-			resp.MemoryAvailable = topInfo.MemoryAvailable
-			resp.MemoryTotal = topInfo.MemoryTotal
-			resp.MemoryUsed = topInfo.MemoryUsed
-			resp.MemoryUsedPercent = topInfo.MemoryUsedPercent
-			
+	// 结点角色只为 worker， 或为 worker 和 master
+	if len(node.Roles) != 0{
+		cli := client.NewClient(node.BaseURL.WorkerURL)
+		topInfo, err := cli.Node.Top(l.ctx)
+		if err != nil {
+			return nil, err
 		}
+		var cpu []types.CPUInfo
+		for _, c := range topInfo.CPU  {
+			cpu = append(cpu, types.CPUInfo{
+				CPU: c.CPU,
+				Cores: c.Cores, 
+				Mhz : c.Mhz,
+				ModelName: c.ModelName,
+				Percent: c.Percent,
+			})
+		}
+
+		resp.CPU = cpu
+		resp.Images = topInfo.Images
+		resp.DiskFree = topInfo.DiskFree
+		resp.DiskTotal = topInfo.DiskTotal
+		resp.DiskUsed = topInfo.DiskUsed
+		resp.DiskUsedPercent = topInfo.DiskUsedPercent
+		resp.MemoryAvailable = topInfo.MemoryAvailable
+		resp.MemoryTotal = topInfo.MemoryTotal
+		resp.MemoryUsed = topInfo.MemoryUsed
+		resp.MemoryUsedPercent = topInfo.MemoryUsedPercent
+			
 	}
 
 	return resp, nil

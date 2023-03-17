@@ -1483,6 +1483,38 @@
         "todo"
       ]
     },
+    "CPUInfo": {
+      "type": "object",
+      "properties": {
+        "cpu": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "cores": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "mhz": {
+          "type": "number",
+          "format": "double"
+        },
+        "model_name": {
+          "type": "string"
+        },
+        "percent": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "CPUInfo",
+      "required": [
+        "cpu",
+        "cores",
+        "mhz",
+        "model_name",
+        "percent"
+      ]
+    },
     "Capacity": {
       "type": "object",
       "properties": {
@@ -2726,6 +2758,12 @@
             "type": "string"
           }
         },
+        "cpu": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CPUInfo"
+          }
+        },
         "memory_used": {
           "type": "integer",
           "format": "int64"
@@ -2762,6 +2800,7 @@
       "title": "NodeTopResponse",
       "required": [
         "images",
+        "cpu",
         "memory_used",
         "memory_available",
         "memory_used_percent",
