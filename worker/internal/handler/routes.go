@@ -69,6 +69,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/node/top",
 					Handler: NodeTopHandler(serverCtx),
 				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/container/logs",
+					Handler: LogsHandler(serverCtx),
+				},
 			}...,
 		),
 	)

@@ -120,6 +120,18 @@ type CPUInfo {
 	Percent float64 `json:"percent"`
 }
 
+type LogsRequest {
+	Container  string `form:"container"`
+	ShowStdout bool   `form:"show_stdout,optional"`
+	ShowStderr bool   `form:"show_stderr,optional"`
+	Since      string `form:"since,optional"`
+	Until      string `form:"until,optional"`
+	Timestamps bool   `form:"timestamps,optional"`
+	Follow     bool   `form:"follow,optional"`
+	Tail       string `form:"tail,optional"`
+	Details    bool   `form:"details,optional"`
+}
+
 @server(
 	middleware: AuthMiddleware
 )
@@ -129,26 +141,31 @@ service worker-api {
 	)
 	@handler CreateContainer
 	post /container/create(CreateContainerRequest) returns (CreateContainerResponse)
+	
 	@doc(
 		summary: "removes the container"
 	)
 	@handler RemoveContainer
 	post /container/remove(RemoveContainerRequest)
+	
 	@doc(
 		summary: "stops any running process that is part of the container"
 	)
 	@handler StopContainer
 	post /container/stop(StopContainerRequest)
+	
 	@doc(
 		summary: "starts the container"
 	)
 	@handler StartContainer
 	post /container/start(StartContainerRequest)
+	
 	@doc(
 		summary: "the status of the container"
 	)
 	@handler ContainerStatus
 	get /container/status(ContainerStatusRequest) returns (ContainerStatusResponse)
+	
 	@doc(
 		summary: "a list of containers"
 	)
@@ -163,11 +180,17 @@ service worker-api {
 	@doc(
 		summary: "prepares a streaming endpoint to attach to a running container"
 	)
+	
 	@handler Attach
 	get /container/attach(AttachRequest)
 	@doc(
 		summary: "node top"
 	)
+	
 	@handler NodeTop
 	get /node/top returns(NodeTopResponse)
+	
+	@doc "container logs"
+	@handler Logs
+	get /container/logs(LogsRequest)
 }

@@ -281,6 +281,83 @@
         ]
       }
     },
+    "/container/logs": {
+      "get": {
+        "summary": "container logs",
+        "operationId": "Logs",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "container",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "show_stdout",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "show_stderr",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "timestamps",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "follow",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "tail",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "details",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "worker-api"
+        ]
+      }
+    },
     "/container/remove": {
       "post": {
         "summary": "removes the container",
@@ -1028,6 +1105,47 @@
       "title": "ListContainersResponse",
       "required": [
         "containers"
+      ]
+    },
+    "LogsRequest": {
+      "type": "object",
+      "properties": {
+        "container": {
+          "type": "string"
+        },
+        "show_stdout": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "show_stderr": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "since": {
+          "type": "string"
+        },
+        "until": {
+          "type": "string"
+        },
+        "timestamps": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "follow": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "tail": {
+          "type": "string"
+        },
+        "details": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "LogsRequest",
+      "required": [
+        "container"
       ]
     },
     "Metadata": {

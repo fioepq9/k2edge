@@ -99,6 +99,18 @@ type CPUInfo struct {
 	Percent   float64 `json:"percent"`
 }
 
+type LogsRequest struct {
+	Container  string `form:"container"`
+	ShowStdout bool   `form:"show_stdout,optional"`
+	ShowStderr bool   `form:"show_stderr,optional"`
+	Since      string `form:"since,optional"`
+	Until      string `form:"until,optional"`
+	Timestamps bool   `form:"timestamps,optional"`
+	Follow     bool   `form:"follow,optional"`
+	Tail       string `form:"tail,optional"`
+	Details    bool   `form:"details,optional"`
+}
+
 type Metadata struct {
 	Namespace string `json:"namespace"`
 	Kind      string `json:"kind"`
