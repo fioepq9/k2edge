@@ -113,7 +113,6 @@ func (c containerAPI) Attach(ctx context.Context, req AttachRequest) (io.ReadWri
 			vals.Add(tagName, fmt.Sprint(rv.Field(i).Interface()))
 		}
 	}
-	fmt.Println(vals.Encode())
 	conn, _, err := websocket.DefaultDialer.DialContext(
 		ctx,
 		fmt.Sprintf("%s/container/attach?%s", c.opt.WebsocketBaseURL(), vals.Encode()),
@@ -123,6 +122,33 @@ func (c containerAPI) Attach(ctx context.Context, req AttachRequest) (io.ReadWri
 		return nil, err
 	}
 	return &websocketSession{
+		ws: conn,
+	}, nil
+}
+
+func (c containerAPI) Logs(ctx context.Context, req LogsRequest) (io.ReadCloser, error) {
+	vals := make(url.Values)
+	rv := reflect.ValueOf(req)
+	rt := rv.Type()
+	for i := 0; i < rv.NumField(); i++ {
+		tagslice := strings.Split(rt.Field(i).Tag.Get("form"), ",")
+		if len(tagslice) == 0 {
+			continue
+		}
+		tagName := tagslice[0]
+		if !rv.Field(i).IsZero() {
+			vals.Add(tagName, fmt.Sprint(rv.Field(i).Interface()))
+		}
+	}
+	conn, _, err := websocket.DefaultDialer.DialContext(
+		ctx,
+		fmt.Sprintf("%s/container/logs?%s", c.opt.WebsocketBaseURL(), vals.Encode()),
+		nil,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &websocketReadSession{
 		ws: conn,
 	}, nil
 }
@@ -149,5 +175,21 @@ func (s *websocketSession) Write(p []byte) (n int, err error) {
 }
 
 func (s *websocketSession) Close() error {
+	return s.ws.Close()
+}
+
+type websocketReadSession struct {
+	ws *websocket.Conn
+}
+
+func (s *websocketReadSession) Read(p []byte) (n int, err error) {
+	_, rd, err := s.ws.NextReader()
+	if err != nil {
+		return 0, err
+	}
+	return rd.Read(p)
+}
+
+func (s *websocketReadSession) Close() error {
 	return s.ws.Close()
 }
