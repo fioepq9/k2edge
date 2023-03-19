@@ -98,12 +98,18 @@ type Container struct {
 }
 
 type ContainerConfig struct {
-	Image    string        `json:"image"`
-	NodeName string        `json:"node_name,optional"`
-	Command  string        `json:"command,optional"`
-	Args     []string      `json:"args,optional"`
-	Expose   []ExposedPort `json:"expose,optional"`
-	Env      []string      `json:"env,optional"`
+	Image    string         `json:"image"`
+	NodeName string         `json:"node_name,optional"`
+	Command  string         `json:"command,optional"`
+	Args     []string       `json:"args,optional"`
+	Expose   []ExposedPort  `json:"expose,optional"`
+	Env      []string       `json:"env,optional"`
+	Limit    ContainerLimit `json:"limit,optional"`
+}
+
+type ContainerLimit struct {
+	CPU    int64 `json:"cpu,default=50000000"`
+	Memory int64 `json:"memory,default=104857600"`
 }
 
 type ExposedPort struct {

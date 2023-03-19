@@ -700,11 +700,34 @@
           "items": {
             "type": "string"
           }
+        },
+        "limit": {
+          "$ref": "#/definitions/ContainerLimit"
         }
       },
       "title": "ContainerConfig",
       "required": [
         "image"
+      ]
+    },
+    "ContainerLimit": {
+      "type": "object",
+      "properties": {
+        "cpu": {
+          "type": "integer",
+          "format": "int64",
+          "default": "50000000"
+        },
+        "memory": {
+          "type": "integer",
+          "format": "int64",
+          "default": "104857600"
+        }
+      },
+      "title": "ContainerLimit",
+      "required": [
+        "cpu",
+        "memory"
       ]
     },
     "ContainerStatus": {

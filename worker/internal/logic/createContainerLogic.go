@@ -42,6 +42,10 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	// 构建 docker 中的 container host config
 	hostConf := container.HostConfig{
 		PortBindings: exposedPortToPortMap(req.Config.Expose),
+		Resources: container.Resources{
+			NanoCPUs: req.Config.Limit.CPU,
+			Memory:   req.Config.Limit.Memory,
+		},
 	}
 
 	// 拉取镜像
