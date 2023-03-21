@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"k2edge/etcdutil"
+	"k2edge/worker/event"
 	"k2edge/worker/internal/config"
 	"k2edge/worker/internal/handler"
 	"k2edge/worker/internal/svc"
@@ -21,7 +22,7 @@ import (
 )
 
 var configFile = flag.String("f", "etc/worker-api.yaml", "the config file")
-var registerNamespace = etcdutil.SystemNamespace 
+var registerNamespace = etcdutil.SystemNamespace
 
 func main() {
 	flag.Parse()
@@ -45,7 +46,13 @@ func main() {
 		panic(err)
 	}
 	defer close()
+
 	go server.Start()
+
+	// 启动 docker 事件监听
+	e := event.NewEventSubcriber(ctx)
+	go e.Subcribe()
+
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch)
 	for {
@@ -114,19 +121,19 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 			Kind:      "node",
 			Name:      ctx.Config.Name,
 		},
-		Roles:        []string{"worker"},
-		BaseURL:      types.NodeURL{
-			WorkerURL:	fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port),
-			MasterURL: 	"",
+		Roles: []string{"worker"},
+		BaseURL: types.NodeURL{
+			WorkerURL: fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port),
+			MasterURL: "",
 		},
 		Spec: types.Spec{
-			Unschedulable: false,	
+			Unschedulable: false,
 		},
 		RegisterTime: time.Now().Unix(),
-		Status:      types.Status{
+		Status: types.Status{
 			Working: true,
 		},
 	}
-	etcdutil.PutOne(ctx.Etcd, c, "/node/" + registerNamespace + "/" + n.Metadata.Name, n)
+	etcdutil.PutOne(ctx.Etcd, c, "/node/"+registerNamespace+"/"+n.Metadata.Name, n)
 	return nil
 }
