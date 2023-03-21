@@ -2,10 +2,8 @@ package svc
 
 import (
 	"context"
-	"fmt"
 	"k2edge/worker/internal/config"
 	"k2edge/worker/internal/middleware"
-	"os"
 	"time"
 
 	"github.com/docker/docker/client"
@@ -41,10 +39,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	u := websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
-	}
-	c.Name, err = os.Hostname()
-	if err != nil {
-		c.Name = fmt.Sprintf("worker-%d", time.Now().Unix())
 	}
 	return &ServiceContext{
 		Config:         c,

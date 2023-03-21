@@ -6,7 +6,6 @@ import (
 	"k2edge/etcdutil"
 	"k2edge/master/internal/config"
 	"k2edge/master/internal/types"
-	"os"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -15,9 +14,9 @@ import (
 )
 
 type ServiceContext struct {
-	Config config.Config
-	Etcd   *clientv3.Client
-	Websocket      websocket.Upgrader
+	Config    config.Config
+	Etcd      *clientv3.Client
+	Websocket websocket.Upgrader
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -30,10 +29,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	if err != nil {
 		panic(err)
 	}
-	c.Name, err = os.Hostname()
-	if err != nil {
-		c.Name = "MyHost"
-	}
 
 	u := websocket.Upgrader{
 		ReadBufferSize:  1024,
@@ -41,8 +36,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 
 	return &ServiceContext{
-		Config: c,
-		Etcd:   etcd,
+		Config:    c,
+		Etcd:      etcd,
 		Websocket: u,
 	}
 }
@@ -51,10 +46,10 @@ type WorkerFilter func([]types.Node) ([]types.Node, error)
 
 func (s *ServiceContext) Worker(filters ...WorkerFilter) (*types.Node, error) {
 	// if len(filters) == 0 {
-	//	负载均衡算法	
+	//	负载均衡算法
 	// }
 
-	nodes, err := etcdutil.GetOne[types.Node](s.Etcd, context.TODO(), "/node/" + etcdutil.SystemNamespace)
+	nodes, err := etcdutil.GetOne[types.Node](s.Etcd, context.TODO(), "/node/"+etcdutil.SystemNamespace)
 	if err != nil {
 		return nil, err
 	}
