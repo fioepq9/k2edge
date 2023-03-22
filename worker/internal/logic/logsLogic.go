@@ -28,8 +28,8 @@ func NewLogsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LogsLogic {
 func (l *LogsLogic) Logs(req *types.LogsRequest) (io.ReadCloser, error) {
 	d := l.svcCtx.Docker
 	rd, err := d.ContainerLogs(l.ctx, req.Container, dtypes.ContainerLogsOptions{
-		ShowStdout: req.ShowStdout,
-		ShowStderr: req.ShowStderr,
+		ShowStdout: true,
+		ShowStderr: true,
 		Since:      req.Since,
 		Until:      req.Until,
 		Timestamps: req.Timestamps,

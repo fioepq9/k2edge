@@ -74,11 +74,14 @@ type ExecContainerRequest struct {
 }
 
 type LogsContainerRequest struct {
-	Todo string `json:"todo"`
-}
-
-type LogsContainerResponse struct {
-	Todo string `json:"todo"`
+	Namespace  string `form:"namespace"`
+	Name       string `form:"name"`
+	Since      string `form:"since,optional"`
+	Until      string `form:"until,optional"`
+	Timestamps bool   `form:"timestamps,optional"`
+	Follow     bool   `form:"follow,optional"`
+	Tail       string `form:"tail,optional"`
+	Details    bool   `form:"details,optional"`
 }
 
 type Metadata struct {

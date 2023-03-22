@@ -59,7 +59,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: ExecContainerHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodPost,
+				Method:  http.MethodGet,
 				Path:    "/logs",
 				Handler: LogsContainerHandler(serverCtx),
 			},

@@ -299,20 +299,6 @@
             "type": "string"
           },
           {
-            "name": "show_stdout",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "format": "boolean"
-          },
-          {
-            "name": "show_stderr",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "format": "boolean"
-          },
-          {
             "name": "since",
             "in": "query",
             "required": false,
@@ -1135,14 +1121,6 @@
       "properties": {
         "container": {
           "type": "string"
-        },
-        "show_stdout": {
-          "type": "boolean",
-          "format": "boolean"
-        },
-        "show_stderr": {
-          "type": "boolean",
-          "format": "boolean"
         },
         "since": {
           "type": "string"

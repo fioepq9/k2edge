@@ -29,6 +29,7 @@ func AttachHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		l := logic.NewAttachLogic(r.Context(), svcCtx)
 		rw, err := l.Attach(&req)
 		if err != nil {
+			ws.WriteMessage(websocket.TextMessage, []byte(err.Error() + "\n"))
 			msg := websocket.FormatCloseMessage(
 				websocket.CloseAbnormalClosure,
 				err.Error(),

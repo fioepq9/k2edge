@@ -1,4 +1,4 @@
-Name: master-api
+Name: MyHost
 Host: 0.0.0.0
 Port: 8080
 Timeout: 0

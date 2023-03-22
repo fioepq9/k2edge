@@ -28,6 +28,7 @@ func ExecHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		l := logic.NewExecLogic(r.Context(), svcCtx)
 		rw, err := l.Exec(&req)
 		if err != nil {
+			ws.WriteMessage(websocket.TextMessage, []byte(err.Error() + "\n"))
 			msg := websocket.FormatCloseMessage(websocket.CloseAbnormalClosure, err.Error())
 			ws.WriteMessage(websocket.CloseMessage, msg)
 			return

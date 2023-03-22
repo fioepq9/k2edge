@@ -347,24 +347,65 @@
       }
     },
     "/container/logs": {
-      "post": {
+      "get": {
         "operationId": "LogsContainer",
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/LogsContainerResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "namespace",
+            "in": "query",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/LogsContainerRequest"
-            }
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "timestamps",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "follow",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          },
+          {
+            "name": "tail",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "details",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
           }
         ],
         "requestBody": {},
@@ -2586,25 +2627,38 @@
     "LogsContainerRequest": {
       "type": "object",
       "properties": {
-        "todo": {
+        "namespace": {
           "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "since": {
+          "type": "string"
+        },
+        "until": {
+          "type": "string"
+        },
+        "timestamps": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "follow": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "tail": {
+          "type": "string"
+        },
+        "details": {
+          "type": "boolean",
+          "format": "boolean"
         }
       },
       "title": "LogsContainerRequest",
       "required": [
-        "todo"
-      ]
-    },
-    "LogsContainerResponse": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "LogsContainerResponse",
-      "required": [
-        "todo"
+        "namespace",
+        "name"
       ]
     },
     "LogsCronJobRequest": {

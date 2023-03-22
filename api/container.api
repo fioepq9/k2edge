@@ -28,7 +28,7 @@ service master-api{
 	get /exec(ExecContainerRequest)
 	
 	@handler LogsContainer
-	post /logs(LogsContainerRequest) returns (LogsContainerResponse)
+	get /logs(LogsContainerRequest)
 }
 
 type CreateContainerRequest {
@@ -100,9 +100,12 @@ type ExecContainerRequest {
 }
 
 type LogsContainerRequest {
-	Todo string `json:"todo"`
-}
-
-type LogsContainerResponse {
-	Todo string `json:"todo"`
+	Namespace  string `form:"namespace"`
+	Name       string `form:"name"`
+	Since      string `form:"since,optional"`
+	Until      string `form:"until,optional"`
+	Timestamps bool   `form:"timestamps,optional"`
+	Follow     bool   `form:"follow,optional"`
+	Tail       string `form:"tail,optional"`
+	Details    bool   `form:"details,optional"`
 }

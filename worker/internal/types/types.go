@@ -101,8 +101,6 @@ type CPUInfo struct {
 
 type LogsRequest struct {
 	Container  string `form:"container"`
-	ShowStdout bool   `form:"show_stdout,optional"`
-	ShowStderr bool   `form:"show_stderr,optional"`
 	Since      string `form:"since,optional"`
 	Until      string `form:"until,optional"`
 	Timestamps bool   `form:"timestamps,optional"`

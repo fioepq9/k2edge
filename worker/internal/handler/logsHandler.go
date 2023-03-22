@@ -9,6 +9,7 @@ import (
 	"k2edge/worker/internal/types"
 
 	"github.com/gorilla/websocket"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
@@ -19,7 +20,7 @@ func LogsHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
-
+		log := logx.WithContext(r.Context())
 		ws, err := svcCtx.Websocket.Upgrade(w, r, nil)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
@@ -29,6 +30,8 @@ func LogsHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		l := logic.NewLogsLogic(r.Context(), svcCtx)
 		rd, err := l.Logs(&req)
 		if err != nil {
+			log.Errorw("trace error", logx.LogField{Key: "error", Value: err})
+			ws.WriteMessage(websocket.TextMessage, []byte(err.Error()+"\n"))
 			msg := websocket.FormatCloseMessage(
 				websocket.CloseAbnormalClosure,
 				err.Error(),

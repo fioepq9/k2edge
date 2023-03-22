@@ -60,6 +60,7 @@ func (l *ExecContainerLogic) ExecContainer(req *types.ExecContainerRequest) (io.
 		return nil, fmt.Errorf("the node where the container is located is not active")
 	}
 
+	fmt.Println(container.ContainerStatus.ContainerID)
 	// 向特定的 work 结点发送获取conatiner信息的请求
 	cli := client.NewClient(worker.BaseURL.WorkerURL)
 	rw, err := cli.Container.Exec(l.ctx, client.ExecRequest{
