@@ -547,38 +547,6 @@
         "stderr"
       ]
     },
-    "CPUInfo": {
-      "type": "object",
-      "properties": {
-        "cpu": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "cores": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "mhz": {
-          "type": "number",
-          "format": "double"
-        },
-        "model_name": {
-          "type": "string"
-        },
-        "percent": {
-          "type": "number",
-          "format": "double"
-        }
-      },
-      "title": "CPUInfo",
-      "required": [
-        "cpu",
-        "cores",
-        "mhz",
-        "model_name",
-        "percent"
-      ]
-    },
     "Capacity": {
       "type": "object",
       "properties": {
@@ -1239,11 +1207,21 @@
             "type": "string"
           }
         },
-        "cpu": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CPUInfo"
-          }
+        "cpu_used": {
+          "type": "number",
+          "format": "double"
+        },
+        "cpu_free": {
+          "type": "number",
+          "format": "double"
+        },
+        "cpu_total": {
+          "type": "number",
+          "format": "double"
+        },
+        "cpu_used_Percent": {
+          "type": "number",
+          "format": "double"
         },
         "memory_used": {
           "type": "integer",
@@ -1281,7 +1259,10 @@
       "title": "NodeTopResponse",
       "required": [
         "images",
-        "cpu",
+        "cpu_used",
+        "cpu_free",
+        "cpu_total",
+        "cpu_used_Percent",
         "memory_used",
         "memory_available",
         "memory_used_percent",

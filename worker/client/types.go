@@ -79,24 +79,19 @@ type AttachRequest struct {
 }
 
 type NodeTopResponse struct {
-	Images            []string  `json:"images"`
-	CPU               []CPUInfo `json:"cpu"`
-	MemoryUsed        uint64    `json:"memory_used"`
-	MemoryAvailable   uint64    `json:"memory_available"`
-	MemoryUsedPercent float64   `json:"memory_used_percent"`
-	MemoryTotal       uint64    `json:"memory_total"`
-	DiskUsed          uint64    `json:"disk_used"`
-	DiskFree          uint64    `json:"disk_free"`
-	DiskUsedPercent   float64   `json:"disk_used_percent"`
-	DiskTotal         uint64    `json:"disk_total"`
-}
-
-type CPUInfo struct {
-	CPU       int32   `json:"cpu"`
-	Cores     int32   `json:"cores"`
-	Mhz       float64 `json:"mhz"`
-	ModelName string  `json:"model_name"`
-	Percent   float64 `json:"percent"`
+	Images            []string `json:"images"`
+	CPUUsed           float64  `json:"cpu_used"`
+	CPUFree           float64  `json:"cpu_free"`
+	CPUTotal          float64  `json:"cpu_total"`
+	CPUUsedPercent    float64  `json:"cpu_used_Percent"`
+	MemoryUsed        uint64   `json:"memory_used"`
+	MemoryAvailable   uint64   `json:"memory_available"`
+	MemoryUsedPercent float64  `json:"memory_used_percent"`
+	MemoryTotal       uint64   `json:"memory_total"`
+	DiskUsed          uint64   `json:"disk_used"`
+	DiskFree          uint64   `json:"disk_free"`
+	DiskUsedPercent   float64  `json:"disk_used_percent"`
+	DiskTotal         uint64   `json:"disk_total"`
 }
 
 type LogsRequest struct {

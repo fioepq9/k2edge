@@ -95,7 +95,10 @@ type NodeTopResponse {
 	// 当前节点存在的镜像列表
 	Images []string `json:"images"`
 	// CPU
-	CPU []CPUInfo `json:"cpu"`
+	CPUUsed        float64 `json:"cpu_used"`
+	CPUFree        float64 `json:"cpu_free"`
+	CPUTotal       float64 `json:"cpu_total"`
+	CPUUsedPercent float64 `json:"cpu_used_Percent"`
 	// 内存
 	MemoryUsed        uint64  `json:"memory_used"`
 	MemoryAvailable   uint64  `json:"memory_available"`
@@ -106,18 +109,6 @@ type NodeTopResponse {
 	DiskFree        uint64  `json:"disk_free"`
 	DiskUsedPercent float64 `json:"disk_used_percent"`
 	DiskTotal       uint64  `json:"disk_total"`
-}
-
-type CPUInfo {
-	CPU int32 `json:"cpu"`
-	// cpu 逻辑核心数
-	Cores int32 `json:"cores"`
-	// cpu 频率
-	Mhz float64 `json:"mhz"`
-	// cpu 架构
-	ModelName string `json:"model_name"`
-	// cpu 使用率
-	Percent float64 `json:"percent"`
 }
 
 type LogsRequest {

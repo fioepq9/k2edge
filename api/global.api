@@ -26,7 +26,7 @@ type ContainerConfig {
 }
 
 type ContainerLimit {
-	// 默认 5% CPU 时间，单位为 纳秒
+	// 默认 5% CPU 时间(100%为1s)，单位为 纳秒
 	CPU int64 `json:"cpu,default=50000000"`
 	// 默认 100 MB，单位为 B
 	Memory int64 `json:"memory,default=104857600"`
