@@ -1176,6 +1176,23 @@
         ]
       }
     },
+    "/node/hostTop": {
+      "get": {
+        "operationId": "HostTop",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/NodeTopResponse"
+            }
+          }
+        },
+        "requestBody": {},
+        "tags": [
+          "master-api"
+        ]
+      }
+    },
     "/node/register": {
       "post": {
         "operationId": "registerNode",

@@ -27,6 +27,9 @@ service master-api{
 	
 	@handler DeleteNode
 	post /delete(DeleteRequest)
+	
+	@handler HostTop
+	get /hostTop returns (NodeTopResponse)
 }
 
 type RegisterRequest {

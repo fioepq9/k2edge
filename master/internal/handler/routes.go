@@ -253,6 +253,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/delete",
 				Handler: DeleteNodeHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/hostTop",
+				Handler: HostTopHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/node"),
 	)

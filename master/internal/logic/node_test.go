@@ -45,7 +45,7 @@ func TestNodeTop(t *testing.T) {
 	l := NewNodeTopLogic(ctx, &testSvcCtx)
 	
 	info, err := l.NodeTop(&types.NodeTopRequest{
-		Name: "ljf",
+		Name: "Master-dev",
 	})
 	if err != nil {
 		t.Fatal(err)

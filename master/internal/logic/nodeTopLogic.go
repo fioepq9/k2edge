@@ -8,6 +8,7 @@ import (
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
 	"k2edge/worker/client"
+	masterCli "k2edge/master/internal/client"
 
 	"github.com/samber/lo"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -46,7 +47,7 @@ func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopRe
 	// 结点角色只有master
 	resp = new(types.NodeTopResponse)
 	if len(node.Roles) == 1 && lo.Contains(node.Roles, "master") {
-		cli := client.NewClient(node.BaseURL.MasterURL)
+		cli := masterCli.NewClient(node.BaseURL.MasterURL)
 		topInfo, err := cli.Node.Top(l.ctx)
 		if err != nil {
 			return nil, err
