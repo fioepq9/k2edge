@@ -45,7 +45,7 @@ func (l *NodeTopLogic) NodeTop() (resp *types.NodeTopResponse, err error) {
 	if err != nil {
 		return nil, err
 	}
-	cpuPercent, err := cpu.PercentWithContext(l.ctx, time.Millisecond, true)
+	cpuPercent, err := cpu.PercentWithContext(l.ctx, time.Second, true)
 	if err != nil {
 		return nil, err
 	}
