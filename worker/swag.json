@@ -1219,7 +1219,7 @@
           "type": "number",
           "format": "double"
         },
-        "cpu_used_Percent": {
+        "cpu_used_percent": {
           "type": "number",
           "format": "double"
         },
@@ -1262,7 +1262,7 @@
         "cpu_used",
         "cpu_free",
         "cpu_total",
-        "cpu_used_Percent",
+        "cpu_used_percent",
         "memory_used",
         "memory_available",
         "memory_used_percent",

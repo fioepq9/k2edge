@@ -82,6 +82,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	} else {
 		// 从 etcd 中获取需要创建容器的 worker 结点，根据在线调度算法自动获取
 		worker, err = l.svcCtx.Worker()
+		fmt.Println(worker.Metadata.Name)
 		if err != nil {
 			return fmt.Errorf("not found worker can run")
 		}
@@ -129,6 +130,10 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 			Args:     c.ContainerConfig.Args,
 			Expose:   expose,
 			Env:      c.ContainerConfig.Env,
+			Limit:    client.ContainerLimit{
+				CPU: c.ContainerConfig.Limit.CPU,
+				Memory: c.ContainerConfig.Limit.Memory,
+			},
 		},
 	})
 

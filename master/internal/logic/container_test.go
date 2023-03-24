@@ -25,7 +25,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestCreatContainer(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 	l := NewCreateContainerLogic(ctx, &testSvcCtx)
 
@@ -34,13 +34,17 @@ func TestCreatContainer(t *testing.T) {
 			Metadata: types.Metadata{
 				Namespace: "default",
 				Kind:      "container",
-				Name:      "ccc",
+				Name:      "555",
 			},
 			ContainerConfig: types.ContainerConfig{
-				Image:    "busybox",
-				NodeName: "outlg",
-				Command: "sh",
-				Args: []string{"-c", "while true; do date; sleep 2; done"},
+				Image:    "joedval/stress",
+				//Image:    "nginx",
+				NodeName: "",
+				Command: "--cpu",
+				Args: []string{"7"},
+				Limit: types.ContainerLimit{
+					CPU: 1e9,
+				} ,
 			},
 			ContainerStatus: types.ContainerStatus{},
 		},
@@ -58,7 +62,7 @@ func TestDeleteContainerLogic(t *testing.T) {
 	// l1 := NewCreateContainerLogic(ctx, &testSvcCtx)
 
 	namespace := "default"
-	containerName := "ccc"
+	containerName := "555"
 	// err := l1.CreateContainer(&types.CreateContainerRequest{
 	// 	Container: types.Container{
 	// 		Metadata: types.Metadata{

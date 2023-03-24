@@ -83,7 +83,7 @@ type NodeTopResponse struct {
 	CPUUsed           float64  `json:"cpu_used"`
 	CPUFree           float64  `json:"cpu_free"`
 	CPUTotal          float64  `json:"cpu_total"`
-	CPUUsedPercent    float64  `json:"cpu_used_Percent"`
+	CPUUsedPercent    float64  `json:"cpu_used_percent"`
 	MemoryUsed        uint64   `json:"memory_used"`
 	MemoryAvailable   uint64   `json:"memory_available"`
 	MemoryUsedPercent float64  `json:"memory_used_percent"`
