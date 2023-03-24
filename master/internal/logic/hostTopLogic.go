@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"k2edge/master/internal/svc"
@@ -30,28 +31,24 @@ func NewHostTopLogic(ctx context.Context, svcCtx *svc.ServiceContext) *HostTopLo
 func (l *HostTopLogic) HostTop() (resp *types.NodeTopResponse, err error) {
 	resp = new(types.NodeTopResponse)
 	// CPU
-	cpuInfoStat, err := cpu.InfoWithContext(l.ctx)
+	cpuTimeSet, err := cpu.TimesWithContext(l.ctx, false)
 	if err != nil {
 		return nil, err
 	}
-	cpuPercent, err := cpu.PercentWithContext(l.ctx, time.Millisecond, true)
+	if len(cpuTimeSet) != 1 {
+		return nil, errors.New("get cpu times failed")
+	}
+	cpuPercent, err := cpu.PercentWithContext(l.ctx, time.Second, false)
 	if err != nil {
 		return nil, err
 	}
-	resp.CPU = make([]types.CPUInfo, 0)
-	for i := range cpuInfoStat {
-		var p float64 = 0
-		if i < len(cpuPercent) {
-			p = cpuPercent[i]
-		}
-		resp.CPU = append(resp.CPU, types.CPUInfo{
-			CPU:       cpuInfoStat[i].CPU,
-			Cores:     cpuInfoStat[i].Cores,
-			Mhz:       cpuInfoStat[i].Mhz,
-			ModelName: cpuInfoStat[i].ModelName,
-			Percent:   p,
-		})
+	if len(cpuPercent) != 1 {
+		return nil, errors.New("get cpu percent failed")
 	}
+	resp.CPUUsedPercent = cpuPercent[0]
+	resp.CPUFree = cpuTimeSet[0].Idle + cpuTimeSet[0].Iowait
+	resp.CPUUsed = cpuTimeSet[0].System + cpuTimeSet[0].Nice + cpuTimeSet[0].User + cpuTimeSet[0].Irq + cpuTimeSet[0].Softirq + cpuTimeSet[0].Steal
+	resp.CPUTotal = resp.CPUFree + resp.CPUUsed
 	// Memory
 	memStat, err := mem.VirtualMemoryWithContext(l.ctx)
 	if err != nil {

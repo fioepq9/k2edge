@@ -52,18 +52,12 @@ func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopRe
 		if err != nil {
 			return nil, err
 		}
-		var cpu []types.CPUInfo
-		for _, c := range topInfo.CPU  {
-			cpu = append(cpu, types.CPUInfo{
-				CPU: c.CPU,
-				Cores: c.Cores, 
-				Mhz : c.Mhz,
-				ModelName: c.ModelName,
-				Percent: c.Percent,
-			})
-		}
-
-		resp.CPU = cpu
+		
+		resp.Images = topInfo.Images
+		resp.CPUFree = topInfo.CPUFree
+		resp.CPUTotal = topInfo.CPUTotal
+		resp.CPUUsed = topInfo.CPUUsed
+		resp.CPUUsedPercent = topInfo.CPUUsedPercent
 		resp.DiskFree = topInfo.DiskFree
 		resp.DiskTotal = topInfo.DiskTotal
 		resp.DiskUsed = topInfo.DiskUsed
@@ -83,18 +77,10 @@ func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopRe
 		if err != nil {
 			return nil, err
 		}
-		var cpu []types.CPUInfo
-		for _, c := range topInfo.CPU  {
-			cpu = append(cpu, types.CPUInfo{
-				CPU: c.CPU,
-				Cores: c.Cores, 
-				Mhz : c.Mhz,
-				ModelName: c.ModelName,
-				Percent: c.Percent,
-			})
-		}
-
-		resp.CPU = cpu
+		resp.CPUFree = topInfo.CPUFree
+		resp.CPUTotal = topInfo.CPUTotal
+		resp.CPUUsed = topInfo.CPUUsed
+		resp.CPUUsedPercent = topInfo.CPUUsedPercent
 		resp.Images = topInfo.Images
 		resp.DiskFree = topInfo.DiskFree
 		resp.DiskTotal = topInfo.DiskTotal

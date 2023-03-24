@@ -2852,11 +2852,21 @@
             "type": "string"
           }
         },
-        "cpu": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CPUInfo"
-          }
+        "cpu_used": {
+          "type": "number",
+          "format": "double"
+        },
+        "cpu_free": {
+          "type": "number",
+          "format": "double"
+        },
+        "cpu_total": {
+          "type": "number",
+          "format": "double"
+        },
+        "cpu_used_Percent": {
+          "type": "number",
+          "format": "double"
         },
         "memory_used": {
           "type": "integer",
@@ -2894,7 +2904,10 @@
       "title": "NodeTopResponse",
       "required": [
         "images",
-        "cpu",
+        "cpu_used",
+        "cpu_free",
+        "cpu_total",
+        "cpu_used_Percent",
         "memory_used",
         "memory_available",
         "memory_used_percent",
@@ -2966,6 +2979,66 @@
       "title": "ScaleResponse",
       "required": [
         "todo"
+      ]
+    },
+    "ScheduleRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "posts": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "title": "ScheduleRequest",
+      "required": [
+        "name",
+        "posts"
+      ]
+    },
+    "ScheduleResponse": {
+      "type": "object",
+      "properties": {
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "memory_used": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "memory_available": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "memory_used_percent": {
+          "type": "number",
+          "format": "double"
+        },
+        "memory_total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "port_usable": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "ScheduleResponse",
+      "required": [
+        "images",
+        "memory_used",
+        "memory_available",
+        "memory_used_percent",
+        "memory_total",
+        "port_usable"
       ]
     },
     "Spec": {

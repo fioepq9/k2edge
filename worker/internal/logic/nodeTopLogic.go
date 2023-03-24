@@ -57,8 +57,8 @@ func (l *NodeTopLogic) NodeTop() (resp *types.NodeTopResponse, err error) {
 		return nil, errors.New("get cpu percent failed")
 	}
 	resp.CPUUsedPercent = cpuPercent[0]
-	resp.CPUFree = cpuTimeSet[0].Idle
-	resp.CPUUsed = cpuTimeSet[0].System + cpuTimeSet[0].User
+	resp.CPUFree = cpuTimeSet[0].Idle + cpuTimeSet[0].Iowait
+	resp.CPUUsed = cpuTimeSet[0].System + cpuTimeSet[0].Nice + cpuTimeSet[0].User + cpuTimeSet[0].Irq + cpuTimeSet[0].Softirq + cpuTimeSet[0].Steal
 	resp.CPUTotal = resp.CPUFree + resp.CPUUsed
 	// Memory
 	memStat, err := mem.VirtualMemoryWithContext(l.ctx)
