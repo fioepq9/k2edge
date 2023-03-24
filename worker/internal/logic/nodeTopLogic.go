@@ -42,12 +42,9 @@ func (l *NodeTopLogic) NodeTop() (resp *types.NodeTopResponse, err error) {
 		return img.RepoTags
 	})
 	// CPU
-	cpuTimeSet, err := cpu.TimesWithContext(l.ctx, false)
+	cpuCount, err := cpu.CountsWithContext(l.ctx, false)
 	if err != nil {
 		return nil, err
-	}
-	if len(cpuTimeSet) != 1 {
-		return nil, errors.New("get cpu times failed")
 	}
 	cpuPercent, err := cpu.PercentWithContext(l.ctx, time.Second, false)
 	if err != nil {
@@ -57,9 +54,9 @@ func (l *NodeTopLogic) NodeTop() (resp *types.NodeTopResponse, err error) {
 		return nil, errors.New("get cpu percent failed")
 	}
 	resp.CPUUsedPercent = cpuPercent[0]
-	resp.CPUFree = cpuTimeSet[0].Idle + cpuTimeSet[0].Iowait
-	resp.CPUUsed = cpuTimeSet[0].System + cpuTimeSet[0].Nice + cpuTimeSet[0].User + cpuTimeSet[0].Irq + cpuTimeSet[0].Softirq + cpuTimeSet[0].Steal
-	resp.CPUTotal = resp.CPUFree + resp.CPUUsed
+	resp.CPUTotal = float64(cpuCount) * 1e9
+	resp.CPUUsed = resp.CPUUsedPercent / 100 * resp.CPUTotal
+	resp.CPUFree = resp.CPUTotal - resp.CPUUsed
 	// Memory
 	memStat, err := mem.VirtualMemoryWithContext(l.ctx)
 	if err != nil {
