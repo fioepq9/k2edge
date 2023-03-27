@@ -1695,6 +1695,9 @@
         },
         "limit": {
           "$ref": "#/definitions/ContainerLimit"
+        },
+        "request": {
+          "$ref": "#/definitions/ContainerRequest"
         }
       },
       "title": "ContainerConfig",
@@ -1717,6 +1720,26 @@
         }
       },
       "title": "ContainerLimit",
+      "required": [
+        "cpu",
+        "memory"
+      ]
+    },
+    "ContainerRequest": {
+      "type": "object",
+      "properties": {
+        "cpu": {
+          "type": "integer",
+          "format": "int64",
+          "default": "50000000"
+        },
+        "memory": {
+          "type": "integer",
+          "format": "int64",
+          "default": "104857600"
+        }
+      },
+      "title": "ContainerRequest",
       "required": [
         "cpu",
         "memory"

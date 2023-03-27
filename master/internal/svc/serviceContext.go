@@ -42,14 +42,20 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 }
 
-type WorkerFilter func([]types.Node) ([]types.Node, error)
+type WorkerFilter func([]types.Node, *types.Container) ([]types.Node, error)
 
-func (s *ServiceContext) Worker(filters ...WorkerFilter) (*types.Node, error) {
-	// if len(filters) == 0 {
-	//	负载均衡算法
-	// }
-
+func (s *ServiceContext) Worker(container *types.Container, filters ...WorkerFilter) (*types.Node, error) {
 	nodes, err := etcdutil.GetOne[types.Node](s.Etcd, context.TODO(), "/node/"+etcdutil.SystemNamespace)
+	if len(filters) == 0 {
+		// 在线调度算法
+		for _, filter := range filters {
+			*nodes, err = filter(*nodes, container)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+	
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +63,7 @@ func (s *ServiceContext) Worker(filters ...WorkerFilter) (*types.Node, error) {
 		return lo.Contains(item.Roles, "worker")
 	})
 	for _, f := range filters {
-		workers, err = f(workers)
+		workers, err = f(workers, container)
 		if err != nil {
 			return nil, err
 		}

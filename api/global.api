@@ -16,16 +16,24 @@ type Container {
 }
 
 type ContainerConfig {
-	Image    string         `json:"image"`
-	NodeName string         `json:"node_name,optional"`
-	Command  string         `json:"command,optional"`
-	Args     []string       `json:"args,optional"`
-	Expose   []ExposedPort  `json:"expose,optional"`
-	Env      []string       `json:"env,optional"`
-	Limit    ContainerLimit `json:"limit,optional"`
+	Image    string           `json:"image"`
+	NodeName string           `json:"node_name,optional"`
+	Command  string           `json:"command,optional"`
+	Args     []string         `json:"args,optional"`
+	Expose   []ExposedPort    `json:"expose,optional"`
+	Env      []string         `json:"env,optional"`
+	Limit    ContainerLimit   `json:"limit,optional"`
+	Request  ContainerRequest `json:"request,optional"`
 }
 
 type ContainerLimit {
+	// 默认 5% CPU 时间(100%为1s)，单位为 纳秒
+	CPU int64 `json:"cpu,default=50000000"`
+	// 默认 100 MB，单位为 B
+	Memory int64 `json:"memory,default=104857600"`
+}
+
+type ContainerRequest {
 	// 默认 5% CPU 时间(100%为1s)，单位为 纳秒
 	CPU int64 `json:"cpu,default=50000000"`
 	// 默认 100 MB，单位为 B
