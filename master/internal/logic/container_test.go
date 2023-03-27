@@ -41,9 +41,9 @@ func TestCreatContainer(t *testing.T) {
 				//Image:    "nginx",
 				NodeName: "",
 				Command: "--cpu",
-				Args: []string{"7"},
+				Args: []string{"8"},
 				Limit: types.ContainerLimit{
-					CPU: 1e9,
+					CPU: 4e9,
 				} ,
 			},
 			ContainerStatus: types.ContainerStatus{},

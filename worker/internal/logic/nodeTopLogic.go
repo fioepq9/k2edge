@@ -42,7 +42,7 @@ func (l *NodeTopLogic) NodeTop() (resp *types.NodeTopResponse, err error) {
 		return img.RepoTags
 	})
 	// CPU
-	cpuCount, err := cpu.CountsWithContext(l.ctx, false)
+	cpuCount, err := cpu.CountsWithContext(l.ctx, true)
 	if err != nil {
 		return nil, err
 	}
