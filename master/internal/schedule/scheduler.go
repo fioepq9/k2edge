@@ -4,45 +4,47 @@ import (
 	"context"
 	"k2edge/master/internal/client"
 	"k2edge/master/internal/types"
-
-	"github.com/samber/lo"
 )
 
-type nodeInfo struct {
-	config types.Node
-	info types.NodeTopResponse
+type Scheduler struct {
+	nodeInfo     []nodeInfo
+	container *types.Container
+	nodes		[]types.Node
+	Err error
 }
 
-func Scheduler(nodes []types.Node, container *types.Container) ([]types.Node, error) {
-	info := make([]nodeInfo, 0)
+func NewScheduler(nodes []types.Node, container *types.Container) *Scheduler {
+	s := &Scheduler{
+		nodes:     nodes,
+		container: container,
+		nodeInfo: make([]nodeInfo, 0),
+	}
 	for _, node := range nodes {
 		var n nodeInfo
 		cli := client.NewClient(node.BaseURL.MasterURL)
 		topInfo, err := cli.Node.Top(context.TODO())
 		if err != nil {
-			return nil, err
+			s.Err = err
+			return s
 		}
-		
 		n.config = node
 		n.info = *topInfo
-		info = append(info, n)
+		n.score = 0
+		s.nodeInfo = append(s.nodeInfo, n)
 	}
-	
-	info, err := predicate(info, container)
-	if err != nil {
-		return nil, err
-	}
-
-	set := make(map[string]bool)
-	for _, i := range info  {
-		set[i.config.Metadata.Name] = true
-	}
-
-	nodes = lo.Filter(nodes, func (item types.Node, idx int) bool {
-		_, found := set[item.Metadata.Name]
-		return found
-	})
-
-	return nodes, nil
+	return s
 }
 
+func (s *Scheduler) GetNodes() ([]types.Node, error) {
+	return s.nodes, s.Err
+}
+
+type nodeInfo struct {
+	config types.Node
+	info   types.NodeTopResponse
+	score  int
+}
+
+func Schedule(nodes []types.Node, container *types.Container) ([]types.Node, error) {
+	return NewScheduler(nodes, container).Predicate().Priority().GetNodes()
+}
