@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"k2edge/etcdutil"
 	"k2edge/master/internal/config"
+	"k2edge/master/internal/schedule"
 	"k2edge/master/internal/types"
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/samber/lo"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
@@ -44,32 +44,19 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 type WorkerFilter func([]types.Node, *types.Container) ([]types.Node, error)
 
-func (s *ServiceContext) Worker(container *types.Container, filters ...WorkerFilter) (*types.Node, error) {
+func (s *ServiceContext) Worker(container *types.Container) (*types.Node, error) {
 	nodes, err := etcdutil.GetOne[types.Node](s.Etcd, context.TODO(), "/node/"+etcdutil.SystemNamespace)
-	if len(filters) == 0 {
-		// 在线调度算法
-		for _, filter := range filters {
-			*nodes, err = filter(*nodes, container)
-			if err != nil {
-				return nil, err
-			}
-		}
-	}
-	
 	if err != nil {
 		return nil, err
 	}
-	workers := lo.Filter(*nodes, func(item types.Node, _ int) bool {
-		return lo.Contains(item.Roles, "worker")
-	})
-	for _, f := range filters {
-		workers, err = f(workers, container)
-		if err != nil {
-			return nil, err
-		}
+
+	*nodes, err = schedule.Schedule(*nodes, container)
+	if err != nil {
+		return nil, err
 	}
-	if len(workers) == 0 {
+	
+	if len(*nodes) == 0 {
 		return nil, fmt.Errorf("not worker can run")
 	}
-	return &workers[0], nil
+	return  &(*nodes)[0], nil
 }
