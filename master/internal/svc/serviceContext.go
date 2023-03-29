@@ -52,31 +52,11 @@ func (s *ServiceContext) Worker(container *types.Container) (*types.Node, error)
 		return nil, err
 	}
 
-	fmt.Print(nodes)
-	fmt.Println("init")
-	sch := schedule.NewScheduler(*nodes, container)
-	*nodes, err = sch.Predicate().GetNodes()
+	*nodes, err = schedule.Schedule(*nodes, container)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(nodes)
 
-	*nodes, err = sch.Priority().GetNodes()
-	if err != nil {
-		return nil, err
-	}
-	fmt.Println(nodes)
-
-	// *nodes, err = schedule.Schedule(*nodes, container)
-	// fmt.Println(err)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// *nodes = lo.Filter(*nodes, func(item types.Node, _ int) bool {
-	// 	return lo.Contains(item.Roles, "worker")
-	// })
-	
 	if len(*nodes) == 0 {
 		return nil, fmt.Errorf("not worker can run")
 	}

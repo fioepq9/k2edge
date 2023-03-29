@@ -2,7 +2,6 @@ package schedule
 
 import (
 	"context"
-	"fmt"
 	"k2edge/master/internal/types"
 	"k2edge/worker/client"
 
@@ -50,14 +49,10 @@ func NewScheduler(nodes []types.Node, container *types.Container) *Scheduler {
 		s.nodeInfo = append(s.nodeInfo, n)
 	}
 
-	fmt.Print(s.nodeInfo)
-	fmt.Println("NewScheduler")
-
 	return s
 }
 
 func (s *Scheduler) GetNodes() ([]types.Node, error) {
-	fmt.Println(s.nodeInfo)
 	nodes := lo.Map(s.nodeInfo, func (item nodeInfo, _ int) types.Node {
 		return item.config
 	})
@@ -71,8 +66,6 @@ func PreProcessing(nodes []types.Node) ([]types.Node, error) {
 		return lo.Contains(item.Roles, "worker") && item.Status.Working && !item.Spec.Unschedulable
 	})
 
-	fmt.Print(nodes)
-	fmt.Println("PreProcessing")
 	return nodes, nil
 }
 
