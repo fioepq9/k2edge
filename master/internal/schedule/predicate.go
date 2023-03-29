@@ -1,6 +1,8 @@
 package schedule
 
 import (
+	"fmt"
+
 	"github.com/samber/lo"
 )
 
@@ -18,10 +20,15 @@ func (s *Scheduler) PodFitsHost() *Scheduler {
 	if s.Err != nil {
 		return s
 	}
+	fmt.Print(s.nodeInfo)
+	fmt.Println("PodFitsHost")
 
-	s.nodeInfo = lo.Filter(s.nodeInfo , func(item nodeInfo, index int) bool {
-		return item.config.Metadata.Name == s.container.ContainerConfig.NodeName
-	})
+	if s.container.ContainerConfig.NodeName != "" {
+		s.nodeInfo = lo.Filter(s.nodeInfo , func(item nodeInfo, index int) bool {
+			return item.config.Metadata.Name == s.container.ContainerConfig.NodeName
+		})
+	}
+	
 	return s
 }
 
@@ -40,6 +47,9 @@ func (s *Scheduler)  PodFitsResource() *Scheduler {
 	if s.Err != nil {
 		return s
 	}
+
+	fmt.Print(s.nodeInfo)
+	fmt.Println("PodFitsResource")
 
 	s.nodeInfo = lo.Filter(s.nodeInfo, func(item nodeInfo, index int) bool {
 		return (item.info.CPUFree * 0.95) > float64(s.container.ContainerConfig.Request.CPU) && 

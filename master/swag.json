@@ -1541,38 +1541,6 @@
         "todo"
       ]
     },
-    "CPUInfo": {
-      "type": "object",
-      "properties": {
-        "cpu": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "cores": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "mhz": {
-          "type": "number",
-          "format": "double"
-        },
-        "model_name": {
-          "type": "string"
-        },
-        "percent": {
-          "type": "number",
-          "format": "double"
-        }
-      },
-      "title": "CPUInfo",
-      "required": [
-        "cpu",
-        "cores",
-        "mhz",
-        "model_name",
-        "percent"
-      ]
-    },
     "Capacity": {
       "type": "object",
       "properties": {
@@ -2887,7 +2855,7 @@
           "type": "number",
           "format": "double"
         },
-        "cpu_used_Percent": {
+        "cpu_used_percent": {
           "type": "number",
           "format": "double"
         },
@@ -2930,7 +2898,7 @@
         "cpu_used",
         "cpu_free",
         "cpu_total",
-        "cpu_used_Percent",
+        "cpu_used_percent",
         "memory_used",
         "memory_available",
         "memory_used_percent",

@@ -46,6 +46,17 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		return fmt.Errorf("namespace %s does not exist", req.Container.Metadata.Namespace)
 	}
 
+	// 判断容器是否已经存在
+	key := etcdutil.GenerateKey("container", req.Container.Metadata.Namespace, req.Container.Metadata.Name)
+	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
+	if err != nil {
+		return err
+	}
+
+	if found {
+		return fmt.Errorf("container %s already exist", req.Container.Metadata.Name)
+	}
+
 	// 如果有指定结点，根据选择的结点创建容器
 	if req.Container.ContainerConfig.NodeName != "" {
 		w, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, req.Container.ContainerConfig.NodeName)
@@ -82,10 +93,11 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	} else {
 		// 从 etcd 中获取需要创建容器的 worker 结点，根据在线调度算法自动获取
 		worker, err = l.svcCtx.Worker(&req.Container)
-		fmt.Println(worker.Metadata.Name)
 		if err != nil {
-			return fmt.Errorf("not found worker can run")
+			//return fmt.Errorf("not found worker can run")
+			return err
 		}
+		fmt.Println(worker.Metadata.Name)
 	}
 
 	cli := client.NewClient(worker.BaseURL.WorkerURL)
@@ -97,18 +109,6 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 
 	if c.Metadata.Name == "" {
 		c.Metadata.Name = strings.ReplaceAll(c.ContainerConfig.Image+uuid.New().String(), "-", "")
-	}
-
-	// 判断容器是否已经存在
-	key := etcdutil.GenerateKey("container", req.Container.Metadata.Namespace, req.Container.Metadata.Name)
-	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
-
-	if err != nil {
-		return err
-	}
-
-	if found {
-		return fmt.Errorf("container %s already exist", c.Metadata.Name)
 	}
 
 	expose := make([]client.ExposedPort, 0)

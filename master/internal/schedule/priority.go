@@ -2,7 +2,7 @@ package schedule
 
 import (
 	"context"
-	"k2edge/master/internal/types"
+	"fmt"
 	"math"
 	"sort"
 
@@ -25,13 +25,15 @@ func (s *Scheduler) SortPriority() *Scheduler {
 		return s
 	}
 
+	fmt.Print(s.nodeInfo)
+	fmt.Println("SortPriority")
+
 	sort.Slice(s.nodeInfo, func(i, j int) bool {
 		return s.nodeInfo[i].score < s.nodeInfo[j].score
 	})
 
-	s.nodes = lo.Map(s.nodeInfo, func(item nodeInfo, _ int) types.Node {
-		return item.config
-	})
+	
+	fmt.Println(s.nodeInfo)
 	return s
 }
 
@@ -69,6 +71,9 @@ func (s *Scheduler) LeastRequestedPriority()  *Scheduler {
 		return s
 	}
 
+	fmt.Print(s.nodeInfo)
+	fmt.Println("LeastRequestedPriority")
+
 	// 权重
 	const ratio = 1.0
 
@@ -93,6 +98,9 @@ func (s *Scheduler) BalancedResourceAllocation()  *Scheduler {
 	if s.Err != nil {
 		return s
 	}
+
+	fmt.Print(s.nodeInfo)
+	fmt.Println("BalancedResourceAllocation")
 
 	// 权重
 	const ratio = 1.0
@@ -120,6 +128,9 @@ func (s *Scheduler) ImageLocalityPriority()  *Scheduler {
 		return s
 	}
 
+	fmt.Print(s.nodeInfo)
+	fmt.Println("ImageLocalityPriority")
+
 	// 权重
 	const ratio = 1.0
 
@@ -140,7 +151,7 @@ func (s *Scheduler) ImageLocalityPriority()  *Scheduler {
         s.Err = err
 		return s
     }
-    image, _, err := cli.ImageInspectWithRaw(context.Background(), "your-image-name:tag")
+    image, _, err := cli.ImageInspectWithRaw(context.Background(), s.container.ContainerConfig.Image)
     if err != nil {
         s.Err = err
 		return s
@@ -174,6 +185,9 @@ func (s *Scheduler) MemoryPressure() *Scheduler {
 		return s
 	}
 
+	fmt.Print(s.nodeInfo)
+	fmt.Println("MemoryPressure")
+
 	// 权重
 	const ratio = 1.0
 
@@ -194,6 +208,9 @@ func (s *Scheduler) CPUPressure() *Scheduler {
 	if s.Err != nil {
 		return s
 	}
+
+	fmt.Print(s.nodeInfo)
+	fmt.Println("CPUPressure")
 
 	// 权重
 	const ratio = 1.0

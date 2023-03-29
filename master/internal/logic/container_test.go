@@ -45,6 +45,9 @@ func TestCreatContainer(t *testing.T) {
 				Limit: types.ContainerLimit{
 					CPU: 4e9,
 				} ,
+				Request: types.ContainerRequest{
+					CPU: 4e9,
+				},
 			},
 			ContainerStatus: types.ContainerStatus{},
 		},

@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"k2edge/etcdutil"
 	"k2edge/master/internal/config"
+
 	"k2edge/master/internal/schedule"
 	"k2edge/master/internal/types"
 	"time"
 
 	"github.com/gorilla/websocket"
+	//"github.com/samber/lo"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
@@ -50,13 +52,34 @@ func (s *ServiceContext) Worker(container *types.Container) (*types.Node, error)
 		return nil, err
 	}
 
-	*nodes, err = schedule.Schedule(*nodes, container)
+	fmt.Print(nodes)
+	fmt.Println("init")
+	sch := schedule.NewScheduler(*nodes, container)
+	*nodes, err = sch.Predicate().GetNodes()
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println(nodes)
+
+	*nodes, err = sch.Priority().GetNodes()
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(nodes)
+
+	// *nodes, err = schedule.Schedule(*nodes, container)
+	// fmt.Println(err)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// *nodes = lo.Filter(*nodes, func(item types.Node, _ int) bool {
+	// 	return lo.Contains(item.Roles, "worker")
+	// })
 	
 	if len(*nodes) == 0 {
 		return nil, fmt.Errorf("not worker can run")
 	}
+	
 	return  &(*nodes)[0], nil
 }
