@@ -1193,9 +1193,35 @@
         ]
       }
     },
+    "/node/list": {
+      "get": {
+        "operationId": "ListNode",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/NodeListResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "all",
+            "in": "query",
+            "required": true,
+            "type": "boolean",
+            "format": "boolean"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "master-api"
+        ]
+      }
+    },
     "/node/register": {
       "post": {
-        "operationId": "registerNode",
+        "operationId": "RegisterNode",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -2820,6 +2846,63 @@
         "spec",
         "register_time",
         "status"
+      ]
+    },
+    "NodeList": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "register_name": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "string"
+        },
+        "url": {
+          "$ref": "#/definitions/NodeURL"
+        }
+      },
+      "title": "NodeList",
+      "required": [
+        "name",
+        "register_name",
+        "status",
+        "roles",
+        "url"
+      ]
+    },
+    "NodeListRequest": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "NodeListRequest",
+      "required": [
+        "all"
+      ]
+    },
+    "NodeListResponse": {
+      "type": "object",
+      "properties": {
+        "node_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NodeList"
+          }
+        }
+      },
+      "title": "NodeListResponse",
+      "required": [
+        "node_list"
       ]
     },
     "NodeTopRequest": {

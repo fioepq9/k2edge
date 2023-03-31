@@ -49,7 +49,7 @@ func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest
 	node, err := etcdutil.GetOne[types.Node](l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("node", etcdutil.SystemNamespace, c.ContainerStatus.Node))
 
 	if err != nil {
-		return err
+		return fmt.Errorf("cannot get node %s info", c.ContainerStatus.Node)
 	}
 
 	n := (*node)[0]

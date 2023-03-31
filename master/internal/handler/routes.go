@@ -226,7 +226,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/register",
-				Handler: registerNodeHandler(serverCtx),
+				Handler: RegisterNodeHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: ListNodeHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,

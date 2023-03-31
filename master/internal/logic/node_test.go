@@ -39,6 +39,22 @@ func TestDeleteNode(t *testing.T) {
 	t.Log("delete node success")
 }
 
+func TestListNode(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	l := NewListNodeLogic(ctx, &testSvcCtx)
+	
+	info, err := l.ListNode(&types.NodeListRequest{
+		All: true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(info)
+	t.Log("list node success")
+}
+
+
 func TestNodeTop(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

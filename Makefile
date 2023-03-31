@@ -5,6 +5,7 @@ api: worker-api master-api
 worker-update: worker-api worker-swagger-update
 master-update: master-api master-swagger-update clean
 swagger-update: worker-swagger-update master-swagger-update
+swagger-run: master-swagger-run worker-swagger-run
 
 worker-api-port=8888
 worker-swagger-port=8083

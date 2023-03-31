@@ -456,6 +456,22 @@ type RegisterRequest struct {
 	BaseURL NodeURL  `json:"base_url"`
 }
 
+type NodeListRequest struct {
+	All bool `form:"all, default=true"`
+}
+
+type NodeListResponse struct {
+	NodeList []NodeList `json:"node_list"`
+}
+
+type NodeList struct {
+	Name         string  `json:"name"`
+	RegisterTime int64   `json:"register_name"`
+	Status       string  `json:"status"`
+	Roles        string  `json:"roles"`
+	URL          NodeURL `json:"url"`
+}
+
 type NodeTopRequest struct {
 	Name string `form:"name"`
 }

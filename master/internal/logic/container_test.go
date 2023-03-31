@@ -34,14 +34,14 @@ func TestCreatContainer(t *testing.T) {
 			Metadata: types.Metadata{
 				Namespace: "default",
 				Kind:      "container",
-				Name:      "555",
+				Name:      "ccc",
 			},
 			ContainerConfig: types.ContainerConfig{
-				Image:    "joedval/stress",
-				//Image:    "nginx",
-				NodeName: "",
-				Command: "--cpu",
-				Args: []string{"8"},
+				//Image:    "joedval/stress",
+				Image:    "alpine",
+				NodeName: "MyHost",
+				Command: "sh",
+				Args: []string{"-c", "while true; do echo $(date +%s); sleep 1; done"},
 				Limit: types.ContainerLimit{
 					CPU: 4e9,
 				} ,

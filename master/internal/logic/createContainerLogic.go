@@ -68,14 +68,14 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 			return fmt.Errorf("node %s does not exist", req.Container.ContainerConfig.NodeName)
 		}
 
-		if worker.Spec.Unschedulable {
+		if w.Spec.Unschedulable {
 			return fmt.Errorf("the node %s is unschedulable", req.Container.Metadata.Name)
 		}
 
-		if !worker.Status.Working {
+		if !w.Status.Working {
 			return fmt.Errorf("the node %s is not active", req.Container.Metadata.Name)
 		}
-
+		
 		worker = new(types.Node)
 		*worker = types.Node{
 			Metadata: types.Metadata{

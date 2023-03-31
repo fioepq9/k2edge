@@ -9,25 +9,25 @@ import (
 )
 
 func main() {
-	testLogs()
+	testExecAttach()
 }
 
 func testExecAttach() {
 	cli := client.NewClient("http://localhost:8080")
-	// rw, err := cli.Container.Exec(context.Background(), client.ExecContainerRequest{
-	// 	Namespace:    "default",
-	// 	Name:         "111",
-	// 	Tty:          true,
-	// 	AttachStdin:  true,
-	// 	AttachStderr: true,
-	// 	AttachStdout: true,
-	// 	Cmd:          []string{`"\"/bin/bash\""`},
-	// })
-
-	rw, err := cli.Container.Attach(context.Background(), client.AttachContainerRequest{
-		Namespace: "default",
-		Name: "ccc",
+	rw, err := cli.Container.Exec(context.Background(), client.ExecContainerRequest{
+		Namespace:    "default",
+		Name:         "ccc",
+		Tty:          true,
+		AttachStdin:  true,
+		AttachStderr: true,
+		AttachStdout: true,
+		Cmd:          []string{`"\"/bin/sh\""`},
 	})
+
+	// rw, err := cli.Container.Attach(context.Background(), client.AttachContainerRequest{
+	// 	Namespace: "default",
+	// 	Name: "ccc",
+	// })
 	if err != nil {
 		panic(err)
 	}
