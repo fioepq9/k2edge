@@ -131,34 +131,9 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: ApplyDeploymentHandler(serverCtx),
 			},
 			{
-				Method:  http.MethodGet,
-				Path:    "/rollout/history",
-				Handler: HistoryDeploymentHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/rollout/undo",
-				Handler: UndoDeploymentHandler(serverCtx),
-			},
-			{
 				Method:  http.MethodPost,
 				Path:    "/scale",
 				Handler: ScaleHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/attach",
-				Handler: AttachDeploymentHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/exec",
-				Handler: ExecDeploymentHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/logs",
-				Handler: LogsDeploymentHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/deployment"),

@@ -339,55 +339,11 @@ type ApplyDeploymentRequest struct {
 	Todo string `json:"todo"`
 }
 
-type ApplyDeploymentResponse struct {
-	Error Error `json:"error,omitempty"`
-}
-
-type HistoryDeploymentRequest struct {
-	Todo string `json:"todo"`
-}
-
-type HistoryDeploymentResponse struct {
-	Deployment Deployment `json:"deployment"`
-}
-
-type UndoDeploymentRequest struct {
-	Todo string `json:"todo"`
-}
-
-type UndoDeploymentResponse struct {
-	Error Error `json:"error,omitempty"`
-}
-
 type ScaleRequest struct {
 	Todo string `json:"todo"`
 }
 
 type ScaleResponse struct {
-	Todo string `json:"todo"`
-}
-
-type AttachDeploymentRequest struct {
-	Todo string `json:"todo"`
-}
-
-type AttachDeploymentResponse struct {
-	Todo string `json:"todo"`
-}
-
-type ExecDeploymentRequest struct {
-	Todo string `json:"todo"`
-}
-
-type ExecDeploymentResponse struct {
-	Todo string `json:"todo"`
-}
-
-type LogsDeploymentRequest struct {
-	Todo string `json:"todo"`
-}
-
-type LogsDeploymentResponse struct {
 	Todo string `json:"todo"`
 }
 

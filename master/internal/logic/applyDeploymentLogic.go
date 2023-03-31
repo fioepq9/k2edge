@@ -23,8 +23,8 @@ func NewApplyDeploymentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *A
 	}
 }
 
-func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest) (resp *types.ApplyDeploymentResponse, err error) {
+func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest) error {
 	// todo: add your logic here and delete this line
 
-	return
+	return nil
 }

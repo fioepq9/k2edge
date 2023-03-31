@@ -605,9 +605,7 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/ApplyDeploymentResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
@@ -617,33 +615,6 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/ApplyDeploymentRequest"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
-    "/deployment/attach": {
-      "post": {
-        "operationId": "AttachDeployment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/AttachDeploymentResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/AttachDeploymentRequest"
             }
           }
         ],
@@ -707,33 +678,6 @@
         ]
       }
     },
-    "/deployment/exec": {
-      "post": {
-        "operationId": "ExecDeployment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/ExecDeploymentResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ExecDeploymentRequest"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
     "/deployment/get": {
       "get": {
         "operationId": "GetDeployment",
@@ -751,85 +695,6 @@
             "in": "query",
             "required": true,
             "type": "string"
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
-    "/deployment/logs": {
-      "post": {
-        "operationId": "LogsDeployment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/LogsDeploymentResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/LogsDeploymentRequest"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
-    "/deployment/rollout/history": {
-      "get": {
-        "operationId": "HistoryDeployment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/HistoryDeploymentResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "todo",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
-    "/deployment/rollout/undo": {
-      "post": {
-        "operationId": "UndoDeployment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/UndoDeploymentResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/UndoDeploymentRequest"
-            }
           }
         ],
         "requestBody": {},
@@ -1468,18 +1333,6 @@
         "todo"
       ]
     },
-    "ApplyDeploymentResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "ApplyDeploymentResponse",
-      "required": [
-        "error"
-      ]
-    },
     "ApplyTokenRequest": {
       "type": "object",
       "properties": {
@@ -1541,30 +1394,6 @@
       "required": [
         "namespace",
         "name"
-      ]
-    },
-    "AttachDeploymentRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "AttachDeploymentRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "AttachDeploymentResponse": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "AttachDeploymentResponse",
-      "required": [
-        "todo"
       ]
     },
     "Capacity": {
@@ -2256,30 +2085,6 @@
         "cmd"
       ]
     },
-    "ExecDeploymentRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "ExecDeploymentRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "ExecDeploymentResponse": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "ExecDeploymentResponse",
-      "required": [
-        "todo"
-      ]
-    },
     "ExposedPort": {
       "type": "object",
       "properties": {
@@ -2484,30 +2289,6 @@
       "title": "HistoryCronJobResponse",
       "required": [
         "cronjob"
-      ]
-    },
-    "HistoryDeploymentRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "HistoryDeploymentRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "HistoryDeploymentResponse": {
-      "type": "object",
-      "properties": {
-        "deployment": {
-          "$ref": "#/definitions/Deployment"
-        }
-      },
-      "title": "HistoryDeploymentResponse",
-      "required": [
-        "deployment"
       ]
     },
     "Job": {
@@ -2715,30 +2496,6 @@
         }
       },
       "title": "LogsCronJobResponse",
-      "required": [
-        "todo"
-      ]
-    },
-    "LogsDeploymentRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "LogsDeploymentRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "LogsDeploymentResponse": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "LogsDeploymentResponse",
       "required": [
         "todo"
       ]
@@ -3229,30 +2986,6 @@
         }
       },
       "title": "UndoCronJobResponse",
-      "required": [
-        "error"
-      ]
-    },
-    "UndoDeploymentRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "UndoDeploymentRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "UndoDeploymentResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "UndoDeploymentResponse",
       "required": [
         "error"
       ]
