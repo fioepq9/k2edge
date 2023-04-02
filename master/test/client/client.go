@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/imroc/req/v3"
+	"k2edge/master/internal/types"
 )
 
 type Client struct {
@@ -61,7 +62,7 @@ func NewClient(baseurl string, opt ...Option) *Client {
 			return nil
 		}).
 		SetResponseBodyTransformer(func(rawBody []byte, req *req.Request, resp *req.Response) (transformedBody []byte, err error) {
-			var r Response
+			var r types.Response
 			err = json.Unmarshal(rawBody, &r)
 			if err != nil {
 				return nil, err

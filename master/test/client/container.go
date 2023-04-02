@@ -10,6 +10,8 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/imroc/req/v3"
+
+	"k2edge/master/internal/types"
 )
 
 type containerAPI struct {
@@ -17,7 +19,7 @@ type containerAPI struct {
 	req *req.Client
 }
 
-func (c containerAPI) Exec(ctx context.Context, req ExecContainerRequest) (io.ReadWriteCloser, error) {
+func (c containerAPI) Exec(ctx context.Context, req  types.ExecContainerRequest) (io.ReadWriteCloser, error) {
 	vals := make(url.Values)
 	rv := reflect.ValueOf(req)
 	rt := rv.Type()
@@ -46,7 +48,7 @@ func (c containerAPI) Exec(ctx context.Context, req ExecContainerRequest) (io.Re
 	}, nil
 }
 
-func (c containerAPI) Attach(ctx context.Context, req AttachContainerRequest) (io.ReadWriteCloser, error) {
+func (c containerAPI) Attach(ctx context.Context, req types.AttachContainerRequest) (io.ReadWriteCloser, error) {
 	vals := make(url.Values)
 	rv := reflect.ValueOf(req)
 	rt := rv.Type()
@@ -73,7 +75,7 @@ func (c containerAPI) Attach(ctx context.Context, req AttachContainerRequest) (i
 	}, nil
 }
 
-func (c containerAPI) Logs(ctx context.Context, req LogsContainerRequest) (io.ReadCloser, error) {
+func (c containerAPI) Logs(ctx context.Context, req types.LogsContainerRequest) (io.ReadCloser, error) {
 	vals := make(url.Values)
 	rv := reflect.ValueOf(req)
 	rt := rv.Type()

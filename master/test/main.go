@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 	"k2edge/master/test/client"
+	"k2edge/master/internal/types"
 	"os"
 	"time"
 )
@@ -14,7 +15,7 @@ func main() {
 
 func testExecAttach() {
 	cli := client.NewClient("http://localhost:8080")
-	rw, err := cli.Container.Exec(context.Background(), client.ExecContainerRequest{
+	rw, err := cli.Container.Exec(context.Background(), types.ExecContainerRequest{
 		Namespace:    "default",
 		Name:         "ccc",
 		Tty:          true,
@@ -66,7 +67,7 @@ func testExecAttach() {
 func testLogs() {
 	cli := client.NewClient("http://localhost:8080")
 
-	rw, err := cli.Container.Logs(context.Background(), client.LogsContainerRequest{
+	rw, err := cli.Container.Logs(context.Background(), types.LogsContainerRequest{
 		Namespace: "default",
 		Name: "111",
 		Follow: true,

@@ -34,8 +34,6 @@ worker-run:
 master-api:
 	goctl api format --dir ./api
 	goctl api go -api ./api/master.api -dir ./master -style goZero --home ./template
-	sed s/"package types"/"package client"/g master/internal/types/types.go > master/test/client/types.go
-	sed s/"package types"/"package client"/g master/internal/types/types.go > master/client/types.go
 
 master-swagger-update: master.api
 	goctl api plugin -plugin goctl-swagger='swagger -filename swag.json --host 127.0.0.1:$(master-api-port)' -api ./tmp/master_noimport.api -dir ./master 
