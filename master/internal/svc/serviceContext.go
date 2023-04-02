@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	//"github.com/samber/lo"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 

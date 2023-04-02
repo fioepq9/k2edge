@@ -1,7 +1,10 @@
 package cli
 
 import (
+	"context"
 	"fmt"
+	"k2edge/master/client"
+	"k2edge/master/internal/types"
 
 	"github.com/urfave/cli"
 )
@@ -35,12 +38,18 @@ func namespaceCreate() *cli.Command {
 		},
 
 		Action: 
-		func(c *cli.Context) error { 
-			if !c.IsSet("name") {
+		func(ctx *cli.Context) error { 
+			if !ctx.IsSet("name") {
 				return fmt.Errorf("missing required parameter --name")
 			}
 
+			config := ctx.App.Metadata["config"].(map[string]string)
+			server := config["server"]
 
+			masterCli := client.NewClient(server)
+			masterCli.Namespace.NamespaceCreate(context.Background() , types.CreateNamespaceRequest{
+				Name: ctx.String("name"),
+			})
 			return nil
 		},
 	}
