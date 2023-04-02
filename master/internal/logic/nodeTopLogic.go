@@ -8,7 +8,7 @@ import (
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
 	"k2edge/worker/client"
-	masterCli "k2edge/master/internal/client"
+	masterCli "k2edge/master/client"
 
 	"github.com/samber/lo"
 	"github.com/zeromicro/go-zero/core/logx"
