@@ -68,7 +68,7 @@ func NewClient(baseurl string, opt ...Option) *Client {
 				return nil, err
 			}
 			if r.Code != 0 {
-				resp.Err = fmt.Errorf("code: %d, msg: %s", r.Code, r.Msg)
+				resp.Err = fmt.Errorf(r.Msg)
 				return nil, nil
 			}
 			transformedBody, err = json.Marshal(r.Data)

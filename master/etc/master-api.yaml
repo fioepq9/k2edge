@@ -8,7 +8,3 @@ Etcd:
   Endpoints:
     - outlg.xyz:2379
   DialTimeout: 5
-
-cli:
-  Server:
-    - https://0.0.0.0:8080

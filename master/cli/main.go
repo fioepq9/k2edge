@@ -1,4 +1,4 @@
-package cli
+package main
 
 import (
 	"context"
@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"k2edge/etcdutil"
-	"k2edge/master/internal/config"
 	"k2edge/master/internal/types"
+	cmd "k2edge/master/cli/command"
 
 	"github.com/samber/lo"
 	"github.com/urfave/cli"
@@ -17,20 +17,20 @@ import (
 )
 
 func main() {
-	var filePath string = "/etc/master-api.yaml"
+	var filePath string = "../etc/master-api.yaml"
 
 	app := cli.NewApp()
 	app.Before = func(ctx *cli.Context) error {
 		data, err := os.ReadFile(filePath)
 		if err != nil {
-			return fmt.Errorf("k2ectl get configuration failed")
+			return fmt.Errorf("k2e get configuration failed")
 		}
 		
-
-		var config config.Config
+		
+		config := new(config)
 		err = yaml.Unmarshal(data, &config)
 		if err != nil {
-			return fmt.Errorf("k2ectl get configuration failed")
+			return fmt.Errorf("k2e get configuration failed")
 		}
 
 		if len(config.Etcd.Endpoints) == 0 {
@@ -47,12 +47,11 @@ func main() {
 		return nil
 	}
 
-	app.Commands = []cli.Command{*namespace()}
+	app.Commands = []cli.Command{*cmd.Namespace() }
 
 	err := app.Run(os.Args)
     if err != nil {
         fmt.Println(err)
-        os.Exit(1)
     }
 }
 
@@ -79,4 +78,13 @@ func getServer(ctx context.Context, endPoint string) string {
 		}
 	}
 	panic("k2e initial: cannot found master node")
+}
+
+type config struct {
+	Etcd Etcd `yaml:"Etcd"`
+}
+
+type Etcd struct {	
+	Endpoints []string `yaml:"Endpoints"`
+	DialTimeout int		`yaml:"DialTimeout"`
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func namespace() *cli.Command {
+func Namespace() *cli.Command {
 	
 	return &cli.Command {
 		Name: "namespace",
@@ -25,8 +25,8 @@ func namespace() *cli.Command {
 // namespace create
 func namespaceCreate() *cli.Command {
 	return &cli.Command {
-		Name: "namespace",
-		Aliases: []string{"ns"},
+		Name: "create",
+		Aliases: []string{"create"},
 		Usage: "Use for creating namespace ",
 		UsageText: "Use 'namespace create <name>' to create namespace. \n",
 		Flags: []cli.Flag{
@@ -47,9 +47,14 @@ func namespaceCreate() *cli.Command {
 			server := config["server"]
 
 			masterCli := client.NewClient(server)
-			masterCli.Namespace.NamespaceCreate(context.Background() , types.CreateNamespaceRequest{
-				Name: ctx.String("name"),
+			name := ctx.String("name")
+			err := masterCli.Namespace.NamespaceCreate(context.Background() , types.CreateNamespaceRequest{
+				Name: name,
 			})
+			if err != nil {
+				return err
+			}
+			fmt.Printf("creat namespace '%s' success\n", name)
 			return nil
 		},
 	}
