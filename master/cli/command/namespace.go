@@ -43,7 +43,7 @@ func namespaceCreate() *cli.Command {
 		Name: "create",
 		Aliases: []string{"c"},
 		Usage: "Use for creating namespace ",
-		UsageText: "Use 'namespace create <name>' to create namespace. \n",
+		UsageText: "Use 'namespace create <name>' to create namespace",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "name",
@@ -80,7 +80,7 @@ func namespaceGet() *cli.Command {
 		Name: "get",
 		Aliases: []string{"g"},
 		Usage: "Use for get namespace info",
-		UsageText: "Use 'namespace get <name>' to get namespace. \n",
+		UsageText: "Use 'namespace get <name>' to get namespace",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "name",
@@ -122,7 +122,7 @@ func namespaceList() *cli.Command {
 		Name: "list",
 		Aliases: []string{"l"},
 		Usage: "Use for list namespace info",
-		UsageText: "Use 'namespace list <All>' to list namespace. \n",
+		UsageText: "Use 'namespace list <All>' to list namespace",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "all",
@@ -170,7 +170,7 @@ func namespaceDelete() *cli.Command {
 		Name: "delete",
 		Aliases: []string{"d"},
 		Usage: "Use for deleting namespace",
-		UsageText: "Use 'namespace delete <name>' to delete namespace. \n",
+		UsageText: "Use 'namespace delete <name>' to delete namespace",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "name",
@@ -200,3 +200,4 @@ func namespaceDelete() *cli.Command {
 		},
 	}
 }
+
