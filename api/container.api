@@ -29,6 +29,9 @@ service master-api{
 	
 	@handler LogsContainer
 	get /logs(LogsContainerRequest)
+	
+	@handler MigrateContainer
+	post /migrate(MigrateContainerRequest)
 }
 
 type CreateContainerRequest {
@@ -108,4 +111,10 @@ type LogsContainerRequest {
 	Follow     bool   `form:"follow,optional"`
 	Tail       string `form:"tail,optional"`
 	Details    bool   `form:"details,optional"`
+}
+
+type MigrateContainerRequest {
+	Namespace string `json:"namespace"`
+	Name      string `json:"name"`
+	Node      string `json:"node"`
 }

@@ -414,6 +414,31 @@
         ]
       }
     },
+    "/container/migrate": {
+      "post": {
+        "operationId": "MigrateContainer",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MigrateContainerRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "master-api"
+        ]
+      }
+    },
     "/cronjob/apply": {
       "post": {
         "operationId": "ApplyCronJob",
@@ -2538,6 +2563,26 @@
         "namespace",
         "kind",
         "name"
+      ]
+    },
+    "MigrateContainerRequest": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "node": {
+          "type": "string"
+        }
+      },
+      "title": "MigrateContainerRequest",
+      "required": [
+        "namespace",
+        "name",
+        "node"
       ]
     },
     "Namespace": {

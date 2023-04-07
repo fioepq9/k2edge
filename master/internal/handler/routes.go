@@ -63,6 +63,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/logs",
 				Handler: LogsContainerHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/migrate",
+				Handler: MigrateContainerHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/container"),
 	)
