@@ -35,7 +35,6 @@ func (l *ListNamespaceLogic) ListNamespace(req *types.ListNamespaceRequest) (res
 	for _, n := range *namespace {
 		if req.All || n.Status == "active" { // 判断是否需要返回所有数组
 			resp.Namespaces = append(resp.Namespaces, types.GetNamespaceResponse{
-				Kind:   n.Kind,
 				Name:   n.Name,
 				Status: n.Status,
 				Age:    time.Since(time.Unix(n.CreateTime, 0)).Round(time.Second).String(),

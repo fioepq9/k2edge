@@ -29,7 +29,6 @@ type GetNamespaceRequest {
 }
 
 type GetNamespaceResponse {
-	Kind   string `json:"kind"`
 	Name   string `json:"name"`
 	Status string `json:"status"`
 	Age    string `json:"age"`

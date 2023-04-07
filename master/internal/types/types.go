@@ -388,7 +388,6 @@ type GetNamespaceRequest struct {
 }
 
 type GetNamespaceResponse struct {
-	Kind   string `json:"kind"`
 	Name   string `json:"name"`
 	Status string `json:"status"`
 	Age    string `json:"age"`

@@ -16,16 +16,23 @@ func (n namespaceAPI) NamespaceCreate(ctx context.Context, req types.CreateNames
 	return n.req.Post("/namespace/create").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 
-func (n namespaceAPI) NamespaceGet(ctx context.Context, req types.GetNamespaceRequest) (resp *types.GetContainerResponse, err error) {
+func (n namespaceAPI) NamespaceGet(ctx context.Context, req types.GetNamespaceRequest) (resp *types.GetNamespaceResponse, err error) {
 	err = n.req.
 		Get("/namespace/get").
+		AddQueryParam("name", req.Name).
 		Do(ctx).Into(&resp)
 	return
 }
 
-func (n namespaceAPI) NamespaceList(ctx context.Context, req types.ListNamespaceRequest) (resp *types.ListContainerResponse, err error) {
+func (n namespaceAPI) NamespaceList(ctx context.Context, req types.ListNamespaceRequest) (resp *types.ListNamespaceResponse, err error) {
+	all := "false"
+	if req.All {
+		all = "true"
+	}
+	
 	err = n.req.
 		Get("/namespace/list").
+		AddQueryParam("all", all).
 		Do(ctx).Into(&resp)
 	return
 }

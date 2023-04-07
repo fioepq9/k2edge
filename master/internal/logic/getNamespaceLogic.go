@@ -36,7 +36,6 @@ func (l *GetNamespaceLogic) GetNamespace(req *types.GetNamespaceRequest) (resp *
 	resp = new(types.GetNamespaceResponse)
 	for _, n := range *namespace {
 		if n.Name == req.Name {
-			resp.Kind = n.Kind
 			resp.Name = n.Name
 			resp.Status = n.Status
 			resp.Age = time.Since(time.Unix(n.CreateTime, 0)).Round(time.Second).String()

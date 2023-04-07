@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"os"
 	cmd "k2edge/master/cli/command"
+	"os"
 
+	"github.com/pterm/pterm"
 	"github.com/urfave/cli"
 
 	"gopkg.in/yaml.v2"
@@ -41,11 +42,11 @@ func main() {
 		return nil
 	}
 
-	app.Commands = []cli.Command{*cmd.Namespace() }
+	app.Commands = []cli.Command{*cmd.Namespace()}
 
 	err := app.Run(os.Args)
     if err != nil {
-        fmt.Println(err)
+        pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgRed)).Printfln(err.Error())
     }
 }
 
