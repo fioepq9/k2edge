@@ -8,6 +8,9 @@ import (
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
 
+	dtypes "github.com/docker/docker/api/types"
+	"github.com/docker/docker/client"
+	"github.com/samber/lo"
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/disk"
 	"github.com/shirou/gopsutil/v3/mem"
@@ -30,6 +33,18 @@ func NewHostTopLogic(ctx context.Context, svcCtx *svc.ServiceContext) *HostTopLo
 
 func (l *HostTopLogic) HostTop() (resp *types.NodeTopResponse, err error) {
 	resp = new(types.NodeTopResponse)
+	d, err := client.NewClientWithOpts(client.FromEnv)
+	if err != nil {
+		return nil, err
+	}
+	// Images
+	imagesSumary, err := d.ImageList(l.ctx, dtypes.ImageListOptions{All: true})
+	if err != nil {
+		return nil, err
+	}
+	resp.Images = lo.FlatMap(imagesSumary, func(img dtypes.ImageSummary, _ int) []string {
+		return img.RepoTags
+	})
 	// CPU
 	cpuTimeSet, err := cpu.TimesWithContext(l.ctx, false)
 	if err != nil {
@@ -70,3 +85,4 @@ func (l *HostTopLogic) HostTop() (resp *types.NodeTopResponse, err error) {
 
 	return resp, nil
 }
+

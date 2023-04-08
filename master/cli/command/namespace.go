@@ -64,7 +64,7 @@ func namespaceCreate() cli.Command {
 				return err
 			}
 			
-			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("create namespace '%s' success", name)
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("create namespace '%s' successfully", name)
 			return nil
 		},
 	}
@@ -183,7 +183,7 @@ func namespaceDelete() cli.Command {
 				return err
 			}
 
-			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("delete namespace '%s' success", name)
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("delete namespace '%s' successfully", name)
 			return nil
 		},
 	}

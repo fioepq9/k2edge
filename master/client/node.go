@@ -38,19 +38,19 @@ func (n nodeAPI) Top(ctx context.Context, req types.NodeTopRequest) (resp *types
 	return
 }
 
-func (n nodeAPI) cordon(ctx context.Context, req types.CordonRequest) error {
+func (n nodeAPI) Cordon(ctx context.Context, req types.CordonRequest) error {
 	return n.req.Post("/node/cordon").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 
-func (n nodeAPI) uncordon(ctx context.Context, req types.UncordonRequest) error {
+func (n nodeAPI) Uncordon(ctx context.Context, req types.UncordonRequest) error {
 	return n.req.Post("/node/uncordon").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 
-func (n nodeAPI) drain(ctx context.Context, req types.DrainRequest) error {
+func (n nodeAPI) Drain(ctx context.Context, req types.DrainRequest) error {
 	return n.req.Post("/node/drain").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 
-func (n nodeAPI) delete(ctx context.Context, req types. DeleteRequest) error {
+func (n nodeAPI) Delete(ctx context.Context, req types. DeleteRequest) error {
 	return n.req.Post("/node/delete").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 

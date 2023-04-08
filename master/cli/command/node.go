@@ -32,16 +32,20 @@ func Node() cli.Command {
 			nodeCreate(),
 			nodeList(),
 			nodeTop(),
+			nodeCordon(),
+			nodeUncordon(),
+			nodeDrain(),
+			nodeDelete(),
 		},
 	}
 }
 
-// namespace register
+// node register
 func nodeCreate() cli.Command {
 	return cli.Command{
 		Name:        "create",
 		Usage:       "Use for adding node to k2edge",
-		Description: "Use 'node create --name=<name> ...' to create namespace",
+		Description: "Use 'node create --name=<name> ...' to create node",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "name",
@@ -85,23 +89,23 @@ func nodeCreate() cli.Command {
 				return err
 			}
 
-			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("create namespace '%s' success", name)
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("create node '%s' successfully", name)
 			return nil
 		},
 	}
 }
 
-// namespace list
+// node list
 func nodeList() cli.Command {
 	return cli.Command{
 		Name:        "list",
 		Aliases:     []string{"l"},
 		Usage:       "Use for listing node",
-		Description: "Use 'namespace list [usable]' to list node",
+		Description: "Use 'node list [usable]' to list node",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
 				Name:  "usable",
-				Usage: "only show good namespace(option)",
+				Usage: "only show good node(option)",
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
@@ -145,12 +149,12 @@ func nodeList() cli.Command {
 	}
 }
 
-// namespace top
+// node top
 func nodeTop() cli.Command {
 	return cli.Command{
 		Name:        "top",
 		Usage:       "Use for showing node's top",
-		Description: "Use 'namespace top --name=<name>' to show node's top",
+		Description: "Use 'node top --name=<name>' to show node's top",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "name",
@@ -191,6 +195,146 @@ func nodeTop() cli.Command {
 			info += color.BlueString("DiskTotal:        ") + fmt.Sprintf("%d\n", resp.DiskTotal)
 
 			fmt.Println(info)
+			return nil
+		},
+	}
+}
+
+// node cordon
+func nodeCordon() cli.Command {
+	return cli.Command{
+		Name:        "cordon",
+		Usage:       "Used to set whether the node is unschedulable",
+		Description: "Use 'node cordon --name=<name>' to set node to be unschedulable",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "name",
+				Usage:    "the name of node",
+				Required: true,
+			},
+		},
+		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
+			return fmt.Errorf(err.Error())
+		},
+
+		Action: func(ctx *cli.Context) error {
+			server := ctx.App.Metadata["config-server"].(string)
+			masterCli := client.NewClient(server)
+
+			name := ctx.String("name")
+			err := masterCli.Node.Cordon(context.Background(), types.CordonRequest{
+				Name: name,
+			})
+
+			if err != nil {
+				return err
+			}
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("set node '%s' unschedulable successfully", name)
+			return nil
+		},
+	}
+}
+
+// node cordon
+func nodeUncordon() cli.Command {
+	return cli.Command{
+		Name:        "uncordon",
+		Usage:       "Used to set whether the node is schedulable",
+		Description: "Use 'node uncordon --name=<name>' to set node to be schedulable",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "name",
+				Usage:    "the name of node",
+				Required: true,
+			},
+		},
+		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
+			return fmt.Errorf(err.Error())
+		},
+
+		Action: func(ctx *cli.Context) error {
+			server := ctx.App.Metadata["config-server"].(string)
+			masterCli := client.NewClient(server)
+
+			name := ctx.String("name")
+			err := masterCli.Node.Uncordon(context.Background(), types.UncordonRequest{
+				Name: name,
+			})
+
+			if err != nil {
+				return err
+			}
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("set node '%s' schedulable successfully", name)
+			return nil
+		},
+	}
+}
+
+// node cordon
+func nodeDrain() cli.Command {
+	return cli.Command{
+		Name:        "drain",
+		Usage:       "Used to set whether the node is unschedulable and migrate node",
+		Description: "Use 'node drain --name=<name>' to drain node",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "name",
+				Usage:    "the name of node",
+				Required: true,
+			},
+		},
+		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
+			return fmt.Errorf(err.Error())
+		},
+
+		Action: func(ctx *cli.Context) error {
+			server := ctx.App.Metadata["config-server"].(string)
+			masterCli := client.NewClient(server)
+
+			name := ctx.String("name")
+			err := masterCli.Node.Drain(context.Background(), types.DrainRequest{
+				Name: name,
+			})
+
+			if err != nil {
+				return err
+			}
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("drain node '%s' successfully", name)
+			return nil
+		},
+	}
+}
+
+// node delete
+func nodeDelete() cli.Command {
+	return cli.Command{
+		Name:        "delete",
+		Usage:       "Used to delete the node",
+		Description: "Use 'node delete --name=<name>' to delete node",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "name",
+				Usage:    "the name of node",
+				Required: true,
+			},
+		},
+		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
+			return fmt.Errorf(err.Error())
+		},
+
+		Action: func(ctx *cli.Context) error {
+			server := ctx.App.Metadata["config-server"].(string)
+			masterCli := client.NewClient(server)
+
+			name := ctx.String("name")
+			err := masterCli.Node.Delete(context.Background(), types.DeleteRequest{
+				Name: name,
+			})
+
+			if err != nil {
+				return err
+			}
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("delete node '%s' successfully", name)
 			return nil
 		},
 	}
