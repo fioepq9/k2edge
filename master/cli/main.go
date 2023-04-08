@@ -57,7 +57,7 @@ func main() {
 	app.Name = "k2e-ctl"
 	app.Version = "v1.0.1"
 	app.Usage = "a control panel of k2edge"
-	app.UsageText = "Use for managing K2edge's resource"
+	app.Description = "Use for managing K2edge's resource"
 	app.Before = func(ctx *cli.Context) error {
 		data, err := os.ReadFile(filePath)
 		if err != nil {
@@ -81,6 +81,10 @@ func main() {
 		return nil
 	}
 
+	app.CommandNotFound = func(ctx *cli.Context, s string) {
+		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgRed)).Printfln("cannot find the command '%s', input -h for help", s)
+	}
+
 	app.Commands = []cli.Command{*cmd.Namespace()}
 
 	err := app.Run(os.Args)
@@ -102,9 +106,7 @@ var AppHelpTemplate =
 `{{blue "NAME:"}}
    {{.Name}}{{if .Usage}} - {{.Usage}}{{end}}
 {{blue "USAGE:"}}
-   {{if .UsageText}}{{.UsageText}}{{else}}{{.HelpName}} {{if .VisibleFlags}}[global options]{{end}}{{if .Commands}} command [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}{{if .Description}}
-{{blue "DESCRIPTION:"}}
-   {{.Description}}{{end}}{{if len .Authors}}
+   {{if .Description}}{{.Description}}{{else}}{{.HelpName}} {{if .VisibleFlags}}[global options]{{end}}{{if .Commands}} command [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}{{if len .Authors}}
 {{blue "AUTHOR"}}{{with $length := len .Authors}}{{if ne 1 $length}}{{blue "S"}}{{end}}{{end}}:
    {{range $index, $author := .Authors}}{{if $index}}
    {{end}}{{$author}}{{end}}{{end}}{{if .VisibleCommands}}{{if .Copyright}}
@@ -127,9 +129,9 @@ var AppHelpTemplate =
 
 var SubcommandHelpTemplate = 
 `{{blue "NAME:"}}
-   {{.HelpName}} - {{if .Description}}{{.Description}}{{else}}{{.Usage}}{{end}}
+   {{.HelpName}} - {{.Usage}}
 {{blue "USAGE:"}}
-   {{if .UsageText}}{{.UsageText}}{{else}}{{.HelpName}} command{{if .VisibleFlags}} [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}
+   {{if .Description}}{{.Description}}{{else}}{{.HelpName}}{{if .VisibleFlags}} [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}
 
 {{blue "COMMANDS:"}}{{range .VisibleCategories}}{{if .Name}}
 
@@ -146,11 +148,9 @@ var CommandHelpTemplate =
 `{{blue "NAME:"}}
    {{.HelpName}} - {{.Usage}}
 {{blue "USAGE:"}}
-   {{if .UsageText}}{{.UsageText}}{{else}}{{.HelpName}}{{if .VisibleFlags}} [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}{{if .Category}}
+   {{if .Description}}{{.Description}}{{else}}{{.HelpName}}{{if .VisibleFlags}} [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}{{if .Category}}
 {{blue "CATEGORY:"}}
-   {{.Category}}{{end}}{{if .Description}}
-{{blue "DESCRIPTION:"}}
-   {{.Description}}{{end}}{{if .VisibleFlags}}
+   {{.Category}}{{end}}{{if .VisibleFlags}}
 
 {{blue "OPTIONS:"}}
    {{range .VisibleFlags}}{{cyanFlag .}}

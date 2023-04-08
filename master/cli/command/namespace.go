@@ -12,12 +12,11 @@ import (
 )
 
 func Namespace() *cli.Command {
-
-	cli := &cli.Command {
+	return &cli.Command {
 		Name: "namespace",
 		Aliases: []string{"ns"},
 		Usage: "Use for namespace management",
-		UsageText: "Use 'namespace <command>' to manage namespace. \nUse 'namespace namespace help' for a list of global command-line options.",
+		Description: "Use 'namespace <command>' to manage namespace",
 		Before: func(ctx *cli.Context) error {
 			etcd := ctx.App.Metadata["config-etcd"].(string)
 			server := getServer(etcd)
@@ -34,16 +33,14 @@ func Namespace() *cli.Command {
 			*namespaceDelete(),
 		},
 	}
-	return cli
 }
 
 // namespace create
 func namespaceCreate() *cli.Command {
 	return &cli.Command {
 		Name: "create",
-		Aliases: []string{"c"},
 		Usage: "Use for creating namespace ",
-		UsageText: "Use 'namespace create <name>' to create namespace",
+		Description: "Use 'namespace create --name=<name>' to create namespace",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "name",
@@ -58,7 +55,7 @@ func namespaceCreate() *cli.Command {
 		Action: 
 		func(ctx *cli.Context) error { 
 			server := ctx.App.Metadata["config-server"].(string)
-
+			ctx.Args()
 			masterCli := client.NewClient(server)
 			name := ctx.String("name")
 			err := masterCli.Namespace.NamespaceCreate(context.Background() , types.CreateNamespaceRequest{
@@ -78,9 +75,8 @@ func namespaceCreate() *cli.Command {
 func namespaceGet() *cli.Command {
 	return &cli.Command {
 		Name: "get",
-		Aliases: []string{"g"},
 		Usage: "Use for get namespace info",
-		UsageText: "Use 'namespace get <name>' to get namespace",
+		Description: "Use 'namespace get --name=<name>' to get namespace",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "name",
@@ -122,7 +118,7 @@ func namespaceList() *cli.Command {
 		Name: "list",
 		Aliases: []string{"l"},
 		Usage: "Use for list namespace info",
-		UsageText: "Use 'namespace list <All>' to list namespace",
+		Description: "Use 'namespace list --all=<All>' to list namespace",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "all",
@@ -168,9 +164,8 @@ func namespaceList() *cli.Command {
 func namespaceDelete() *cli.Command {
 	return &cli.Command {
 		Name: "delete",
-		Aliases: []string{"d"},
 		Usage: "Use for deleting namespace",
-		UsageText: "Use 'namespace delete <name>' to delete namespace",
+		Description: "Use 'namespace delete --name=<name>' to delete namespace",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "name",

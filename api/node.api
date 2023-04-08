@@ -31,7 +31,8 @@ service master-api{
 	@handler DeleteNode
 	post /delete(DeleteRequest)
 	
-	@handler HostTop
+	//本机任务，接口不对外开放
+	@handler HostTop 
 	get /hostTop returns (NodeTopResponse)
 }
 
