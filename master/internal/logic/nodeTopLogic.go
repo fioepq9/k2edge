@@ -37,11 +37,11 @@ func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopRe
 	}
 
 	if !found {
-		return nil, fmt.Errorf("node %s does not exists", req.Name)
+		return nil, fmt.Errorf("node '%s' does not exists", req.Name)
 	}
 
 	if !node.Status.Working {
-		return nil, fmt.Errorf("node %s is not active", req.Name)
+		return nil, fmt.Errorf("node '%s' is not active", req.Name)
 	}
 
 	// 结点角色只有master

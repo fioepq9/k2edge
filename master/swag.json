@@ -2652,7 +2652,7 @@
         "name": {
           "type": "string"
         },
-        "register_name": {
+        "register_time": {
           "type": "integer",
           "format": "int64"
         },
@@ -2669,7 +2669,7 @@
       "title": "NodeList",
       "required": [
         "name",
-        "register_name",
+        "register_time",
         "status",
         "roles",
         "url"

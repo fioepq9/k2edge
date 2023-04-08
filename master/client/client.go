@@ -63,6 +63,9 @@ func NewClient(baseurl string, opt ...Option) *Client {
 		}).
 		SetResponseBodyTransformer(func(rawBody []byte, req *req.Request, resp *req.Response) (transformedBody []byte, err error) {
 			var r types.Response
+			if resp.StatusCode == 500 {
+				return nil, fmt.Errorf("server error, url is %s ", req.URL)
+			}
 			err = json.Unmarshal(rawBody, &r)
 			if err != nil {
 				return nil, err

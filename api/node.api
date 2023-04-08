@@ -32,7 +32,7 @@ service master-api{
 	post /delete(DeleteRequest)
 	
 	//本机任务，接口不对外开放
-	@handler HostTop 
+	@handler HostTop
 	get /hostTop returns (NodeTopResponse)
 }
 
@@ -52,7 +52,7 @@ type NodeListResponse {
 
 type NodeList {
 	Name         string  `json:"name"`
-	RegisterTime int64   `json:"register_name"`
+	RegisterTime int64   `json:"register_time"`
 	Status       string  `json:"status"`
 	Roles        string  `json:"roles"`
 	URL          NodeURL `json:"url"`

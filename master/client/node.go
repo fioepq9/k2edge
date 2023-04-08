@@ -30,7 +30,7 @@ func (n nodeAPI) List(ctx context.Context, req types.NodeListRequest) (resp *typ
 	return
 }
 
-func (n nodeAPI) Top(ctx context.Context, req types.NodeTopRequest) (resp *types.NodeListResponse, err error) {
+func (n nodeAPI) Top(ctx context.Context, req types.NodeTopRequest) (resp *types.NodeTopResponse, err error) {
 	err = n.req.
 		Get("/node/top").
 		AddQueryParam("name", req.Name).

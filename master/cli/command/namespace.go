@@ -11,8 +11,8 @@ import (
 	"github.com/urfave/cli"
 )
 
-func Namespace() *cli.Command {
-	return &cli.Command {
+func Namespace() cli.Command {
+	return cli.Command {
 		Name: "namespace",
 		Aliases: []string{"ns"},
 		Usage: "Use for namespace management",
@@ -27,17 +27,17 @@ func Namespace() *cli.Command {
 			return nil
 		},
 		Subcommands: cli.Commands{
-			*namespaceCreate(),
-			*namespaceGet(),
-			*namespaceList(),
-			*namespaceDelete(),
+			namespaceCreate(),
+			namespaceGet(),
+			namespaceList(),
+			namespaceDelete(),
 		},
 	}
 }
 
 // namespace create
-func namespaceCreate() *cli.Command {
-	return &cli.Command {
+func namespaceCreate() cli.Command {
+	return cli.Command {
 		Name: "create",
 		Usage: "Use for creating namespace ",
 		Description: "Use 'namespace create --name=<name>' to create namespace",
@@ -71,8 +71,8 @@ func namespaceCreate() *cli.Command {
 }
 
 // namespace get
-func namespaceGet() *cli.Command {
-	return &cli.Command {
+func namespaceGet() cli.Command {
+	return cli.Command {
 		Name: "get",
 		Usage: "Use for get namespace info",
 		Description: "Use 'namespace get --name=<name>' to get namespace",
@@ -112,17 +112,16 @@ func namespaceGet() *cli.Command {
 }
 
 // namespace list
-func namespaceList() *cli.Command {
-	return &cli.Command {
+func namespaceList() cli.Command {
+	return cli.Command {
 		Name: "list",
 		Aliases: []string{"l"},
 		Usage: "Use for list namespace info",
-		Description: "Use 'namespace list --all=<All>' to list namespace",
+		Description: "Use 'namespace list [--usable]' to list namespace",
 		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:  "all",
-				Usage: "slow all namespace(option)",
-				Value: "true",
+			&cli.BoolFlag{
+				Name:  "usable",
+				Usage: "only show good namespace(option)",
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
@@ -134,14 +133,9 @@ func namespaceList() *cli.Command {
 			server := ctx.App.Metadata["config-server"].(string)
 			masterCli := client.NewClient(server)
 
-			req := types.ListNamespaceRequest{}
-			if ctx.String("all") == "true" {
-				req.All = true
-			} else {
-				req.All = false
-			}
-
-			resp, err := masterCli.Namespace.NamespaceList(context.Background(), req)
+			resp, err := masterCli.Namespace.NamespaceList(context.Background(), types.ListNamespaceRequest{
+				All: !ctx.Bool("usable"),
+			})
 			if err != nil {
 				return err
 			}
@@ -160,8 +154,8 @@ func namespaceList() *cli.Command {
 }
 
 // namespace delete
-func namespaceDelete() *cli.Command {
-	return &cli.Command {
+func namespaceDelete() cli.Command {
+	return cli.Command {
 		Name: "delete",
 		Usage: "Use for deleting namespace",
 		Description: "Use 'namespace delete --name=<name>' to delete namespace",

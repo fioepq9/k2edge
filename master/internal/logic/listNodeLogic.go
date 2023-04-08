@@ -26,7 +26,7 @@ func NewListNodeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListNode
 
 func (l *ListNodeLogic) ListNode(req *types.NodeListRequest) (resp *types.NodeListResponse, err error) {
 	// 获取node信息
-	nodes, err := etcdutil.GetOne[types.Node](l.svcCtx.Etcd, l.ctx, "/node/" + etcdutil.SystemNamespace)
+	nodes, err := etcdutil.GetOne[types.Node](l.svcCtx.Etcd, l.ctx, "/node/"+etcdutil.SystemNamespace)
 
 	if err != nil {
 		return nil, err
@@ -37,11 +37,11 @@ func (l *ListNodeLogic) ListNode(req *types.NodeListRequest) (resp *types.NodeLi
 		if !req.All && !node.Status.Working {
 			continue
 		}
-		
+
 		n := types.NodeList{
-			Name: node.Metadata.Name,
+			Name:         node.Metadata.Name,
 			RegisterTime: node.RegisterTime,
-			URL: node.BaseURL,
+			URL:          node.BaseURL,
 		}
 
 		if !node.Status.Working {
@@ -52,11 +52,10 @@ func (l *ListNodeLogic) ListNode(req *types.NodeListRequest) (resp *types.NodeLi
 			n.Status = "active"
 		}
 
-		
-		if len(node.Roles) == 1 {
+		if len(node.Roles) == 2 {
+			n.Roles = "master/worker"
+		} else if len(node.Roles) == 1 {
 			n.Roles = node.Roles[0]
-		} else if len(node.Roles) == 2 {
-			n.Roles = node.Roles[0] + "/" + node.Roles[1]
 		}
 		resp.NodeList = append(resp.NodeList, n)
 	}

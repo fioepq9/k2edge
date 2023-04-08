@@ -86,8 +86,8 @@ func main() {
 	}
 
 	app.Commands = []cli.Command{
-		*cmd.Namespace(),
-		*cmd.Node(),
+		cmd.Namespace(),
+		cmd.Node(),
 	}
 
 	err := app.Run(os.Args)

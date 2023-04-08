@@ -427,7 +427,7 @@ type NodeListResponse struct {
 
 type NodeList struct {
 	Name         string  `json:"name"`
-	RegisterTime int64   `json:"register_name"`
+	RegisterTime int64   `json:"register_time"`
 	Status       string  `json:"status"`
 	Roles        string  `json:"roles"`
 	URL          NodeURL `json:"url"`
