@@ -55,7 +55,6 @@ func namespaceCreate() *cli.Command {
 		Action: 
 		func(ctx *cli.Context) error { 
 			server := ctx.App.Metadata["config-server"].(string)
-			ctx.Args()
 			masterCli := client.NewClient(server)
 			name := ctx.String("name")
 			err := masterCli.Namespace.NamespaceCreate(context.Background() , types.CreateNamespaceRequest{

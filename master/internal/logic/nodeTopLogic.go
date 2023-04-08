@@ -48,7 +48,7 @@ func (l *NodeTopLogic) NodeTop(req *types.NodeTopRequest) (resp *types.NodeTopRe
 	resp = new(types.NodeTopResponse)
 	if len(node.Roles) == 1 && lo.Contains(node.Roles, "master") {
 		cli := masterCli.NewClient(node.BaseURL.MasterURL)
-		topInfo, err := cli.Node.Top(l.ctx)
+		topInfo, err := cli.Node.HostTop(l.ctx)
 		if err != nil {
 			return nil, err
 		}

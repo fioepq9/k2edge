@@ -1,6 +1,15 @@
 package cli
 
-import "github.com/urfave/cli"
+import (
+	"context"
+	"fmt"
+	"k2edge/master/client"
+	"k2edge/master/internal/types"
+
+	"github.com/pterm/pterm"
+	"github.com/samber/lo"
+	"github.com/urfave/cli"
+)
 
 func Node() *cli.Command {
 	return &cli.Command {
@@ -17,11 +26,12 @@ func Node() *cli.Command {
 			return nil
 		},
 		Subcommands: cli.Commands{
+			*nodeCreate(),
 		},
 	}
 }
 
-// namespace create
+// namespace register
 func nodeCreate() *cli.Command {
 	return &cli.Command {
 		Name: "create",
@@ -30,8 +40,21 @@ func nodeCreate() *cli.Command {
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "name",
-				Usage: "the name of namespace",
+				Usage: "the name of node, no repetition allowed",
 				Required: true,
+			},
+			&cli.StringSliceFlag{
+				Name: "roles",
+				Usage: "the roles of node, master/worker",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name: "masterurl",
+				Usage: "the url of master",
+			},
+			&cli.StringFlag{
+				Name: "workerurl",
+				Usage: "the url of worker",
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
@@ -41,11 +64,25 @@ func nodeCreate() *cli.Command {
 		Action: 
 		func(ctx *cli.Context) error { 
 			server := ctx.App.Metadata["config-server"].(string)
-			ctx.Args()
 			masterCli := client.NewClient(server)
 			name := ctx.String("name")
-			err := masterCli.Namespace.NamespaceCreate(context.Background() , types.CreateNamespaceRequest{
+			roles := ctx.StringSlice("roles")
+			masterurl := ctx.String("masterurl")
+			workerurl := ctx.String("workerurl")
+			if lo.Contains(roles, "master") && masterurl == "" {
+				return fmt.Errorf("masterurl is empty")
+			}
+			if lo.Contains(roles, "worker") && workerurl == "" {
+				return fmt.Errorf("workerurl is empty")
+			}
+
+			err := masterCli.Node.Register(context.Background() , &types.RegisterRequest{
 				Name: name,
+				Roles: roles,
+				BaseURL: types.NodeURL{
+					MasterURL: workerurl,
+					WorkerURL: masterurl,
+				},
 			})
 			if err != nil {
 				return err

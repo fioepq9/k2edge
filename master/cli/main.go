@@ -22,14 +22,14 @@ func main() {
 		funcMap := template.FuncMap{
 			"sprint": fmt.Sprint,
 			"join":   strings.Join,
-			"blue":   color.BlueString,
-			"cyan":   color.CyanString,
+			"blue":   color.HiBlueString,
+			"cyan":   color.HiCyanString,
 			"cyanFlag": func (flag cli.Flag) (string) {
 				str := strings.SplitN(flag.String(), "\t", 2) 
 				if len(str) == 1 {
-					return color.CyanString(str[0])
+					return color.HiCyanString(str[0])
 				}
-				return color.CyanString(str[0]) + "\t" + str[1]
+				return color.HiCyanString(str[0]) + "\t" + str[1]
 			},
 		}
 		for key, value := range customFuncs {
@@ -85,7 +85,10 @@ func main() {
 		pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgRed)).Printfln("cannot find the command '%s', input -h for help", s)
 	}
 
-	app.Commands = []cli.Command{*cmd.Namespace()}
+	app.Commands = []cli.Command{
+		*cmd.Namespace(),
+		*cmd.Node(),
+	}
 
 	err := app.Run(os.Args)
 	if err != nil {
