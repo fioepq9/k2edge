@@ -13,7 +13,7 @@ type nodeAPI struct {
 	req *req.Client
 }
 
-func (n nodeAPI) Register(ctx context.Context, req *types.RegisterRequest) error {
+func (n nodeAPI) Register(ctx context.Context, req types.RegisterRequest) error {
 	return n.req.Post("/node/register").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 

@@ -336,7 +336,7 @@
           {
             "name": "namespace",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           }
         ],
@@ -2412,10 +2412,7 @@
           "type": "string"
         }
       },
-      "title": "ListContainerRequest",
-      "required": [
-        "namespace"
-      ]
+      "title": "ListContainerRequest"
     },
     "ListContainerResponse": {
       "type": "object",

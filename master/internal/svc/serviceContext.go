@@ -59,6 +59,6 @@ func (s *ServiceContext) Worker(container *types.Container) (*types.Node, error)
 	if len(*nodes) == 0 {
 		return nil, fmt.Errorf("not worker can run")
 	}
-	fmt.Println(&(*nodes)[0])
+
 	return  &(*nodes)[0], nil
 }

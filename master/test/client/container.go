@@ -42,7 +42,6 @@ func (c containerAPI) Exec(ctx context.Context, req  types.ExecContainerRequest)
 		return nil, err
 	}
 
-	fmt.Println(req.Cmd)
 	return &websocketSession{
 		ws: conn,
 	}, nil

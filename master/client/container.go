@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"k2edge/master/internal/types"
 	"net/url"
 	"reflect"
 	"strings"
@@ -17,61 +18,32 @@ type containerAPI struct {
 	req *req.Client
 }
 
-func (c containerAPI) Create(ctx context.Context, req CreateContainerRequest) (resp *CreateContainerResponse, err error) {
+func (c containerAPI) Create(ctx context.Context, req types.CreateContainerRequest) error {
+	return c.req.Post("/container/create").SetBodyJsonMarshal(req).Do(ctx).Err
+}
+
+func (c containerAPI) Get(ctx context.Context, req types.GetContainerRequest) (resp *types.GetContainerResponse, err error) {
 	err = c.req.
-		Post("/container/create").
-		SetBodyJsonMarshal(req).
+		Get("/container/get").
+		AddQueryParam("namespace", req.Namespace).
+		AddQueryParam("name", req.Name).
 		Do(ctx).Into(&resp)
 	return
 }
 
-func (c containerAPI) Remove(ctx context.Context, req RemoveContainerRequest) error {
-	return c.req.Post("/container/remove").SetBodyJsonMarshal(req).Do(ctx).Err
-}
-
-func (c containerAPI) Stop(ctx context.Context, req StopContainerRequest) error {
-	return c.req.Post("/container/stop").SetBodyJsonMarshal(req).Do(ctx).Err
-}
-
-func (c containerAPI) Start(ctx context.Context, req StartContainerRequest) error {
-	return c.req.Post("/container/start").SetBodyJsonMarshal(req).Do(ctx).Err
-}
-
-func (c containerAPI) Status(ctx context.Context, req ContainerStatusRequest) (resp *ContainerStatusResponse, err error) {
+func (c containerAPI) List(ctx context.Context, req types.ListContainerRequest) (resp *types.ListContainerResponse, err error) {
 	err = c.req.
-		Get("/container/status").
-		AddQueryParam("id", req.ID).
+		Get("/container/list").
+		AddQueryParam("namespace", req.Namespace).
 		Do(ctx).Into(&resp)
 	return
 }
 
-func (c containerAPI) List(ctx context.Context, req ListContainersRequest) (resp *ListContainersResponse, err error) {
-	resp = new(ListContainersResponse)
-	params := make(map[string]interface{})
-	rv := reflect.ValueOf(req)
-	rt := rv.Type()
-	for i := 0; i < rv.NumField(); i++ {
-		tagslice := strings.Split(rt.Field(i).Tag.Get("form"), ",")
-		if len(tagslice) == 0 {
-			continue
-		}
-		tagName := tagslice[0]
-		if !rv.Field(i).IsZero() {
-			params[tagName] = rv.Field(i).Interface()
-		}
-	}
-	cli := c.req.Get("/container/list")
-	for k, v := range params {
-		cli = cli.AddQueryParam(k, fmt.Sprint(v))
-	}
-	err = cli.Do(ctx).Into(&resp)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+func (c containerAPI) Delete(ctx context.Context, req types.DeleteContainerRequest) error {
+	return c.req.Post("/container/delete").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 
-func (c containerAPI) Exec(ctx context.Context, req ExecRequest) (io.ReadWriteCloser, error) {
+func (c containerAPI) Exec(ctx context.Context, req  types.ExecContainerRequest) (io.ReadWriteCloser, error) {
 	vals := make(url.Values)
 	rv := reflect.ValueOf(req)
 	rt := rv.Type()
@@ -85,7 +57,6 @@ func (c containerAPI) Exec(ctx context.Context, req ExecRequest) (io.ReadWriteCl
 			vals.Add(tagName, fmt.Sprint(rv.Field(i).Interface()))
 		}
 	}
-	
 	conn, _, err := websocket.DefaultDialer.DialContext(
 		ctx,
 		fmt.Sprintf("%s/container/exec?%s", c.opt.WebsocketBaseURL(), vals.Encode()),
@@ -94,12 +65,13 @@ func (c containerAPI) Exec(ctx context.Context, req ExecRequest) (io.ReadWriteCl
 	if err != nil {
 		return nil, err
 	}
+
 	return &websocketSession{
 		ws: conn,
 	}, nil
 }
 
-func (c containerAPI) Attach(ctx context.Context, req AttachRequest) (io.ReadWriteCloser, error) {
+func (c containerAPI) Attach(ctx context.Context, req types.AttachContainerRequest) (io.ReadWriteCloser, error) {
 	vals := make(url.Values)
 	rv := reflect.ValueOf(req)
 	rt := rv.Type()
@@ -126,7 +98,7 @@ func (c containerAPI) Attach(ctx context.Context, req AttachRequest) (io.ReadWri
 	}, nil
 }
 
-func (c containerAPI) Logs(ctx context.Context, req LogsRequest) (io.ReadCloser, error) {
+func (c containerAPI) Logs(ctx context.Context, req types.LogsContainerRequest) (io.ReadCloser, error) {
 	vals := make(url.Values)
 	rv := reflect.ValueOf(req)
 	rt := rv.Type()
@@ -152,6 +124,11 @@ func (c containerAPI) Logs(ctx context.Context, req LogsRequest) (io.ReadCloser,
 		ws: conn,
 	}, nil
 }
+
+func (c containerAPI) Migrate(ctx context.Context, req types.MigrateContainerRequest) error {
+	return c.req.Post("/container/migrate").SetBodyJsonMarshal(req).Do(ctx).Err
+}
+
 
 type websocketSession struct {
 	ws *websocket.Conn

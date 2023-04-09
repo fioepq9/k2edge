@@ -30,6 +30,7 @@ service master-api{
 	@handler LogsContainer
 	get /logs(LogsContainerRequest)
 	
+	// k2e-ctl不调用该接口
 	@handler MigrateContainer
 	post /migrate(MigrateContainerRequest)
 }
@@ -48,7 +49,7 @@ type GetContainerResponse {
 }
 
 type ListContainerRequest {
-	Namespace string `form:"namespace"`
+	Namespace string `form:"namespace,optional"`
 }
 
 type ListContainerResponse {

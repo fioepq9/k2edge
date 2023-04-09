@@ -45,7 +45,7 @@ func nodeCreate() cli.Command {
 	return cli.Command{
 		Name:        "create",
 		Usage:       "Use for adding node to k2edge",
-		Description: "Use 'node create --name=<name> ...' to create node",
+		Description: "Use 'node create --name=<name> [args...]' to create node",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "name",
@@ -77,7 +77,7 @@ func nodeCreate() cli.Command {
 			roles := ctx.StringSlice("roles")
 			masterurl := ctx.String("masterurl")
 			workerurl := ctx.String("workerurl")
-			err := masterCli.Node.Register(context.Background(), &types.RegisterRequest{
+			err := masterCli.Node.Register(context.Background(), types.RegisterRequest{
 				Name:  name,
 				Roles: roles,
 				BaseURL: types.NodeURL{

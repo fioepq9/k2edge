@@ -16,6 +16,7 @@ type Client struct {
 
 	Node      nodeAPI
 	Namespace namespaceAPI
+	Container containerAPI
 }
 
 type ClientOption struct {
@@ -78,13 +79,17 @@ func NewClient(baseurl string, opt ...Option) *Client {
 			return
 		})
 
-
 	c.Node = nodeAPI{
 		req: c.req,
 		opt: c.opt,
 	}
 
 	c.Namespace = namespaceAPI{
+		req: c.req,
+		opt: c.opt,
+	}
+
+	c.Container = containerAPI{
 		req: c.req,
 		opt: c.opt,
 	}

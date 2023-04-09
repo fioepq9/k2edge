@@ -19,7 +19,7 @@ type GetContainerResponse struct {
 }
 
 type ListContainerRequest struct {
-	Namespace string `form:"namespace"`
+	Namespace string `form:"namespace,optional"`
 }
 
 type ListContainerResponse struct {

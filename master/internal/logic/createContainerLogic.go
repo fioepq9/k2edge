@@ -97,11 +97,10 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 			//return fmt.Errorf("not found worker can run")
 			return err
 		}
-		fmt.Println(worker.Metadata.Name)
 	}
 
 	cli := client.NewClient(worker.BaseURL.WorkerURL)
-	var c types.Container
+	c := types.Container{}
 	c.Metadata = req.Container.Metadata
 	c.Metadata.Kind = "container"
 	c.ContainerConfig = req.Container.ContainerConfig
@@ -119,6 +118,20 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 			HostPort: e.HostPort,
 		})
 	}
+
+	if c.ContainerConfig.Limit.CPU == 0 {
+		c.ContainerConfig.Limit.CPU = 50000000
+	} 
+	if c.ContainerConfig.Limit.Memory == 0 {
+		c.ContainerConfig.Limit.Memory = 104857600
+	} 
+	if c.ContainerConfig.Request.CPU == 0 {
+		c.ContainerConfig.Request.CPU = 50000000
+	} 
+	if c.ContainerConfig.Request.Memory == 0 {
+		c.ContainerConfig.Request.Memory = 104857600
+	} 
+
 
 	// 访问 worker 结点并创建容器
 	res, err := cli.Container.Create(l.ctx, client.CreateContainerRequest{
