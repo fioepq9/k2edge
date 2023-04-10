@@ -134,10 +134,10 @@ type ExposedPort struct {
 }
 
 type ContainerStatus struct {
-	Status      string      `json:"status"`
-	Node        string      `json:"node"`
-	ContainerID string      `json:"container_id"`
-	Info        interface{} `json:"info"`
+	Status      string      `json:"status,optional"`
+	Node        string      `json:"node,optional"`
+	ContainerID string      `json:"container_id,optional"`
+	Info        interface{} `json:"info,optional"`
 }
 
 type JobConfig struct {

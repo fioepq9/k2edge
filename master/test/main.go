@@ -16,13 +16,13 @@ func main() {
 func testExecAttach() {
 	cli := client.NewClient("http://localhost:8080")
 	rw, err := cli.Container.Exec(context.Background(), types.ExecContainerRequest{
-		Namespace:    "default",
-		Name:         "ccc",
+		Namespace:    "nnn",
+		Name:         "exec",
 		Tty:          true,
 		AttachStdin:  true,
 		AttachStderr: true,
 		AttachStdout: true,
-		Cmd:          []string{`"\"/bin/sh\""`},
+		Cmd:          []string{`"\"/bin/bash\""`},
 	})
 
 	// rw, err := cli.Container.Attach(context.Background(), client.AttachContainerRequest{

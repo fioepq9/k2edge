@@ -119,20 +119,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		})
 	}
 
-	if c.ContainerConfig.Limit.CPU == 0 {
-		c.ContainerConfig.Limit.CPU = 50000000
-	} 
-	if c.ContainerConfig.Limit.Memory == 0 {
-		c.ContainerConfig.Limit.Memory = 104857600
-	} 
-	if c.ContainerConfig.Request.CPU == 0 {
-		c.ContainerConfig.Request.CPU = 50000000
-	} 
-	if c.ContainerConfig.Request.Memory == 0 {
-		c.ContainerConfig.Request.Memory = 104857600
-	} 
-
-
+	fmt.Println(c)
 	// 访问 worker 结点并创建容器
 	res, err := cli.Container.Create(l.ctx, client.CreateContainerRequest{
 		ContainerName: c.Metadata.Name,

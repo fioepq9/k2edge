@@ -22,6 +22,10 @@ func (c containerAPI) Create(ctx context.Context, req types.CreateContainerReque
 	return c.req.Post("/container/create").SetBodyJsonMarshal(req).Do(ctx).Err
 }
 
+func (c containerAPI) Apply(ctx context.Context, req types.ApplyContainerRequest) error {
+	return c.req.Post("/container/apply").SetBodyJsonMarshal(req).Do(ctx).Err
+}
+
 func (c containerAPI) Get(ctx context.Context, req types.GetContainerRequest) (resp *types.GetContainerResponse, err error) {
 	err = c.req.
 		Get("/container/get").

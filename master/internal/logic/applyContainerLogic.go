@@ -27,6 +27,17 @@ func NewApplyContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ap
 }
 
 func (l *ApplyContainerLogic) ApplyContainer(req *types.ApplyContainerRequest) error {
+	// 判断容器是否已经存在
+	key := etcdutil.GenerateKey("container", req.Container.Metadata.Namespace, req.Container.Metadata.Name)
+	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
+	if err != nil {
+		return err
+	}
+
+	if !found {
+		return fmt.Errorf("container %s does not exist", req.Container.Metadata.Name)
+	}
+	
 	// 获取目的容器在etcd中的信息以便备份恢复
 	getFunc := NewGetContainerLogic(l.ctx, l.svcCtx)
 	config, err := getFunc.GetContainer(&types.GetContainerRequest{
@@ -47,17 +58,6 @@ func (l *ApplyContainerLogic) ApplyContainer(req *types.ApplyContainerRequest) e
 	}
 	if req.Container.Metadata.Name == "" {
 		return fmt.Errorf("container's name cannot be empty")
-	}
-
-	// 判断容器是否已经存在
-	key := etcdutil.GenerateKey("container", req.Container.Metadata.Namespace, req.Container.Metadata.Name)
-	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
-	if err != nil {
-		return err
-	}
-
-	if !found {
-		return fmt.Errorf("container %s does not exist", req.Container.Metadata.Name)
 	}
 
 	// 如果有指定结点，根据选择的结点创建容器

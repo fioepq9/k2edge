@@ -115,7 +115,7 @@ func namespaceGet() cli.Command {
 func namespaceList() cli.Command {
 	return cli.Command {
 		Name: "list",
-		Aliases: []string{"l"},
+		Aliases: []string{"ls"},
 		Usage: "Use for list namespace info",
 		Description: "Use 'namespace list [--usable]' to list namespace",
 		Flags: []cli.Flag{

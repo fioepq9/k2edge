@@ -1633,13 +1633,7 @@
           "type": "object"
         }
       },
-      "title": "ContainerStatus",
-      "required": [
-        "status",
-        "node",
-        "container_id",
-        "info"
-      ]
+      "title": "ContainerStatus"
     },
     "CordonRequest": {
       "type": "object",

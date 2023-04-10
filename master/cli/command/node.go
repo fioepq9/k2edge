@@ -99,7 +99,7 @@ func nodeCreate() cli.Command {
 func nodeList() cli.Command {
 	return cli.Command{
 		Name:        "list",
-		Aliases:     []string{"l"},
+		Aliases:     []string{"ls"},
 		Usage:       "Use for listing node",
 		Description: "Use 'node list [usable]' to list node",
 		Flags: []cli.Flag{

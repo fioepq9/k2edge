@@ -723,13 +723,7 @@
           "type": "object"
         }
       },
-      "title": "ContainerStatus",
-      "required": [
-        "status",
-        "node",
-        "container_id",
-        "info"
-      ]
+      "title": "ContainerStatus"
     },
     "ContainerStatusRequest": {
       "type": "object",

@@ -40,7 +40,6 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		conf.Cmd = append([]string{req.Config.Command}, req.Config.Args...)
 	}
 	// 构建 docker 中的 container host config
-	fmt.Printf("%+v\n", req.Config.Limit.CPU)
 	hostConf := container.HostConfig{
 		PortBindings: exposedPortToPortMap(req.Config.Expose),
 		Resources: container.Resources{

@@ -3,10 +3,13 @@ package cli
 import (
 	"context"
 	"fmt"
+	"io"
 	"k2edge/master/client"
 	"k2edge/master/internal/types"
+	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 	"github.com/pterm/pterm"
@@ -32,6 +35,10 @@ func Container() cli.Command {
 			containerGet(),
 			containerList(),
 			containerDelete(),
+			containerApply(),
+			containerAttach(),
+			containerExec(),
+			containerLogs(),
 		},
 	}
 }
@@ -41,7 +48,7 @@ func containerCreate() cli.Command {
 	return cli.Command{
 		Name:        "create",
 		Usage:       "Use for adding container on node",
-		Description: "Use 'container create --name=<name> [args...]' to create container",
+		Description: "Use 'container create --namespace=<namespace> --name=<name> [args...]' to create container",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "namespace",
@@ -208,7 +215,7 @@ func containerGet() cli.Command {
 			},
 			&cli.StringFlag{
 				Name:  "name",
-				Usage: "the name of container.",
+				Usage: "the name of container",
 			},
 			&cli.BoolFlag{
 				Name: "detail",
@@ -282,10 +289,11 @@ func containerGet() cli.Command {
 	}
 }
 
-//container list
+// container list
 func containerList() cli.Command {
 	return cli.Command{
 		Name:        "list",
+		Aliases: 	 []string{"ls"},
 		Usage:       "Use to list container info",
 		Description: "Use 'node list --namespace=<namespace> [args...]' to get node",
 		Flags: []cli.Flag{
@@ -326,7 +334,7 @@ func containerList() cli.Command {
 	}
 }
 
-//container delete
+// container delete
 func containerDelete() cli.Command {
 	return cli.Command{
 		Name:        "delete",
@@ -387,6 +395,510 @@ func containerDelete() cli.Command {
 			}
 
 			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("delete container '%s' successfully", name)
+			return nil
+		},
+	}
+}
+
+// container apply
+func containerApply() cli.Command {
+	return cli.Command{
+		Name:        "apply",
+		Usage:       "apply the configuration of the container",
+		Description: "Use 'container apply --namespace=<namespace> --name=<name> [args...]' to apply container's configuration",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "namespace",
+				Usage:    "the namespace of container",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name:  "name",
+				Usage: "the name of container",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name:     "image",
+				Usage:    "the image of container",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name:  "nodeName",
+				Usage: "specify the location where the container is created",
+			},
+			&cli.StringFlag{
+				Name:  "command",
+				Usage: "the command executed by the container",
+			},
+			&cli.StringSliceFlag{
+				Name:  "args",
+				Usage: "command parameters",
+			},
+			&cli.StringSliceFlag{
+				Name:  "expose",
+				Usage: "ports exposed by the container, example: port,protocol,hostport",
+			},
+			&cli.StringSliceFlag{
+				Name:  "env",
+				Usage: "container environment configuration",
+			},
+			&cli.StringFlag{
+				Name:  "limit",
+				Usage: "limited resources, contain CPU and Memory, example: cpu,mempry",
+			},
+			&cli.StringFlag{
+				Name:  "request",
+				Usage: "requested resources, contain CPU and Memory, example: cpu,mempry",
+			},
+		},
+		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
+			return fmt.Errorf(err.Error())
+		},
+
+		Action: func(ctx *cli.Context) error {
+			server := ctx.App.Metadata["config-server"].(string)
+			masterCli := client.NewClient(server)
+
+			namespace := ctx.String("namespace")
+			name := ctx.String("name")
+			image := ctx.String("image")
+			nodeName := ctx.String("nodeName")
+			command := ctx.String("command")
+			args := ctx.StringSlice("args")
+			exposeStr := ctx.StringSlice("expose")
+			expose := []types.ExposedPort{}
+			for _, e := range exposeStr {
+				es := strings.Split(e, ",")
+				if len(es) != 3 {
+					return fmt.Errorf("'%s' is in the wrong format", e)
+				}
+				port, err := strconv.Atoi(es[0])
+				if err != nil {
+					return fmt.Errorf("'%s' is in the wrong format", e)
+				}
+				hostPort, err := strconv.Atoi(es[2])
+				if err != nil {
+					return fmt.Errorf("'%s' is in the wrong format", e)
+				}
+				expose = append(expose, types.ExposedPort{
+					Port:     int64(port),
+					Protocol: es[1],
+					HostPort: int64(hostPort),
+				})
+			}
+
+			env := ctx.StringSlice("env")
+			limitStr := ctx.String("limit")
+			limit := types.ContainerLimit{}
+			if ctx.IsSet("limit") {
+				ls := strings.Split(limitStr, ",")
+				if len(ls) != 2 {
+					return fmt.Errorf("'%s' is in the wrong format", ls)
+				}
+
+				cpul, err := strconv.Atoi(ls[0])
+				if err != nil {
+					return err
+				}
+				memoryl, err := strconv.Atoi(ls[1])
+				if err != nil {
+					return err
+				}
+
+				limit.CPU = int64(cpul)
+				limit.Memory = int64(memoryl)
+			}
+
+			requestStr := ctx.String("request")
+			request := types.ContainerRequest{}
+			if ctx.IsSet("request") {
+				rs := strings.Split(requestStr, ",")
+				if len(rs) != 2 {
+					return fmt.Errorf("'%s' is in the wrong format", rs)
+				}
+
+				cpur, err := strconv.Atoi(rs[0])
+				if err != nil {
+					return err
+				}
+				memoryr, err := strconv.Atoi(rs[1])
+				if err != nil {
+					return err
+				}
+
+				request.CPU = int64(cpur)
+				request.Memory = int64(memoryr)
+			}
+
+			err := masterCli.Container.Apply(context.Background(), types.ApplyContainerRequest{
+				Container: types.Container{
+					Metadata: types.Metadata{
+						Namespace: namespace,
+						Kind:      "container",
+						Name:      name,
+					},
+					ContainerConfig: types.ContainerConfig{
+						Image:    image,
+						NodeName: nodeName,
+						Command:  command,
+						Args:     args,
+						Expose:   expose,
+						Env:      env,
+						Limit:    limit,
+						Request:  request,
+					},
+				},
+			})
+
+			if err != nil {
+				return err
+			}
+
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("apply the configuration of container'%s' successfully", name)
+			return nil
+		},
+	}
+}
+
+// container attach
+// such as: go run main.go container attach --namespace nnn --name attach --stream --stdin --stdout --stderr
+// go run main.go container create --namespace nnn --name attach --image alpine --command sh --args -c --args 'while true; do echo $(date); sleep 1; done'
+func containerAttach() cli.Command {
+	return cli.Command{
+		Name:        "attach",
+		Usage:       "connect to a running container",
+		Description: "Use 'container attach --namespace=<namespace> --name=<name> [args...]' to connect container",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "namespace",
+				Usage:    "the namespace of container",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name:  "name",
+				Usage: "the name of container",
+				Required: true,
+			},
+			&cli.BoolFlag{
+				Name:     "stream",
+				Usage:    "Get the stream of the container",
+			},
+			&cli.BoolFlag{
+				Name:  "stdin",
+				Usage: "get the standard input of the container",
+			},
+			&cli.BoolFlag{
+				Name:  "stdout",
+				Usage: "get the standard output of the container",
+			},
+			&cli.BoolFlag{
+				Name:  "stderr",
+				Usage: "get the standard error of the container",
+			},
+			&cli.StringFlag{
+				Name:  "detachKeys",
+			},
+			&cli.BoolFlag{
+				Name:  "logs",
+				Usage: "print the container log",
+			},
+		},
+		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
+			return fmt.Errorf(err.Error())
+		},
+
+		Action: func(ctx *cli.Context) error {
+			server := ctx.App.Metadata["config-server"].(string)
+			masterCli := client.NewClient(server)
+
+			namespace := ctx.String("namespace")
+			name := ctx.String("name")
+			stream := ctx.Bool("stream")
+			stdin := ctx.Bool("stdin")
+			stdout := ctx.Bool("stdout")
+			stderr := ctx.Bool("stderr")
+			detachKeys := ctx.String("detachKeys")
+			logs := ctx.Bool("logs")
+
+			rw, err := masterCli.Container.Attach(context.Background(), types.AttachContainerRequest{
+				Namespace: namespace,
+				Name: name,
+				Stream: stream,
+				Stdin: stdin,
+				Stdout: stdout,
+				Stderr: stderr,
+				DetachKeys: detachKeys,
+				Logs: logs,
+			})
+
+			if err != nil {
+				return err
+			}
+
+
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.BgGreen, pterm.FgBlack)).Println("container input/output...")
+			defer rw.Close()
+			ctxx, cancel := context.WithCancel(context.Background())
+
+			go func() {
+				defer cancel()
+				for {
+					if _, err := io.Copy(rw, os.Stdin); err != nil {
+						break
+					}
+					select {
+					case <-ctxx.Done():
+						return
+					default:
+					}
+				}
+			}()
+			go func() {
+				defer cancel()
+				for {
+					if _, err := io.Copy(os.Stdout, rw); err != nil {
+						break
+					}
+					select {
+					case <-ctxx.Done():
+						return
+					default:
+					}
+				}
+			}()
+			<-ctxx.Done()
+			return nil
+		},
+	}
+}
+
+// container exec
+// such as: go run main.go container exec --namespace nnn --name exec --cmd '/bin/bash' --tty --stdin --stdout --stderr
+// go run main.go container create --namespace nnn --name exec --image ubuntu --cmd tail --args '-f' --args '/dev/null'
+func containerExec() cli.Command {
+	return cli.Command{
+		Name:        "exec",
+		Usage:       "execute the command in the container",
+		Description: "Use 'container exec --namespace=<namespace> --name=<name> [args...]' to execute the command",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "namespace",
+				Usage:    "the namespace of container",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name:  "name",
+				Usage: "the name of container",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name:  "user",
+			},
+			&cli.BoolFlag{
+				Name:  "privileged",
+			},
+			&cli.BoolFlag{
+				Name:  "tty",
+			},
+			&cli.BoolFlag{
+				Name:  "stdin",
+				Usage: "get the standard input of the container",
+			},
+			&cli.BoolFlag{
+				Name:  "stdout",
+				Usage: "get the standard output of the container",
+			},
+			&cli.BoolFlag{
+				Name:  "stderr",
+				Usage: "get the standard error of the container",
+			},
+			&cli.BoolFlag{
+				Name: "detach",
+			},
+			&cli.StringFlag{
+				Name:  "detachKeys",
+			},
+			&cli.StringSliceFlag{
+				Name: "env",
+			},
+			&cli.StringFlag{
+				Name: "workingDir",
+			},
+			&cli.StringSliceFlag{
+				Name: "cmd",
+				Required: true,
+			},
+		},
+		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
+			return fmt.Errorf(err.Error())
+		},
+
+		Action: func(ctx *cli.Context) error {
+			server := ctx.App.Metadata["config-server"].(string)
+			masterCli := client.NewClient(server)
+
+			namespace := ctx.String("namespace")
+			name := ctx.String("name")
+			user := ctx.String("user")
+			privileged := ctx.Bool("privileged")
+			tty := ctx.Bool("tty")
+			stdin := ctx.Bool("stdin")
+			stderr := ctx.Bool("stderr")
+			stdout := ctx.Bool("stdout")
+			detach := ctx.Bool("detach")
+			detachKeys := ctx.String("detachKeys")
+			env := ctx.StringSlice("env")
+			workingDir := ctx.String("workingDir")
+			cmd := ctx.StringSlice("cmd")
+			cmdArray := []string{}
+			for _, c := range cmd {
+				cmdArray = append(cmdArray, `"\"` + c +`\""`)
+			}
+			rw, err := masterCli.Container.Exec(context.Background(), types.ExecContainerRequest{
+				Namespace: namespace,
+				Name: name,
+				User: user,
+				Privileged: privileged,
+				Tty: tty,
+				AttachStdin: stdin,
+				AttachStderr: stderr,
+				AttachStdout: stdout,
+				Detach: detach,
+				DetachKeys: detachKeys,
+				Env: env,
+				WorkingDir: workingDir,
+				Cmd: cmdArray,
+			})
+
+			if err != nil {
+				return err
+			}
+
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.BgGreen, pterm.FgBlack)).Println("container input/output...")
+			defer rw.Close()
+			ctxx, cancel := context.WithCancel(context.Background())
+
+			go func() {
+				defer cancel()
+				for {
+					if _, err := io.Copy(rw, os.Stdin); err != nil {
+						break
+					}
+					select {
+					case <-ctxx.Done():
+						return
+					default:
+					}
+				}
+			}()
+			go func() {
+				defer cancel()
+				for {
+					if _, err := io.Copy(os.Stdout, rw); err != nil {
+						break
+					}
+					select {
+					case <-ctxx.Done():
+						return
+					default:
+					}
+				}
+			}()
+			<-ctxx.Done()
+			return nil
+		},
+	}
+}
+
+// container logs
+// such as: go run main.go container logs --namespace nnn --name logs --follow
+// go run main.go container create --namespace nnn --name logs --image alpine --command sh --args -c --args 'while true; do echo $(date); sleep 1; done'
+func containerLogs() cli.Command {
+	return cli.Command{
+		Name:        "logs",
+		Usage:       "print container logs",
+		Description: "Use 'container logs --namespace=<namespace> --name=<name> [args...]' to print the logs",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "namespace",
+				Usage:    "the namespace of container",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name:  "name",
+				Usage: "the name of container",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name:  "since",
+			},
+			&cli.StringFlag{
+				Name:  "until",
+			},
+			&cli.BoolFlag{
+				Name:  "timestamps",
+			},
+			&cli.BoolFlag{
+				Name:  "follow",
+				Usage: "follow the stream",
+			},
+			&cli.StringFlag{
+				Name:  "tail",
+			},
+			&cli.BoolFlag{
+				Name:  "details",
+			},
+		},
+		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
+			return fmt.Errorf(err.Error())
+		},
+
+		Action: func(ctx *cli.Context) error {
+			server := ctx.App.Metadata["config-server"].(string)
+			masterCli := client.NewClient(server)
+
+			namespace := ctx.String("namespace")
+			name := ctx.String("name")
+			since := ctx.String("since")
+			until := ctx.String("until")
+			timestamps := ctx.Bool("timestamps")
+			follow := ctx.Bool("follow")
+			tail := ctx.String("tail")
+			details := ctx.Bool("details")
+
+			rw, err := masterCli.Container.Logs(context.Background(), types.LogsContainerRequest{
+				Namespace: namespace,
+				Name: name,
+				Since: since,
+				Until: until,
+				Timestamps: timestamps,
+				Follow: follow,
+				Tail: tail,
+				Details: details,
+			})
+
+			if err != nil {
+				return err
+			}
+
+			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.BgGreen, pterm.FgBlack)).Println("container output...")
+			defer rw.Close()
+			ctxx, cancel := context.WithCancel(context.Background())
+			go func() {
+				defer cancel()
+				for {
+					if _, err := io.Copy(os.Stdout, rw); err != nil {
+						break
+					}
+					select {
+					case <-ctxx.Done():
+						return
+					default:
+					}
+				}
+			}()
+			<-ctxx.Done()
+			time.Sleep(time.Second)
 			return nil
 		},
 	}
