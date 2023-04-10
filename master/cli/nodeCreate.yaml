@@ -1,0 +1,7 @@
+name: my-node
+roles:
+  - master
+  - worker
+baseUrl:
+  masterUrl: http://localhost:8080
+  workerUrl: http://localhost:8888

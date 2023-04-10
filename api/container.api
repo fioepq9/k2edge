@@ -36,7 +36,7 @@ service master-api{
 }
 
 type CreateContainerRequest {
-	Container Container `json:"container"`
+	Container Container `json:"container" yaml:"container"`
 }
 
 type GetContainerRequest {

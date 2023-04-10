@@ -1508,7 +1508,9 @@
       "title": "Container",
       "required": [
         "metadata",
-        "container_config"
+        "container_config",
+        "containerConfig",
+        "containerStatus"
       ]
     },
     "ContainerConfig": {
@@ -1550,7 +1552,14 @@
       },
       "title": "ContainerConfig",
       "required": [
-        "image"
+        "image",
+        "nodeName",
+        "command",
+        "args",
+        "expose",
+        "env",
+        "limit",
+        "request"
       ]
     },
     "ContainerLimit": {
@@ -1633,7 +1642,13 @@
           "type": "object"
         }
       },
-      "title": "ContainerStatus"
+      "title": "ContainerStatus",
+      "required": [
+        "status",
+        "node",
+        "containerID",
+        "info"
+      ]
     },
     "CordonRequest": {
       "type": "object",
@@ -2123,7 +2138,8 @@
       "required": [
         "port",
         "protocol",
-        "host_port"
+        "host_port",
+        "hostPort"
       ]
     },
     "GetContainerRequest": {
@@ -2794,7 +2810,9 @@
       "title": "NodeURL",
       "required": [
         "worker_url",
-        "master_url"
+        "workerUrl",
+        "master_url",
+        "masterUrl"
       ]
     },
     "RegisterRequest": {
@@ -2817,7 +2835,8 @@
       "required": [
         "name",
         "roles",
-        "base_url"
+        "base_url",
+        "baseUrl"
       ]
     },
     "ScaleRequest": {

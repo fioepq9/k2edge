@@ -53,7 +53,6 @@ func containerCreate() cli.Command {
 			&cli.StringFlag{
 				Name:     "namespace",
 				Usage:    "the namespace of container",
-				Required: true,
 			},
 			&cli.StringFlag{
 				Name:  "name",
@@ -62,7 +61,6 @@ func containerCreate() cli.Command {
 			&cli.StringFlag{
 				Name:     "image",
 				Usage:    "the image of container",
-				Required: true,
 			},
 			&cli.StringFlag{
 				Name:  "nodeName",
@@ -92,12 +90,29 @@ func containerCreate() cli.Command {
 				Name:  "request",
 				Usage: "requested resources, contain CPU and Memory, example: cpu,mempry",
 			},
+			&cli.StringFlag{
+				Name:  "f",
+				Usage: "YAML configuration file",
+			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
 			return fmt.Errorf(err.Error())
 		},
 
 		Action: func(ctx *cli.Context) error {
+			notSetFlags := []string{}
+			if !ctx.IsSet("f") {
+				if !ctx.IsSet("namespace") {
+					notSetFlags = append(notSetFlags, "namespace")
+				}
+				if !ctx.IsSet("image") {
+					notSetFlags = append(notSetFlags, "image")
+				}
+				if len(notSetFlags) != 0 {
+					return fmt.Errorf("required flags %s not set", strings.Join(notSetFlags, ", "))
+				}
+			}
+
 			server := ctx.App.Metadata["config-server"].(string)
 			masterCli := client.NewClient(server)
 
@@ -172,7 +187,7 @@ func containerCreate() cli.Command {
 				request.Memory = int64(memoryr)
 			}
 
-			err := masterCli.Container.Create(context.Background(), types.CreateContainerRequest{
+			arg := types.CreateContainerRequest{
 				Container: types.Container{
 					Metadata: types.Metadata{
 						Namespace: namespace,
@@ -190,7 +205,21 @@ func containerCreate() cli.Command {
 						Request:  request,
 					},
 				},
-			})
+			}
+
+			if ctx.IsSet("f") {
+				file := ctx.String("f")
+				config, err :=  yaml2args[types.Container](file)
+				if err != nil {
+					return err
+				}
+				arg.Container.Metadata = config.Metadata
+				arg.Container.ContainerConfig = config.ContainerConfig
+				name = arg.Container.Metadata.Name
+				arg.Container.Metadata.Kind = "container"
+			}
+
+			err := masterCli.Container.Create(context.Background(), arg)
 
 			if err != nil {
 				return err
@@ -410,17 +439,14 @@ func containerApply() cli.Command {
 			&cli.StringFlag{
 				Name:     "namespace",
 				Usage:    "the namespace of container",
-				Required: true,
 			},
 			&cli.StringFlag{
 				Name:  "name",
 				Usage: "the name of container",
-				Required: true,
 			},
 			&cli.StringFlag{
 				Name:     "image",
 				Usage:    "the image of container",
-				Required: true,
 			},
 			&cli.StringFlag{
 				Name:  "nodeName",
@@ -450,12 +476,32 @@ func containerApply() cli.Command {
 				Name:  "request",
 				Usage: "requested resources, contain CPU and Memory, example: cpu,mempry",
 			},
+			&cli.StringFlag{
+				Name:  "f",
+				Usage: "YAML configuration file",
+			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
 			return fmt.Errorf(err.Error())
 		},
 
 		Action: func(ctx *cli.Context) error {
+			notSetFlags := []string{}
+			if !ctx.IsSet("f") {
+				if !ctx.IsSet("namespace") {
+					notSetFlags = append(notSetFlags, "namespace")
+				}
+				if !ctx.IsSet("name") {
+					notSetFlags = append(notSetFlags, "name")
+				}
+				if !ctx.IsSet("image") {
+					notSetFlags = append(notSetFlags, "image")
+				}
+				if len(notSetFlags) != 0 {
+					return fmt.Errorf("required flags %s not set", strings.Join(notSetFlags, ", "))
+				}
+			}
+
 			server := ctx.App.Metadata["config-server"].(string)
 			masterCli := client.NewClient(server)
 
@@ -530,7 +576,7 @@ func containerApply() cli.Command {
 				request.Memory = int64(memoryr)
 			}
 
-			err := masterCli.Container.Apply(context.Background(), types.ApplyContainerRequest{
+			arg := types.ApplyContainerRequest{
 				Container: types.Container{
 					Metadata: types.Metadata{
 						Namespace: namespace,
@@ -548,7 +594,21 @@ func containerApply() cli.Command {
 						Request:  request,
 					},
 				},
-			})
+			}
+
+			if ctx.IsSet("f") {
+				file := ctx.String("f")
+				config, err :=  yaml2args[types.Container](file)
+				if err != nil {
+					return err
+				}
+				arg.Container.Metadata = config.Metadata
+				arg.Container.ContainerConfig = config.ContainerConfig
+				name = arg.Container.Metadata.Name
+				arg.Container.Metadata.Kind = "container"
+			}
+
+			err := masterCli.Container.Apply(context.Background(), arg)
 
 			if err != nil {
 				return err

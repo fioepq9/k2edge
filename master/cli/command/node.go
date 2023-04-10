@@ -50,12 +50,10 @@ func nodeCreate() cli.Command {
 			&cli.StringFlag{
 				Name:     "name",
 				Usage:    "the name of node, no repetition allowed",
-				Required: true,
 			},
 			&cli.StringSliceFlag{
 				Name:     "roles",
 				Usage:    "master/worker OR both, exp: --roles worker --roles master",
-				Required: true,
 			},
 			&cli.StringFlag{
 				Name:  "masterurl",
@@ -65,26 +63,55 @@ func nodeCreate() cli.Command {
 				Name:  "workerurl",
 				Usage: "the url of worker",
 			},
+			&cli.StringFlag{
+				Name:  "f",
+				Usage: "YAML configuration file",
+			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
 			return fmt.Errorf(err.Error())
 		},
 
 		Action: func(ctx *cli.Context) error {
+			notSetFlags := []string{}
+			if !ctx.IsSet("f") {
+				if !ctx.IsSet("name") {
+					notSetFlags = append(notSetFlags, "name")
+				}
+				if !ctx.IsSet("roles") {
+					notSetFlags = append(notSetFlags, "roles")
+				}
+				if len(notSetFlags) != 0 {
+					return fmt.Errorf("required flags %s not set", strings.Join(notSetFlags, ", "))
+				}
+			}
+
 			server := ctx.App.Metadata["config-server"].(string)
 			masterCli := client.NewClient(server)
 			name := ctx.String("name")
 			roles := ctx.StringSlice("roles")
 			masterurl := ctx.String("masterurl")
 			workerurl := ctx.String("workerurl")
-			err := masterCli.Node.Register(context.Background(), types.RegisterRequest{
+
+			args := types.RegisterRequest{
 				Name:  name,
 				Roles: roles,
 				BaseURL: types.NodeURL{
 					MasterURL: masterurl,
 					WorkerURL: workerurl,
 				},
-			})
+			}
+
+			if ctx.IsSet("f") {
+				file := ctx.String("f")
+				config, err :=  yaml2args[types.RegisterRequest](file)
+				if err != nil {
+					return err
+				}
+				args = *config
+				name = args.Name
+			}
+			err := masterCli.Node.Register(context.Background(), args)
 			if err != nil {
 				return err
 			}

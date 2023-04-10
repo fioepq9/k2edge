@@ -188,4 +188,3 @@ func namespaceDelete() cli.Command {
 		},
 	}
 }
-

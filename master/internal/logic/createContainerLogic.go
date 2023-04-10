@@ -11,6 +11,7 @@ import (
 	"k2edge/worker/client"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -69,11 +70,15 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		}
 
 		if w.Spec.Unschedulable {
-			return fmt.Errorf("the node %s is unschedulable", req.Container.Metadata.Name)
+			return fmt.Errorf("the node %s is unschedulable", req.Container.ContainerConfig.NodeName)
 		}
 
 		if !w.Status.Working {
-			return fmt.Errorf("the node %s is not active", req.Container.Metadata.Name)
+			return fmt.Errorf("the node %s is not active", req.Container.ContainerConfig.NodeName)
+		}
+
+		if !lo.Contains(w.Roles, "worker") {
+			return fmt.Errorf("the node %s is not a worker", req.Container.ContainerConfig.NodeName)
 		}
 		
 		worker = new(types.Node)
@@ -119,7 +124,6 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		})
 	}
 
-	fmt.Println(c)
 	// 访问 worker 结点并创建容器
 	res, err := cli.Container.Create(l.ctx, client.CreateContainerRequest{
 		ContainerName: c.Metadata.Name,

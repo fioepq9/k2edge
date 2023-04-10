@@ -105,9 +105,9 @@ type LogsRequest struct {
 }
 
 type Metadata struct {
-	Namespace string `json:"namespace"`
-	Kind      string `json:"kind"`
-	Name      string `json:"name"`
+	Namespace string `json:"namespace" yaml:"namespace"`
+	Kind      string `json:"kind" yaml:"kind"`
+	Name      string `json:"name" yaml:"name"`
 }
 
 type Error struct {
@@ -115,43 +115,43 @@ type Error struct {
 }
 
 type Container struct {
-	Metadata        Metadata        `json:"metadata"`
-	ContainerConfig ContainerConfig `json:"container_config"`
-	ContainerStatus ContainerStatus `json:"container_status,optional"`
+	Metadata        Metadata        `json:"metadata" yaml:"metadata"`
+	ContainerConfig ContainerConfig `json:"container_config" yaml:"containerConfig"`
+	ContainerStatus ContainerStatus `json:"container_status,optional" yaml:"containerStatus"`
 }
 
 type ContainerConfig struct {
-	Image    string           `json:"image"`
-	NodeName string           `json:"node_name,optional"`
-	Command  string           `json:"command,optional"`
-	Args     []string         `json:"args,optional"`
-	Expose   []ExposedPort    `json:"expose,optional"`
-	Env      []string         `json:"env,optional"`
-	Limit    ContainerLimit   `json:"limit,optional"`
-	Request  ContainerRequest `json:"request,optional"`
+	Image    string           `json:"image" yaml:"image"`
+	NodeName string           `json:"node_name,optional" yaml:"nodeName"`
+	Command  string           `json:"command,optional" yaml:"command"`
+	Args     []string         `json:"args,optional" yaml:"args"`
+	Expose   []ExposedPort    `json:"expose,optional" yaml:"expose"`
+	Env      []string         `json:"env,optional" yaml:"env"`
+	Limit    ContainerLimit   `json:"limit,optional" yaml:"limit"`
+	Request  ContainerRequest `json:"request,optional" yaml:"request"`
 }
 
 type ContainerLimit struct {
-	CPU    int64 `json:"cpu,default=50000000"`
-	Memory int64 `json:"memory,default=104857600"`
+	CPU    int64 `json:"cpu,default=50000000" yaml:"cpu"`
+	Memory int64 `json:"memory,default=104857600" yaml:"memory"`
 }
 
 type ContainerRequest struct {
-	CPU    int64 `json:"cpu,default=50000000"`
-	Memory int64 `json:"memory,default=104857600"`
+	CPU    int64 `json:"cpu,default=50000000" yaml:"cpu"`
+	Memory int64 `json:"memory,default=104857600" yaml:"memory"`
 }
 
 type ExposedPort struct {
-	Port     int64  `json:"port"`
-	Protocol string `json:"protocol"`
-	HostPort int64  `json:"host_port"`
+	Port     int64  `json:"port" yaml:"port"`
+	Protocol string `json:"protocol" yaml:"protocol"`
+	HostPort int64  `json:"host_port" yaml:"hostPort"`
 }
 
 type ContainerStatus struct {
-	Status      string      `json:"status,optional"`
-	Node        string      `json:"node,optional"`
-	ContainerID string      `json:"container_id,optional"`
-	Info        interface{} `json:"info,optional"`
+	Status      string      `json:"status,optional" yaml:"status"`
+	Node        string      `json:"node,optional" yaml:"node"`
+	ContainerID string      `json:"container_id,optional" yaml:"containerID"`
+	Info        interface{} `json:"info,optional" yaml:"info"`
 }
 
 type JobConfig struct {
@@ -230,8 +230,8 @@ type Node struct {
 }
 
 type NodeURL struct {
-	WorkerURL string `json:"worker_url"`
-	MasterURL string `json:"master_url"`
+	WorkerURL string `json:"worker_url" yaml:"workerUrl"`
+	MasterURL string `json:"master_url" yaml:"masterUrl"`
 }
 
 type Spec struct {

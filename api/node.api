@@ -37,9 +37,9 @@ service master-api{
 }
 
 type RegisterRequest {
-	Name    string   `json:"name"`
-	Roles   []string `json:"roles"`
-	BaseURL NodeURL  `json:"base_url"`
+	Name    string   `json:"name" yaml:"name"`
+	Roles   []string `json:"roles" yaml:"roles"`
+	BaseURL NodeURL  `json:"base_url" yaml:"baseUrl"`
 }
 
 type NodeListRequest {

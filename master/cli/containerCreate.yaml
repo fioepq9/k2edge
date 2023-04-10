@@ -1,0 +1,12 @@
+metadata:
+  namespace: "default"
+  kind: ""
+  name: yamltest
+containerConfig:
+  image: "alpine"
+  nodeName: "MyHost"
+  command: "sh"
+  args:
+    - -c
+    - while true; do echo $(date); sleep 1; done
+  
