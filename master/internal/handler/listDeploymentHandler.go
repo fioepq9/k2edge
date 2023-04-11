@@ -10,16 +10,16 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func DeleteDeploymentHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func ListDeploymentHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.DeleteDeploymentRequest
+		var req types.ListDeploymentRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := logic.NewDeleteDeploymentLogic(r.Context(), svcCtx)
-		resp, err := l.DeleteDeployment(&req)
+		l := logic.NewListDeploymentLogic(r.Context(), svcCtx)
+		resp, err := l.ListDeployment(&req)
 		var body types.Response
 		if err != nil {
 			body.Code = -1

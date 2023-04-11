@@ -200,8 +200,9 @@ type Deployment struct {
 }
 
 type DeploymentConfig struct {
-	Replicas int               `json:"replicas,default=1"`
-	Template ContainerTemplate `json:"container_template" yaml:"containerTemplate"`
+	CreateTime int64             `json:"create_time,optional"`
+	Replicas   int               `json:"replicas,default=1"`
+	Template   ContainerTemplate `json:"container_template" yaml:"containerTemplate"`
 }
 
 type ContainerTemplate struct {

@@ -935,6 +935,10 @@
     "DeploymentConfig": {
       "type": "object",
       "properties": {
+        "create_time": {
+          "type": "integer",
+          "format": "int64"
+        },
         "replicas": {
           "type": "integer",
           "format": "int32",

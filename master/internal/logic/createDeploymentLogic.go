@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"k2edge/etcdutil"
 	"k2edge/master/internal/svc"
@@ -40,7 +41,7 @@ func (l *CreateDeploymentLogic) CreateDeployment(req *types.CreateDeploymentRequ
 		return nil, fmt.Errorf("namespace %s does not exist", req.Deployment.Metadata.Namespace)
 	}
 
-	// 判断容器是否已经存在
+	// 判断 deployment 是否已经存在
 	key := etcdutil.GenerateKey("deployment", req.Deployment.Metadata.Namespace, req.Deployment.Metadata.Name)
 	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
@@ -83,6 +84,7 @@ func (l *CreateDeploymentLogic) CreateDeployment(req *types.CreateDeploymentRequ
 	}
 	
 	deployment := req.Deployment
+	deployment.Config.CreateTime = time.Now().Unix()
 	resp = new(types.CreateDeploymentResponse)
 	resp.Err = make([]string, 0)
 	logic := NewCreateContainerLogic(l.ctx, l.svcCtx)
@@ -106,6 +108,7 @@ func (l *CreateDeploymentLogic) CreateDeployment(req *types.CreateDeploymentRequ
 			})
 		}
 	}
+	deployment.Status.AvailableReplicas = req.Deployment.Config.Replicas - len(resp.Err)
 	// 插入 deployment
 	return resp, etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, deployment)
 }

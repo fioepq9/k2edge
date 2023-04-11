@@ -126,6 +126,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: GetDeploymentHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: ListDeploymentHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPost,
 				Path:    "/delete",
 				Handler: DeleteDeploymentHandler(serverCtx),

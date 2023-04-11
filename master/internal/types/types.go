@@ -190,8 +190,9 @@ type Deployment struct {
 }
 
 type DeploymentConfig struct {
-	Replicas int               `json:"replicas,default=1"`
-	Template ContainerTemplate `json:"container_template" yaml:"containerTemplate"`
+	CreateTime int64             `json:"create_time,optional"`
+	Replicas   int               `json:"replicas,default=1"`
+	Template   ContainerTemplate `json:"container_template" yaml:"containerTemplate"`
 }
 
 type ContainerTemplate struct {
@@ -351,16 +352,41 @@ type CreateDeploymentResponse struct {
 }
 
 type GetDeploymentRequest struct {
-	Namespace string `json:"namespace"`
-	Name      string `json:"name"`
+	Namespace string `form:"namespace"`
+	Name      string `form:"name"`
 }
 
 type GetDeploymentResponse struct {
 	Deployment Deployment `json:"deployment"`
 }
 
+type ListDeploymentRequest struct {
+	Namespace string `form:"namespace,optional"`
+}
+
+type ListDeploymentResponse struct {
+	Info []DeploymentSimpleInfo `json:"info"`
+}
+
+type DeploymentSimpleInfo struct {
+	Namespace  string `json:"namespace"`
+	Name       string `json:"name"`
+	CreateTime int64  `json:"create_time"`
+	Replicas   int    `json:"replicas"`
+	Available  int    `json:"available"`
+}
+
 type DeleteDeploymentRequest struct {
-	Todo string `json:"todo"`
+	Namespace      string `json:"namespace"`
+	Name           string `json:"name"`
+	RemoveVolumnes bool   `json:"remove_volumns,optional"`
+	RemoveLinks    bool   `json:"remoce_links,optional"`
+	Force          bool   `json:"force,optional"`
+	Timeout        int    `json:"timeout,optional"`
+}
+
+type DeleteDeploymentResponse struct {
+	Err []string `json:"err"`
 }
 
 type ApplyDeploymentRequest struct {

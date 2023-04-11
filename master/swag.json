@@ -734,6 +734,31 @@
         ]
       }
     },
+    "/deployment/list": {
+      "get": {
+        "operationId": "ListDeployment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ListDeploymentResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "master-api"
+        ]
+      }
+    },
     "/deployment/scale": {
       "post": {
         "operationId": "Scale",
@@ -1980,13 +2005,48 @@
     "DeleteDeploymentRequest": {
       "type": "object",
       "properties": {
-        "todo": {
+        "namespace": {
           "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "remove_volumns": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "remoce_links": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "force": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "timeout": {
+          "type": "integer",
+          "format": "int32"
         }
       },
       "title": "DeleteDeploymentRequest",
       "required": [
-        "todo"
+        "namespace",
+        "name"
+      ]
+    },
+    "DeleteDeploymentResponse": {
+      "type": "object",
+      "properties": {
+        "err": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "DeleteDeploymentResponse",
+      "required": [
+        "err"
       ]
     },
     "DeleteJobRequest": {
@@ -2084,6 +2144,10 @@
     "DeploymentConfig": {
       "type": "object",
       "properties": {
+        "create_time": {
+          "type": "integer",
+          "format": "int64"
+        },
         "replicas": {
           "type": "integer",
           "format": "int32",
@@ -2098,6 +2162,37 @@
         "replicas",
         "container_template",
         "containerTemplate"
+      ]
+    },
+    "DeploymentSimpleInfo": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "replicas": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "available": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "DeploymentSimpleInfo",
+      "required": [
+        "namespace",
+        "name",
+        "create_time",
+        "replicas",
+        "available"
       ]
     },
     "DeploymentStatus": {
@@ -2540,6 +2635,30 @@
       "title": "ListContainerResponse",
       "required": [
         "containers"
+      ]
+    },
+    "ListDeploymentRequest": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string"
+        }
+      },
+      "title": "ListDeploymentRequest"
+    },
+    "ListDeploymentResponse": {
+      "type": "object",
+      "properties": {
+        "info": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DeploymentSimpleInfo"
+          }
+        }
+      },
+      "title": "ListDeploymentResponse",
+      "required": [
+        "info"
       ]
     },
     "ListNamespaceRequest": {

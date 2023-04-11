@@ -12,6 +12,9 @@ service master-api {
 	@handler GetDeployment
 	get /get(GetDeploymentRequest) returns (GetDeploymentResponse)
 	
+	@handler ListDeployment
+	get /list(ListDeploymentRequest) returns (ListDeploymentResponse)
+	
 	@handler DeleteDeployment
 	post /delete(DeleteDeploymentRequest)
 	
@@ -20,7 +23,6 @@ service master-api {
 	
 	@handler Scale
 	post /scale(ScaleRequest)
-	
 }
 
 type CreateDeploymentRequest {
@@ -32,16 +34,41 @@ type CreateDeploymentResponse {
 }
 
 type GetDeploymentRequest {
-	Namespace string `json:"namespace"`
-	Name      string `json:"name"`
+	Namespace string `form:"namespace"`
+	Name      string `form:"name"`
 }
 
 type GetDeploymentResponse {
 	Deployment Deployment `json:"deployment"`
 }
 
+type ListDeploymentRequest {
+	Namespace string `form:"namespace,optional"`
+}
+
+type ListDeploymentResponse {
+	Info []DeploymentSimpleInfo `json:"info"`
+}
+
+type DeploymentSimpleInfo {
+	Namespace  string `json:"namespace"`
+	Name       string `json:"name"`
+	CreateTime int64  `json:"create_time"`
+	Replicas   int    `json:"replicas"`
+	Available  int    `json:"available"`
+}
+
 type DeleteDeploymentRequest {
-	Todo string `json:"todo"`
+	Namespace      string `json:"namespace"`
+	Name           string `json:"name"`
+	RemoveVolumnes bool   `json:"remove_volumns,optional"`
+	RemoveLinks    bool   `json:"remoce_links,optional"`
+	Force          bool   `json:"force,optional"`
+	Timeout        int    `json:"timeout,optional"`
+}
+
+type DeleteDeploymentResponse {
+	Err []string `json:"err"`
 }
 
 type ApplyDeploymentRequest {
