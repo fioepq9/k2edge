@@ -13,26 +13,27 @@ service master-api {
 	get /get(GetDeploymentRequest) returns (GetDeploymentResponse)
 	
 	@handler DeleteDeployment
-	post /delete(DeleteDeploymentRequest) returns (DeleteDeploymentResponse)
+	post /delete(DeleteDeploymentRequest)
 	
 	@handler ApplyDeployment
 	post /apply(ApplyDeploymentRequest)
 	
 	@handler Scale
-	post /scale(ScaleRequest) returns (ScaleResponse)
+	post /scale(ScaleRequest)
 	
 }
 
 type CreateDeploymentRequest {
-	Todo string `json:"todo"`
+	Deployment Deployment `json:"deployment" yaml:"deployment"`
 }
 
 type CreateDeploymentResponse {
-	Error Error `json:"error,omitempty"`
+	Err []string `json:"err"`
 }
 
 type GetDeploymentRequest {
-	Todo string `json:"todo"`
+	Namespace string `json:"namespace"`
+	Name      string `json:"name"`
 }
 
 type GetDeploymentResponse {
@@ -41,10 +42,6 @@ type GetDeploymentResponse {
 
 type DeleteDeploymentRequest {
 	Todo string `json:"todo"`
-}
-
-type DeleteDeploymentResponse {
-	Error Error `json:"error,omitempty"`
 }
 
 type ApplyDeploymentRequest {

@@ -7,7 +7,7 @@ import (
 )
 service master-api{
 	@handler CreateContainer
-	post /create(CreateContainerRequest)
+	post /create(CreateContainerRequest) returns (CreateContainerResponse)
 	
 	@handler GetContainer
 	get /get(GetContainerRequest) returns (GetContainerResponse)
@@ -37,6 +37,10 @@ service master-api{
 
 type CreateContainerRequest {
 	Container Container `json:"container" yaml:"container"`
+}
+
+type CreateContainerResponse {
+	ContainerInfo ContainerInfo `json:"containerInfo"`
 }
 
 type GetContainerRequest {

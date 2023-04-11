@@ -9,4 +9,7 @@ containerConfig:
   args:
     - -c
     - while true; do echo $(date); sleep 1; done
+  # request:
+  #   cpu: 80000000000
+  #   memory: 1000000000000
   

@@ -29,79 +29,63 @@ func NewCreateContainerLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 	}
 }
 
-func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest) error {
+func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest) (resp *types.CreateContainerResponse, err error) {
 	var worker *types.Node
-	var err error
 
 	if req.Container.Metadata.Namespace == "" {
-		return fmt.Errorf("container's namespace cannot be empty")
+		return nil, fmt.Errorf("container's namespace cannot be empty")
 	}
 
 	// 判断 container 的 Namespace 是否存在
 	isExist, err := etcdutil.IsExistNamespace(l.svcCtx.Etcd, l.ctx, req.Container.Metadata.Namespace)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if !isExist {
-		return fmt.Errorf("namespace %s does not exist", req.Container.Metadata.Namespace)
+		return nil, fmt.Errorf("namespace '%s' does not exist", req.Container.Metadata.Namespace)
 	}
 
 	// 判断容器是否已经存在
 	key := etcdutil.GenerateKey("container", req.Container.Metadata.Namespace, req.Container.Metadata.Name)
 	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if found {
-		return fmt.Errorf("container %s already exist", req.Container.Metadata.Name)
+		return nil, fmt.Errorf("container '%s' already exist", req.Container.Metadata.Name)
 	}
 
 	// 如果有指定结点，根据选择的结点创建容器
 	if req.Container.ContainerConfig.NodeName != "" {
 		w, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, req.Container.ContainerConfig.NodeName)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		if !found {
-			return fmt.Errorf("node %s does not exist", req.Container.ContainerConfig.NodeName)
+			return nil, fmt.Errorf("node %s does not exist", req.Container.ContainerConfig.NodeName)
 		}
 
 		if w.Spec.Unschedulable {
-			return fmt.Errorf("the node %s is unschedulable", req.Container.ContainerConfig.NodeName)
+			return nil, fmt.Errorf("the node %s is unschedulable", req.Container.ContainerConfig.NodeName)
 		}
 
 		if !w.Status.Working {
-			return fmt.Errorf("the node %s is not active", req.Container.ContainerConfig.NodeName)
+			return nil, fmt.Errorf("the node %s is not active", req.Container.ContainerConfig.NodeName)
 		}
 
 		if !lo.Contains(w.Roles, "worker") {
-			return fmt.Errorf("the node %s is not a worker", req.Container.ContainerConfig.NodeName)
+			return nil, fmt.Errorf("the node %s is not a worker", req.Container.ContainerConfig.NodeName)
 		}
-		
-		worker = new(types.Node)
-		*worker = types.Node{
-			Metadata: types.Metadata{
-				Namespace: w.Metadata.Namespace,
-				Kind:      w.Metadata.Kind,
-				Name:      w.Metadata.Name,
-			},
-			Roles: w.Roles,
-			BaseURL: types.NodeURL{
-				WorkerURL: w.BaseURL.WorkerURL,
-				MasterURL: w.BaseURL.MasterURL,
-			},
-		}
+	}
 
-	} else {
-		// 从 etcd 中获取需要创建容器的 worker 结点，根据在线调度算法自动获取
-		worker, err = l.svcCtx.Worker(&req.Container)
-		if err != nil {
-			//return fmt.Errorf("not found worker can run")
-			return err
-		}
+	// 从 etcd 中获取需要创建容器的 worker 结点，根据在线调度算法自动获取
+	worker, err = l.svcCtx.Worker(&req.Container)
+	if err != nil {
+		//return fmt.Errorf("not found worker can run")
+		return nil, err
 	}
 
 	cli := client.NewClient(worker.BaseURL.WorkerURL)
@@ -122,6 +106,19 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 			Protocol: e.Protocol,
 			HostPort: e.HostPort,
 		})
+	}
+
+	if c.ContainerConfig.Limit.CPU == 0 {
+		c.ContainerConfig.Limit.CPU = 50000000
+	}
+	if c.ContainerConfig.Limit.Memory == 0 {
+		c.ContainerConfig.Limit.Memory = 104857600
+	}
+	if c.ContainerConfig.Request.CPU == 0 {
+		c.ContainerConfig.Limit.CPU = 50000000
+	}
+	if c.ContainerConfig.Request.Memory == 0 {
+		c.ContainerConfig.Limit.Memory = 104857600
 	}
 
 	// 访问 worker 结点并创建容器
@@ -146,9 +143,13 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	})
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 	c.ContainerStatus.ContainerID = res.ID
 	// 将容器信息写入etcd
-	return etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, c)
+	resp = new(types.CreateContainerResponse)
+	resp.ContainerInfo.Name = c.Metadata.Name
+	resp.ContainerInfo.ContainerID = res.ID
+	resp.ContainerInfo.Node = worker.Metadata.Name
+	return resp, etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, c)
 }

@@ -134,7 +134,9 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {}
+            "schema": {
+              "$ref": "#/definitions/CreateContainerResponse"
+            }
           }
         },
         "parameters": [
@@ -682,9 +684,7 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/DeleteDeploymentResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
@@ -716,7 +716,13 @@
         },
         "parameters": [
           {
-            "name": "todo",
+            "name": "namespace",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
             "in": "query",
             "required": true,
             "type": "string"
@@ -734,9 +740,7 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/ScaleResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
@@ -1516,6 +1520,9 @@
     "ContainerConfig": {
       "type": "object",
       "properties": {
+        "deployment": {
+          "type": "string"
+        },
         "image": {
           "type": "string"
         },
@@ -1560,6 +1567,26 @@
         "env",
         "limit",
         "request"
+      ]
+    },
+    "ContainerInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "node": {
+          "type": "string"
+        },
+        "containerID": {
+          "type": "string"
+        }
+      },
+      "title": "ContainerInfo",
+      "required": [
+        "name",
+        "node",
+        "containerID"
       ]
     },
     "ContainerLimit": {
@@ -1650,6 +1677,59 @@
         "info"
       ]
     },
+    "ContainerTemplate": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "node_name": {
+          "type": "string"
+        },
+        "command": {
+          "type": "string"
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expose": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExposedPort"
+          }
+        },
+        "env": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limit": {
+          "$ref": "#/definitions/ContainerLimit"
+        },
+        "request": {
+          "$ref": "#/definitions/ContainerRequest"
+        }
+      },
+      "title": "ContainerTemplate",
+      "required": [
+        "name",
+        "image",
+        "nodeName",
+        "command",
+        "args",
+        "expose",
+        "env",
+        "limit",
+        "request"
+      ]
+    },
     "CordonRequest": {
       "type": "object",
       "properties": {
@@ -1672,6 +1752,18 @@
       "title": "CreateContainerRequest",
       "required": [
         "container"
+      ]
+    },
+    "CreateContainerResponse": {
+      "type": "object",
+      "properties": {
+        "containerInfo": {
+          "$ref": "#/definitions/ContainerInfo"
+        }
+      },
+      "title": "CreateContainerResponse",
+      "required": [
+        "containerInfo"
       ]
     },
     "CreateCronJobRequest": {
@@ -1701,25 +1793,28 @@
     "CreateDeploymentRequest": {
       "type": "object",
       "properties": {
-        "todo": {
-          "type": "string"
+        "deployment": {
+          "$ref": "#/definitions/Deployment"
         }
       },
       "title": "CreateDeploymentRequest",
       "required": [
-        "todo"
+        "deployment"
       ]
     },
     "CreateDeploymentResponse": {
       "type": "object",
       "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
+        "err": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "title": "CreateDeploymentResponse",
       "required": [
-        "error"
+        "err"
       ]
     },
     "CreateJobRequest": {
@@ -1894,18 +1989,6 @@
         "todo"
       ]
     },
-    "DeleteDeploymentResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "DeleteDeploymentResponse",
-      "required": [
-        "error"
-      ]
-    },
     "DeleteJobRequest": {
       "type": "object",
       "properties": {
@@ -2001,25 +2084,41 @@
     "DeploymentConfig": {
       "type": "object",
       "properties": {
-        "todo": {
-          "type": "string"
+        "replicas": {
+          "type": "integer",
+          "format": "int32",
+          "default": "1"
+        },
+        "container_template": {
+          "$ref": "#/definitions/ContainerTemplate"
         }
       },
       "title": "DeploymentConfig",
       "required": [
-        "todo"
+        "replicas",
+        "container_template",
+        "containerTemplate"
       ]
     },
     "DeploymentStatus": {
       "type": "object",
       "properties": {
-        "todo": {
-          "type": "string"
+        "available_replicas": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "containers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContainerInfo"
+          }
         }
       },
       "title": "DeploymentStatus",
       "required": [
-        "todo"
+        "available_replicas",
+        "availableReplicas",
+        "containers"
       ]
     },
     "DrainRequest": {
@@ -2197,13 +2296,17 @@
     "GetDeploymentRequest": {
       "type": "object",
       "properties": {
-        "todo": {
+        "namespace": {
+          "type": "string"
+        },
+        "name": {
           "type": "string"
         }
       },
       "title": "GetDeploymentRequest",
       "required": [
-        "todo"
+        "namespace",
+        "name"
       ]
     },
     "GetDeploymentResponse": {

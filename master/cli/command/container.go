@@ -283,6 +283,9 @@ func containerGet() cli.Command {
 			info += color.BlueString("container id:     ") + fmt.Sprintf("%s\n", resp.Container.ContainerStatus.ContainerID)
 			
 			info += color.CyanString("spec:\n")
+			if resp.Container.ContainerConfig.Deployment != "" {
+				info += color.BlueString("deployment:       ") + fmt.Sprintf("%s\n", resp.Container.ContainerConfig.Deployment)
+			}
 			info += color.BlueString("image:            ") + fmt.Sprintf("%s\n", resp.Container.ContainerConfig.Image)
 			if resp.Container.ContainerConfig.NodeName != "" {
 				info += color.BlueString("node name:        ") + fmt.Sprintf("%s\n", resp.Container.ContainerConfig.NodeName)
@@ -324,7 +327,7 @@ func containerList() cli.Command {
 		Name:        "list",
 		Aliases: 	 []string{"ls"},
 		Usage:       "Use to list container info",
-		Description: "Use 'node list --namespace=<namespace> [args...]' to get node",
+		Description: "Use 'node list --namespace=<namespace>' to get node",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "namespace",

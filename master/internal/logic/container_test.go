@@ -29,7 +29,7 @@ func TestCreatContainer(t *testing.T) {
 	defer cancel()
 	l := NewCreateContainerLogic(ctx, &testSvcCtx)
 
-	err := l.CreateContainer(&types.CreateContainerRequest{
+	resp, err := l.CreateContainer(&types.CreateContainerRequest{
 		Container: types.Container{
 			Metadata: types.Metadata{
 				Namespace: "default",
@@ -55,6 +55,7 @@ func TestCreatContainer(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	t.Log(resp)
 	t.Log("create container success")
 }
 

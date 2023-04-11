@@ -23,8 +23,8 @@ func NewDeleteDeploymentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-func (l *DeleteDeploymentLogic) DeleteDeployment(req *types.DeleteDeploymentRequest) (resp *types.DeleteDeploymentResponse, err error) {
+func (l *DeleteDeploymentLogic) DeleteDeployment(req *types.DeleteDeploymentRequest) error {
 	// todo: add your logic here and delete this line
 
-	return
+	return nil
 }

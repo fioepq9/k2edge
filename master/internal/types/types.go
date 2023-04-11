@@ -9,6 +9,10 @@ type CreateContainerRequest struct {
 	Container Container `json:"container" yaml:"container"`
 }
 
+type CreateContainerResponse struct {
+	ContainerInfo ContainerInfo `json:"containerInfo"`
+}
+
 type GetContainerRequest struct {
 	Namespace string `form:"namespace"`
 	Name      string `form:"name"`
@@ -107,14 +111,15 @@ type Container struct {
 }
 
 type ContainerConfig struct {
-	Image    string           `json:"image" yaml:"image"`
-	NodeName string           `json:"node_name,optional" yaml:"nodeName"`
-	Command  string           `json:"command,optional" yaml:"command"`
-	Args     []string         `json:"args,optional" yaml:"args"`
-	Expose   []ExposedPort    `json:"expose,optional" yaml:"expose"`
-	Env      []string         `json:"env,optional" yaml:"env"`
-	Limit    ContainerLimit   `json:"limit,optional" yaml:"limit"`
-	Request  ContainerRequest `json:"request,optional" yaml:"request"`
+	Deployment string           `json:"deployment,optional"`
+	Image      string           `json:"image" yaml:"image"`
+	NodeName   string           `json:"node_name,optional" yaml:"nodeName"`
+	Command    string           `json:"command,optional" yaml:"command"`
+	Args       []string         `json:"args,optional" yaml:"args"`
+	Expose     []ExposedPort    `json:"expose,optional" yaml:"expose"`
+	Env        []string         `json:"env,optional" yaml:"env"`
+	Limit      ContainerLimit   `json:"limit,optional" yaml:"limit"`
+	Request    ContainerRequest `json:"request,optional" yaml:"request"`
 }
 
 type ContainerLimit struct {
@@ -178,18 +183,38 @@ type CronJob struct {
 	Status   CronJobStatus `json:"status"`
 }
 
+type Deployment struct {
+	Metadata Metadata         `json:"metadata" yaml:"metadata"`
+	Config   DeploymentConfig `json:"config" yaml:"config"`
+	Status   DeploymentStatus `json:"status" yaml:"status"`
+}
+
 type DeploymentConfig struct {
-	Todo string `json:"todo"`
+	Replicas int               `json:"replicas,default=1"`
+	Template ContainerTemplate `json:"container_template" yaml:"containerTemplate"`
+}
+
+type ContainerTemplate struct {
+	Name     string           `json:"name" yaml:"name"`
+	Image    string           `json:"image" yaml:"image"`
+	NodeName string           `json:"node_name,optional" yaml:"nodeName"`
+	Command  string           `json:"command,optional" yaml:"command"`
+	Args     []string         `json:"args,optional" yaml:"args"`
+	Expose   []ExposedPort    `json:"expose,optional" yaml:"expose"`
+	Env      []string         `json:"env,optional" yaml:"env"`
+	Limit    ContainerLimit   `json:"limit,optional" yaml:"limit"`
+	Request  ContainerRequest `json:"request,optional" yaml:"request"`
 }
 
 type DeploymentStatus struct {
-	Todo string `json:"todo"`
+	AvailableReplicas int             `json:"available_replicas" yaml:"availableReplicas"`
+	Containers        []ContainerInfo `json:"containers" yaml:"containers"`
 }
 
-type Deployment struct {
-	Metadata Metadata         `json:"metadata"`
-	Config   DeploymentConfig `json:"config"`
-	Status   DeploymentStatus `json:"status"`
+type ContainerInfo struct {
+	Name        string `json:"name" yaml:"name"`
+	Node        string `json:"node" yaml:"node"`
+	ContainerID string `json:"containerID" yaml:"containerID"`
 }
 
 type TokenConfig struct {
@@ -318,15 +343,16 @@ type LogsCronJobResponse struct {
 }
 
 type CreateDeploymentRequest struct {
-	Todo string `json:"todo"`
+	Deployment Deployment `json:"deployment" yaml:"deployment"`
 }
 
 type CreateDeploymentResponse struct {
-	Error Error `json:"error,omitempty"`
+	Err []string `json:"err"`
 }
 
 type GetDeploymentRequest struct {
-	Todo string `json:"todo"`
+	Namespace string `json:"namespace"`
+	Name      string `json:"name"`
 }
 
 type GetDeploymentResponse struct {
@@ -335,10 +361,6 @@ type GetDeploymentResponse struct {
 
 type DeleteDeploymentRequest struct {
 	Todo string `json:"todo"`
-}
-
-type DeleteDeploymentResponse struct {
-	Error Error `json:"error,omitempty"`
 }
 
 type ApplyDeploymentRequest struct {
