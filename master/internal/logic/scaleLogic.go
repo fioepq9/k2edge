@@ -2,7 +2,9 @@ package logic
 
 import (
 	"context"
+	"fmt"
 
+	"k2edge/etcdutil"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
 
@@ -23,8 +25,31 @@ func NewScaleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ScaleLogic 
 	}
 }
 
-func (l *ScaleLogic) Scale(req *types.ScaleRequest) (resp *types.ScaleResponse, err error) {
-	// todo: add your logic here and delete this line
+func (l *ScaleLogic) Scale(req *types.ScaleRequest) error {
+	// 判断 deployment 是否已经存在
+	key := etcdutil.GenerateKey("deployment", req.Namespace, req.Name)
+	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
+	if err != nil {
+		return err
+	}
 
-	return
+	if !found {
+		return fmt.Errorf("deployment %s does not exist", req.Name)
+	}
+
+	if req.Replicas <= 0 {
+		return fmt.Errorf("the replicas of deployment must be more than 0")
+	}
+
+	deployments, err := etcdutil.GetOne[types.Deployment](l.svcCtx.Etcd, l.ctx, key)
+	if err != nil {
+		return err
+	}
+	deployment := (*deployments)[0]
+	deployment.Config.Replicas = req.Replicas
+	err = etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, deployment)
+	if err != nil {
+		return err
+	}
+	return err
 }

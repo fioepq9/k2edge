@@ -19,14 +19,13 @@ func ScaleHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := logic.NewScaleLogic(r.Context(), svcCtx)
-		resp, err := l.Scale(&req)
+		err := l.Scale(&req)
 		var body types.Response
 		if err != nil {
 			body.Code = -1
 			body.Msg = err.Error()
 		} else {
 			body.Msg = "success"
-			body.Data = resp
 		}
 		httpx.OkJsonCtx(r.Context(), w, body)
 	}

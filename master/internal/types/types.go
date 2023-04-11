@@ -390,15 +390,15 @@ type DeleteDeploymentResponse struct {
 }
 
 type ApplyDeploymentRequest struct {
-	Todo string `json:"todo"`
+	Namespace string           `json:"namespace"`
+	Name      string           `json:"name"`
+	Config    DeploymentConfig `json:"config" yaml:"config"`
 }
 
 type ScaleRequest struct {
-	Todo string `json:"todo"`
-}
-
-type ScaleResponse struct {
-	Todo string `json:"todo"`
+	Namespace string `json:"namespace"`
+	Name      string `json:"name"`
+	Replicas  int    `json:"replicas"`
 }
 
 type CreateJobRequest struct {

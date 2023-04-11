@@ -1378,13 +1378,21 @@
     "ApplyDeploymentRequest": {
       "type": "object",
       "properties": {
-        "todo": {
+        "namespace": {
           "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "config": {
+          "$ref": "#/definitions/DeploymentConfig"
         }
       },
       "title": "ApplyDeploymentRequest",
       "required": [
-        "todo"
+        "namespace",
+        "name",
+        "config"
       ]
     },
     "ApplyTokenRequest": {
@@ -3064,25 +3072,22 @@
     "ScaleRequest": {
       "type": "object",
       "properties": {
-        "todo": {
+        "namespace": {
           "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "replicas": {
+          "type": "integer",
+          "format": "int32"
         }
       },
       "title": "ScaleRequest",
       "required": [
-        "todo"
-      ]
-    },
-    "ScaleResponse": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "ScaleResponse",
-      "required": [
-        "todo"
+        "namespace",
+        "name",
+        "replicas"
       ]
     },
     "ScheduleRequest": {

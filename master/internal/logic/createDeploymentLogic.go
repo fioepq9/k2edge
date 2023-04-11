@@ -53,9 +53,9 @@ func (l *CreateDeploymentLogic) CreateDeployment(req *types.CreateDeploymentRequ
 	}
 
 	if req.Deployment.Config.Replicas <= 0 {
-		req.Deployment.Config.Replicas = 1
+		return nil, fmt.Errorf("the replicas of deployment must be more than 0")
 	}
-	
+
 	req.Deployment.Metadata.Kind = "deployment"
 	req.Deployment.Status = types.DeploymentStatus{}
 
