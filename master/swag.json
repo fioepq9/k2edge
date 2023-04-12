@@ -632,7 +632,9 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {}
+            "schema": {
+              "$ref": "#/definitions/ApplyDeploymentResponse"
+            }
           }
         },
         "parameters": [
@@ -1393,6 +1395,21 @@
         "namespace",
         "name",
         "config"
+      ]
+    },
+    "ApplyDeploymentResponse": {
+      "type": "object",
+      "properties": {
+        "err": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "ApplyDeploymentResponse",
+      "required": [
+        "err"
       ]
     },
     "ApplyTokenRequest": {

@@ -395,6 +395,10 @@ type ApplyDeploymentRequest struct {
 	Config    DeploymentConfig `json:"config" yaml:"config"`
 }
 
+type ApplyDeploymentResponse struct {
+	Err []string `json:"err"`
+}
+
 type ScaleRequest struct {
 	Namespace string `json:"namespace"`
 	Name      string `json:"name"`

@@ -48,7 +48,6 @@ func (l *DeleteDeploymentLogic) DeleteDeployment(req *types.DeleteDeploymentRequ
 	if err != nil {
 		return nil, err
 	}
-	
 
 	resp = new(types.DeleteDeploymentResponse)
 	resp.Err = make([]string, 0) 
@@ -58,17 +57,17 @@ func (l *DeleteDeploymentLogic) DeleteDeployment(req *types.DeleteDeploymentRequ
 		worker, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, c.Node)
 		if err != nil {
 			resp.Err = append(resp.Err, err.Error())
-			break
+			continue
 		}
 
 		if !found {
 			resp.Err = append(resp.Err, fmt.Sprintf("cannot find container '%s' info", c.Name))
-			break
+			continue
 		}
 
 		if !worker.Status.Working {
 			resp.Err = append(resp.Err, fmt.Sprintf("the node where the container '%s' is located is not active", c.Name))
-			break
+			continue
 		}
 
 		// 向特定的 worker 结点发送获取conatiner信息的请求
@@ -80,7 +79,7 @@ func (l *DeleteDeploymentLogic) DeleteDeployment(req *types.DeleteDeploymentRequ
 
 		if err != nil {
 			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while stopping the container '%s'", c.Name))
-			break
+			continue
 		}
 
 		err = cli.Container.Remove(l.ctx, client.RemoveContainerRequest{
@@ -92,14 +91,14 @@ func (l *DeleteDeploymentLogic) DeleteDeployment(req *types.DeleteDeploymentRequ
 
 		if err != nil {
 			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while removing the container '%s'", c.Name))
-			break
+			continue
 		}
 
 		err = etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container",req.Namespace, c.Name))
 
 		if err != nil {
 			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while deleting the info of container '%s'", c.Name))
-			break
+			continue
 		}
 	}
 

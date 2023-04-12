@@ -19,7 +19,7 @@ service master-api {
 	post /delete(DeleteDeploymentRequest)
 	
 	@handler ApplyDeployment
-	post /apply(ApplyDeploymentRequest)
+	post /apply(ApplyDeploymentRequest) returns (ApplyDeploymentResponse)
 	
 	@handler Scale
 	post /scale(ScaleRequest)
@@ -77,10 +77,8 @@ type ApplyDeploymentRequest {
 	Config    DeploymentConfig `json:"config" yaml:"config"`
 }
 
-type ApplyDeploymentRequest {
-	Namespace string           `json:"namespace"`
-	Name      string           `json:"name"`
-	Config    DeploymentConfig `json:"config" yaml:"config"`
+type ApplyDeploymentResponse {
+	Err []string `json:"err"`
 }
 
 type ScaleRequest {
