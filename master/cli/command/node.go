@@ -69,7 +69,7 @@ func nodeCreate() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -136,7 +136,7 @@ func nodeList() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -190,7 +190,7 @@ func nodeTop() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -241,7 +241,7 @@ func nodeCordon() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -276,7 +276,7 @@ func nodeUncordon() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -311,7 +311,7 @@ func nodeDrain() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -346,7 +346,7 @@ func nodeDelete() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {

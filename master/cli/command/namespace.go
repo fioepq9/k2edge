@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"fmt"
 	"k2edge/master/client"
 	"k2edge/master/internal/types"
 
@@ -49,7 +48,7 @@ func namespaceCreate() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: 
@@ -84,7 +83,7 @@ func namespaceGet() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: 
@@ -125,7 +124,7 @@ func namespaceList() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: 
@@ -167,7 +166,7 @@ func namespaceDelete() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: 

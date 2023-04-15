@@ -12,7 +12,13 @@ func (s *Scheduler) Priority() *Scheduler {
 		return s
 	}
 
-	return s.SelectorSpreadPriority().LeastRequestedPriority().BalancedResourceAllocation().ImageLocalityPriority().MemoryPressure().CPUPressure().SortPriority()
+	return s.SelectorSpreadPriority().
+			LeastRequestedPriority().
+			BalancedResourceAllocation().
+			ImageLocalityPriority().
+			MemoryPressure().
+			CPUPressure().
+			SortPriority()
 }
 
 // 将node按nodeInfo中的分数排序

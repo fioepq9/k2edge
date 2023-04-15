@@ -96,7 +96,7 @@ func containerCreate() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -252,7 +252,7 @@ func containerGet() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -335,7 +335,7 @@ func containerList() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -399,7 +399,7 @@ func containerDelete() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -485,7 +485,7 @@ func containerApply() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -667,7 +667,7 @@ func containerAttach() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -793,7 +793,7 @@ func containerExec() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
@@ -913,7 +913,7 @@ func containerLogs() cli.Command {
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
-			return fmt.Errorf(err.Error())
+			return err
 		},
 
 		Action: func(ctx *cli.Context) error {
