@@ -122,6 +122,7 @@ type Container struct {
 
 type ContainerConfig struct {
 	Deployment string           `json:"deployment,optional"`
+	Job        string           `json:"job,optional"`
 	Image      string           `json:"image" yaml:"image"`
 	NodeName   string           `json:"node_name,optional" yaml:"nodeName"`
 	Command    string           `json:"command,optional" yaml:"command"`
@@ -155,42 +156,17 @@ type ContainerStatus struct {
 	Info        interface{} `json:"info,optional" yaml:"info"`
 }
 
-type JobConfig struct {
-	Todo string `json:"todo"`
-}
-
-type JobStatus struct {
-	Todo string `json:"todo"`
-}
-
 type Job struct {
-	Metadata              Metadata        `json:"metadata"`
-	Node                  string          `json:"node"`
-	Containers            []string        `json:"containers"`
-	Completions           int64           `json:"completions"`
-	BackoffLimit          int64           `json:"backoff_limit"`
-	ActiveDeadlineSeconds int64           `json:"active_deadline_seconds"`
-	StartTime             string          `json:"start_time"`
-	CompletionTime        string          `json:"completion_time"`
-	Active                int64           `json:"active"`
-	Failed                int64           `json:"failed"`
-	Succeeded             int64           `json:"succeeded"`
-	Status                string          `json:"status"`
-	Template              ContainerConfig `json:"template"`
+	Metadata  Metadata  `json:"metadata"`
+	Config    JobConfig `json:"config"`
+	Succeeded int       `json:"succeeded"`
 }
 
-type CronJobConfig struct {
-	Todo string `json:"todo"`
-}
-
-type CronJobStatus struct {
-	Todo string `json:"todo"`
-}
-
-type CronJob struct {
-	Metadata Metadata      `json:"metadata"`
-	Config   CronJobConfig `json:"config"`
-	Status   CronJobStatus `json:"status"`
+type JobConfig struct {
+	CreateTime  int64             `json:"create_time"`
+	Completions int64             `json:"completions"`
+	Schedule    string            `json:"schedule"`
+	Template    ContainerTemplate `json:"template"`
 }
 
 type Deployment struct {

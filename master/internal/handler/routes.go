@@ -77,47 +77,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/create",
-				Handler: CreateCronJobHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/get",
-				Handler: GetCronJobHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/delete",
-				Handler: DeleteCronJobHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/apply",
-				Handler: ApplyCronJobHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/rollout/history",
-				Handler: HistoryCronJobHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/rollout/undo",
-				Handler: UndoCronJobHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/logs",
-				Handler: LogsCronJobHandler(serverCtx),
-			},
-		},
-		rest.WithPrefix("/cronjob"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/create",
 				Handler: CreateDeploymentHandler(serverCtx),
 			},
 			{
@@ -162,19 +121,14 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: GetJobHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodGet,
+				Path:    "/list",
+				Handler: ListJobHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPost,
 				Path:    "/delete",
 				Handler: DeleteJobHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/apply",
-				Handler: ApplyJobHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/logs",
-				Handler: LogsJobHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/job"),

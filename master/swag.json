@@ -441,191 +441,6 @@
         ]
       }
     },
-    "/cronjob/apply": {
-      "post": {
-        "operationId": "ApplyCronJob",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/ApplyCronJobResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ApplyCronJobRequest"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
-    "/cronjob/create": {
-      "post": {
-        "operationId": "CreateCronJob",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/CreateCronJobResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CreateCronJobRequest"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
-    "/cronjob/delete": {
-      "post": {
-        "operationId": "DeleteCronJob",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/DeleteCronJobResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DeleteCronJobRequest"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
-    "/cronjob/get": {
-      "get": {
-        "operationId": "GetCronJob",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/GetCronJobResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "todo",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
-    "/cronjob/logs": {
-      "post": {
-        "operationId": "LogsCronJob",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/LogsCronJobResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/LogsCronJobRequest"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
-    "/cronjob/rollout/history": {
-      "get": {
-        "operationId": "HistoryCronJob",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/HistoryCronJobResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "todo",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
-    "/cronjob/rollout/undo": {
-      "post": {
-        "operationId": "UndoCronJob",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/UndoCronJobResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/UndoCronJobRequest"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
     "/deployment/apply": {
       "post": {
         "operationId": "ApplyDeployment",
@@ -786,42 +601,13 @@
         ]
       }
     },
-    "/job/apply": {
-      "post": {
-        "operationId": "ApplyJob",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/DeleteJobResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DeleteJobRequest"
-            }
-          }
-        ],
-        "requestBody": {},
-        "tags": [
-          "master-api"
-        ]
-      }
-    },
     "/job/create": {
       "post": {
         "operationId": "CreateJob",
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/CreateJobResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
@@ -846,9 +632,7 @@
         "responses": {
           "200": {
             "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/DeleteJobResponse"
-            }
+            "schema": {}
           }
         },
         "parameters": [
@@ -880,7 +664,14 @@
         },
         "parameters": [
           {
-            "name": "todo",
+            "name": "namespace",
+            "in": "query",
+            "required": true,
+            "type": "invalid",
+            "format": "UNKNOWN"
+          },
+          {
+            "name": "name",
             "in": "query",
             "required": true,
             "type": "string"
@@ -892,25 +683,30 @@
         ]
       }
     },
-    "/job/logs": {
-      "post": {
-        "operationId": "LogsJob",
+    "/job/list": {
+      "get": {
+        "operationId": "ListJob",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/LogsJobResponse"
+              "$ref": "#/definitions/ListJobResponse"
             }
           }
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "namespace",
+            "in": "query",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/LogsJobRequest"
-            }
+            "type": "invalid",
+            "format": "UNKNOWN"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
           }
         ],
         "requestBody": {},
@@ -1353,30 +1149,6 @@
         "container"
       ]
     },
-    "ApplyCronJobRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "ApplyCronJobRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "ApplyCronJobResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "ApplyCronJobResponse",
-      "required": [
-        "error"
-      ]
-    },
     "ApplyDeploymentRequest": {
       "type": "object",
       "properties": {
@@ -1571,6 +1343,9 @@
       "type": "object",
       "properties": {
         "deployment": {
+          "type": "string"
+        },
+        "job": {
           "type": "string"
         },
         "image": {
@@ -1816,30 +1591,6 @@
         "containerInfo"
       ]
     },
-    "CreateCronJobRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "CreateCronJobRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "CreateCronJobResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "CreateCronJobResponse",
-      "required": [
-        "error"
-      ]
-    },
     "CreateDeploymentRequest": {
       "type": "object",
       "properties": {
@@ -1870,25 +1621,13 @@
     "CreateJobRequest": {
       "type": "object",
       "properties": {
-        "todo": {
-          "type": "string"
+        "job": {
+          "$ref": "#/definitions/Job"
         }
       },
       "title": "CreateJobRequest",
       "required": [
-        "todo"
-      ]
-    },
-    "CreateJobResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "CreateJobResponse",
-      "required": [
-        "error"
+        "job"
       ]
     },
     "CreateNamespaceRequest": {
@@ -1927,50 +1666,6 @@
         "error"
       ]
     },
-    "CronJob": {
-      "type": "object",
-      "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
-        },
-        "config": {
-          "$ref": "#/definitions/CronJobConfig"
-        },
-        "status": {
-          "$ref": "#/definitions/CronJobStatus"
-        }
-      },
-      "title": "CronJob",
-      "required": [
-        "metadata",
-        "config",
-        "status"
-      ]
-    },
-    "CronJobConfig": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "CronJobConfig",
-      "required": [
-        "todo"
-      ]
-    },
-    "CronJobStatus": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "CronJobStatus",
-      "required": [
-        "todo"
-      ]
-    },
     "DeleteContainerRequest": {
       "type": "object",
       "properties": {
@@ -2001,30 +1696,6 @@
       "required": [
         "namespace",
         "name"
-      ]
-    },
-    "DeleteCronJobRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "DeleteCronJobRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "DeleteCronJobResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "DeleteCronJobResponse",
-      "required": [
-        "error"
       ]
     },
     "DeleteDeploymentRequest": {
@@ -2077,25 +1748,17 @@
     "DeleteJobRequest": {
       "type": "object",
       "properties": {
-        "todo": {
+        "namespace": {
+          "$ref": "#/definitions/Namespace"
+        },
+        "name": {
           "type": "string"
         }
       },
       "title": "DeleteJobRequest",
       "required": [
-        "todo"
-      ]
-    },
-    "DeleteJobResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "DeleteJobResponse",
-      "required": [
-        "error"
+        "namespace",
+        "name"
       ]
     },
     "DeleteNamespaceRequest": {
@@ -2389,30 +2052,6 @@
         "container"
       ]
     },
-    "GetCronJobRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "GetCronJobRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "GetCronJobResponse": {
-      "type": "object",
-      "properties": {
-        "cronjob": {
-          "$ref": "#/definitions/CronJob"
-        }
-      },
-      "title": "GetCronJobResponse",
-      "required": [
-        "cronjob"
-      ]
-    },
     "GetDeploymentRequest": {
       "type": "object",
       "properties": {
@@ -2444,13 +2083,17 @@
     "GetJobRequest": {
       "type": "object",
       "properties": {
-        "todo": {
+        "namespace": {
+          "$ref": "#/definitions/Namespace"
+        },
+        "name": {
           "type": "string"
         }
       },
       "title": "GetJobRequest",
       "required": [
-        "todo"
+        "namespace",
+        "name"
       ]
     },
     "GetJobResponse": {
@@ -2521,121 +2164,82 @@
         "token"
       ]
     },
-    "HistoryCronJobRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "HistoryCronJobRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "HistoryCronJobResponse": {
-      "type": "object",
-      "properties": {
-        "cronjob": {
-          "$ref": "#/definitions/CronJob"
-        }
-      },
-      "title": "HistoryCronJobResponse",
-      "required": [
-        "cronjob"
-      ]
-    },
     "Job": {
       "type": "object",
       "properties": {
         "metadata": {
           "$ref": "#/definitions/Metadata"
         },
-        "node": {
-          "type": "string"
-        },
-        "containers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "completions": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "backoff_limit": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "active_deadline_seconds": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "start_time": {
-          "type": "string"
-        },
-        "completion_time": {
-          "type": "string"
-        },
-        "active": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "failed": {
-          "type": "integer",
-          "format": "int64"
+        "config": {
+          "$ref": "#/definitions/JobConfig"
         },
         "succeeded": {
           "type": "integer",
-          "format": "int64"
-        },
-        "status": {
-          "type": "string"
-        },
-        "template": {
-          "$ref": "#/definitions/ContainerConfig"
+          "format": "int32"
         }
       },
       "title": "Job",
       "required": [
         "metadata",
-        "node",
-        "containers",
-        "completions",
-        "backoff_limit",
-        "active_deadline_seconds",
-        "start_time",
-        "completion_time",
-        "active",
-        "failed",
-        "succeeded",
-        "status",
-        "template"
+        "config",
+        "succeeded"
       ]
     },
     "JobConfig": {
       "type": "object",
       "properties": {
-        "todo": {
+        "create_time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "completions": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "schedule": {
           "type": "string"
+        },
+        "template": {
+          "$ref": "#/definitions/ContainerTemplate"
         }
       },
       "title": "JobConfig",
       "required": [
-        "todo"
+        "create_time",
+        "completions",
+        "schedule",
+        "template"
       ]
     },
-    "JobStatus": {
+    "JobSimpleInfo": {
       "type": "object",
       "properties": {
-        "todo": {
+        "namespace": {
           "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "completions": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "succeeded": {
+          "type": "integer",
+          "format": "int32"
         }
       },
-      "title": "JobStatus",
+      "title": "JobSimpleInfo",
       "required": [
-        "todo"
+        "namespace",
+        "name",
+        "create_time",
+        "completions",
+        "succeeded"
       ]
     },
     "ListContainerRequest": {
@@ -2682,6 +2286,37 @@
         }
       },
       "title": "ListDeploymentResponse",
+      "required": [
+        "info"
+      ]
+    },
+    "ListJobRequest": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "$ref": "#/definitions/Namespace"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "ListJobRequest",
+      "required": [
+        "namespace",
+        "name"
+      ]
+    },
+    "ListJobResponse": {
+      "type": "object",
+      "properties": {
+        "info": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JobSimpleInfo"
+          }
+        }
+      },
+      "title": "ListJobResponse",
       "required": [
         "info"
       ]
@@ -2749,54 +2384,6 @@
       "required": [
         "namespace",
         "name"
-      ]
-    },
-    "LogsCronJobRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "LogsCronJobRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "LogsCronJobResponse": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "LogsCronJobResponse",
-      "required": [
-        "todo"
-      ]
-    },
-    "LogsJobRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "LogsJobRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "LogsJobResponse": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "LogsJobResponse",
-      "required": [
-        "todo"
       ]
     },
     "Metadata": {
@@ -3259,30 +2846,6 @@
       "title": "UncordonRequest",
       "required": [
         "name"
-      ]
-    },
-    "UndoCronJobRequest": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "UndoCronJobRequest",
-      "required": [
-        "todo"
-      ]
-    },
-    "UndoCronJobResponse": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/Error"
-        }
-      },
-      "title": "UndoCronJobResponse",
-      "required": [
-        "error"
       ]
     }
   },

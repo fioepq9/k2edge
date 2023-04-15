@@ -633,6 +633,9 @@
         "deployment": {
           "type": "string"
         },
+        "job": {
+          "type": "string"
+        },
         "image": {
           "type": "string"
         },
@@ -868,50 +871,6 @@
         "id"
       ]
     },
-    "CronJob": {
-      "type": "object",
-      "properties": {
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
-        },
-        "config": {
-          "$ref": "#/definitions/CronJobConfig"
-        },
-        "status": {
-          "$ref": "#/definitions/CronJobStatus"
-        }
-      },
-      "title": "CronJob",
-      "required": [
-        "metadata",
-        "config",
-        "status"
-      ]
-    },
-    "CronJobConfig": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "CronJobConfig",
-      "required": [
-        "todo"
-      ]
-    },
-    "CronJobStatus": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "CronJobStatus",
-      "required": [
-        "todo"
-      ]
-    },
     "Deployment": {
       "type": "object",
       "properties": {
@@ -1086,91 +1045,45 @@
         "metadata": {
           "$ref": "#/definitions/Metadata"
         },
-        "node": {
-          "type": "string"
-        },
-        "containers": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "completions": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "backoff_limit": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "active_deadline_seconds": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "start_time": {
-          "type": "string"
-        },
-        "completion_time": {
-          "type": "string"
-        },
-        "active": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "failed": {
-          "type": "integer",
-          "format": "int64"
+        "config": {
+          "$ref": "#/definitions/JobConfig"
         },
         "succeeded": {
           "type": "integer",
-          "format": "int64"
-        },
-        "status": {
-          "type": "string"
-        },
-        "template": {
-          "$ref": "#/definitions/ContainerConfig"
+          "format": "int32"
         }
       },
       "title": "Job",
       "required": [
         "metadata",
-        "node",
-        "containers",
-        "completions",
-        "backoff_limit",
-        "active_deadline_seconds",
-        "start_time",
-        "completion_time",
-        "active",
-        "failed",
-        "succeeded",
-        "status",
-        "template"
+        "config",
+        "succeeded"
       ]
     },
     "JobConfig": {
       "type": "object",
       "properties": {
-        "todo": {
+        "create_time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "completions": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "schedule": {
           "type": "string"
+        },
+        "template": {
+          "$ref": "#/definitions/ContainerTemplate"
         }
       },
       "title": "JobConfig",
       "required": [
-        "todo"
-      ]
-    },
-    "JobStatus": {
-      "type": "object",
-      "properties": {
-        "todo": {
-          "type": "string"
-        }
-      },
-      "title": "JobStatus",
-      "required": [
-        "todo"
+        "create_time",
+        "completions",
+        "schedule",
+        "template"
       ]
     },
     "ListContainersRequest": {

@@ -17,6 +17,7 @@ type Container {
 
 type ContainerConfig {
 	Deployment string           `json:"deployment,optional"`
+	Job        string           `json:"job,optional"`
 	Image      string           `json:"image" yaml:"image"`
 	NodeName   string           `json:"node_name,optional" yaml:"nodeName"`
 	Command    string           `json:"command,optional" yaml:"command"`
@@ -55,44 +56,17 @@ type ContainerStatus {
 }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Job <<<<<<<<<<<<<<<<<<<<<<<<<<
-type JobConfig {
-	Todo string `json:"todo"`
-}
-
-type JobStatus {
-	Todo string `json:"todo"`
-}
-
 type Job {
-	Metadata              Metadata `json:"metadata"`
-	Node                  string   `json:"node"`
-	Containers            []string `json:"containers"`
-	Completions           int64    `json:"completions"`
-	BackoffLimit          int64    `json:"backoff_limit"`
-	ActiveDeadlineSeconds int64    `json:"active_deadline_seconds"`
-	StartTime             string   `json:"start_time"`
-	CompletionTime        string   `json:"completion_time"`
-	Active                int64    `json:"active"`
-	Failed                int64    `json:"failed"`
-	Succeeded             int64    `json:"succeeded"`
-	Status                string   `json:"status"`
-
-	Template ContainerConfig `json:"template"`
+	Metadata  Metadata  `json:"metadata"`
+	Config    JobConfig `json:"config"`
+	Succeeded int       `json:"succeeded"`
 }
 
-//>>>>>>>>>>>>>>>>>>>>>>>>>>> CronJob <<<<<<<<<<<<<<<<<<<<<<<<<<
-type CronJobConfig {
-	Todo string `json:"todo"`
-}
-
-type CronJobStatus {
-	Todo string `json:"todo"`
-}
-
-type CronJob {
-	Metadata Metadata      `json:"metadata"`
-	Config   CronJobConfig `json:"config"`
-	Status   CronJobStatus `json:"status"`
+type JobConfig {
+	CreateTime  int64             `json:"create_time"`
+	Completions int64             `json:"completions"`
+	Schedule    string            `json:"schedule"`
+	Template    ContainerTemplate `json:"template"`
 }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Deployment <<<<<<<<<<<<<<<<<<<<<<<<<<

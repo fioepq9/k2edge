@@ -53,8 +53,6 @@ master.api: master-api
 	echo "" >> tmp/master.api
 	cat api/container.api >> tmp/master.api
 	echo "" >> tmp/master.api
-	cat api/cronjob.api >> tmp/master.api
-	echo "" >> tmp/master.api
 	cat api/deployment.api >> tmp/master.api
 	echo "" >> tmp/master.api
 	cat api/namespace.api >> tmp/master.api
