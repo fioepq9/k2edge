@@ -84,7 +84,6 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	// 从 etcd 中获取需要创建容器的 worker 结点，根据在线调度算法自动获取
 	worker, err = l.svcCtx.Worker(&req.Container)
 	if err != nil {
-		//return fmt.Errorf("not found worker can run")
 		return nil, err
 	}
 
@@ -146,6 +145,7 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		return nil, err
 	}
 	c.ContainerStatus.ContainerID = res.ID
+	c.ContainerStatus.Status = "running"
 	// 将容器信息写入etcd
 	resp = new(types.CreateContainerResponse)
 	resp.ContainerInfo.Name = c.Metadata.Name

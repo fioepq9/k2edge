@@ -1056,8 +1056,7 @@
       "title": "Job",
       "required": [
         "metadata",
-        "config",
-        "succeeded"
+        "config"
       ]
     },
     "JobConfig": {
@@ -1069,7 +1068,7 @@
         },
         "completions": {
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
         "schedule": {
           "type": "string"
@@ -1080,9 +1079,7 @@
       },
       "title": "JobConfig",
       "required": [
-        "create_time",
         "completions",
-        "schedule",
         "template"
       ]
     },

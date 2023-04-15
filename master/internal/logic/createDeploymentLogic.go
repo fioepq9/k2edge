@@ -70,7 +70,7 @@ func (l *CreateDeploymentLogic) CreateDeployment(req *types.CreateDeploymentRequ
 				Name: req.Deployment.Metadata.Name + "-" + req.Deployment.Config.Template.Name,
 			},
 			ContainerConfig: types.ContainerConfig{
-				Deployment: req.Deployment.Metadata.Name,
+				Deployment: req.Deployment.Metadata.Namespace + "/" + req.Deployment.Metadata.Name,
 				Image: req.Deployment.Config.Template.Image,
 				NodeName: req.Deployment.Config.Template.NodeName,
 				Command: req.Deployment.Config.Template.Command,

@@ -37,7 +37,7 @@ func (l *GetDeploymentLogic) GetDeployment(req *types.GetDeploymentRequest) (res
 		return nil, fmt.Errorf("deployment %s does not exist", req.Name)
 	}
 
-	//根据 deployment 里 nodeName 去 etcd 里查询的 nodeBaseURL
+	//获取deployment信息
 	deployment, err := etcdutil.GetOne[types.Deployment](l.svcCtx.Etcd, l.ctx, key)
 	if err != nil {
 		return nil, err

@@ -159,13 +159,13 @@ type ContainerStatus struct {
 type Job struct {
 	Metadata  Metadata  `json:"metadata"`
 	Config    JobConfig `json:"config"`
-	Succeeded int       `json:"succeeded"`
+	Succeeded int       `json:"succeeded,optional"`
 }
 
 type JobConfig struct {
-	CreateTime  int64             `json:"create_time"`
-	Completions int64             `json:"completions"`
-	Schedule    string            `json:"schedule"`
+	CreateTime  int64             `json:"create_time,optional"`
+	Completions int               `json:"completions"`
+	Schedule    string            `json:"schedule,optional"`
 	Template    ContainerTemplate `json:"template"`
 }
 

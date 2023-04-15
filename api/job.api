@@ -24,8 +24,8 @@ type CreateJobRequest {
 }
 
 type GetJobRequest {
-	Namespace Namespace `form:"namespace"`
-	Name      string    `form:"name"`
+	Namespace string `form:"namespace"`
+	Name      string `form:"name"`
 }
 
 type GetJobResponse {
@@ -33,8 +33,7 @@ type GetJobResponse {
 }
 
 type ListJobRequest {
-	Namespace Namespace `form:"namespace"`
-	Name      string    `form:"name"`
+	Namespace string `form:"namespace,optional"`
 }
 
 type ListJobResponse {
@@ -50,6 +49,6 @@ type JobSimpleInfo {
 }
 
 type DeleteJobRequest {
-	Namespace Namespace `json:"namespace"`
-	Name      string    `json:"name"`
+	Namespace string `json:"namespace"`
+	Name      string `json:"name"`
 }

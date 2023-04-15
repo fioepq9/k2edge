@@ -667,8 +667,7 @@
             "name": "namespace",
             "in": "query",
             "required": true,
-            "type": "invalid",
-            "format": "UNKNOWN"
+            "type": "string"
           },
           {
             "name": "name",
@@ -698,14 +697,7 @@
           {
             "name": "namespace",
             "in": "query",
-            "required": true,
-            "type": "invalid",
-            "format": "UNKNOWN"
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "required": true,
+            "required": false,
             "type": "string"
           }
         ],
@@ -1749,7 +1741,7 @@
       "type": "object",
       "properties": {
         "namespace": {
-          "$ref": "#/definitions/Namespace"
+          "type": "string"
         },
         "name": {
           "type": "string"
@@ -2084,7 +2076,7 @@
       "type": "object",
       "properties": {
         "namespace": {
-          "$ref": "#/definitions/Namespace"
+          "type": "string"
         },
         "name": {
           "type": "string"
@@ -2181,8 +2173,7 @@
       "title": "Job",
       "required": [
         "metadata",
-        "config",
-        "succeeded"
+        "config"
       ]
     },
     "JobConfig": {
@@ -2194,7 +2185,7 @@
         },
         "completions": {
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
         "schedule": {
           "type": "string"
@@ -2205,9 +2196,7 @@
       },
       "title": "JobConfig",
       "required": [
-        "create_time",
         "completions",
-        "schedule",
         "template"
       ]
     },
@@ -2294,17 +2283,10 @@
       "type": "object",
       "properties": {
         "namespace": {
-          "$ref": "#/definitions/Namespace"
-        },
-        "name": {
           "type": "string"
         }
       },
-      "title": "ListJobRequest",
-      "required": [
-        "namespace",
-        "name"
-      ]
+      "title": "ListJobRequest"
     },
     "ListJobResponse": {
       "type": "object",
