@@ -57,33 +57,33 @@ type ContainerStatus {
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Job <<<<<<<<<<<<<<<<<<<<<<<<<<
 type Job {
-	Metadata  Metadata  `json:"metadata"`
-	Config    JobConfig `json:"config"`
-	Succeeded int       `json:"succeeded,optional"`
+	Metadata  Metadata  `json:"metadata" yaml:"matadata"`
+	Config    JobConfig `json:"config" yaml:"config"`
+	Succeeded int       `json:"succeeded,optional" yaml:"succeeded"`
 }
 
 type JobConfig {
 	CreateTime  int64             `json:"create_time,optional"`
-	Completions int               `json:"completions"`
-	Schedule    string            `json:"schedule,optional"`
-	Template    ContainerTemplate `json:"template"`
+	Completions int               `json:"completions" yaml:"completions"`
+	Schedule    string            `json:"schedule,optional" yaml:"schedule"`
+	Template    ContainerTemplate `json:"template" yaml:"template"`
 }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Deployment <<<<<<<<<<<<<<<<<<<<<<<<<<
 type Deployment {
 	Metadata Metadata         `json:"metadata" yaml:"metadata"`
 	Config   DeploymentConfig `json:"config" yaml:"config"`
-	Status   DeploymentStatus `json:"status" yaml:"status"`
+	Status   DeploymentStatus `json:"status,optional" yaml:"status"`
 }
 
 type DeploymentConfig {
 	CreateTime int64             `json:"create_time,optional"`
-	Replicas   int               `json:"replicas,default=1"`
+	Replicas   int               `json:"replicas,default=1" yaml:"replicas"`
 	Template   ContainerTemplate `json:"container_template" yaml:"containerTemplate"`
 }
 
 type ContainerTemplate {
-	Name     string           `json:"name" yaml:"name"`
+	Name     string           `json:"name,optional" yaml:"name"`
 	Image    string           `json:"image" yaml:"image"`
 	NodeName string           `json:"node_name,optional" yaml:"nodeName"`
 	Command  string           `json:"command,optional" yaml:"command"`
@@ -96,7 +96,7 @@ type ContainerTemplate {
 
 type DeploymentStatus {
 	AvailableReplicas int             `json:"available_replicas" yaml:"availableReplicas"`
-	Containers        []ContainerInfo `json:"containers" yaml:"containers"`
+	Containers        []ContainerInfo `json:"containers,optional" yaml:"containers"`
 }
 
 type ContainerInfo {

@@ -71,5 +71,5 @@ func PreProcessing(nodes []types.Node) ([]types.Node, error) {
 
 
 func Schedule(nodes []types.Node, container *types.Container) ([]types.Node, error) {
-	return NewScheduler(nodes, container).Predicate().Priority().GetNodes()
+	return NewScheduler(nodes, container).GetNodes()
 }

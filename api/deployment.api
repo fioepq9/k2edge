@@ -72,8 +72,8 @@ type DeleteDeploymentResponse {
 }
 
 type ApplyDeploymentRequest {
-	Namespace string           `json:"namespace"`
-	Name      string           `json:"name"`
+	Namespace string           `json:"namespace" yaml:"namespace"`
+	Name      string           `json:"name" yaml:"name"`
 	Config    DeploymentConfig `json:"config" yaml:"config"`
 }
 

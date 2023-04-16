@@ -2220,6 +2220,9 @@
         "succeeded": {
           "type": "integer",
           "format": "int32"
+        },
+        "schedule": {
+          "type": "string"
         }
       },
       "title": "JobSimpleInfo",
@@ -2228,7 +2231,8 @@
         "name",
         "create_time",
         "completions",
-        "succeeded"
+        "succeeded",
+        "schedule"
       ]
     },
     "ListContainerRequest": {

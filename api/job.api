@@ -20,7 +20,7 @@ service master-api{
 }
 
 type CreateJobRequest {
-	Job Job `json:"job"`
+	Job Job `json:"job" yaml:"job"`
 }
 
 type GetJobRequest {
@@ -46,6 +46,7 @@ type JobSimpleInfo {
 	CreateTime  int64  `json:"create_time"`
 	Completions int    `json:"completions"`
 	Succeeded   int    `json:"succeeded"`
+	Schedule    string `json:"schedule"`
 }
 
 type DeleteJobRequest {

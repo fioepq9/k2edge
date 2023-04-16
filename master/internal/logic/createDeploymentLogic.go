@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"k2edge/etcdutil"
@@ -27,6 +28,8 @@ func NewCreateDeploymentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *CreateDeploymentLogic) CreateDeployment(req *types.CreateDeploymentRequest) (resp *types.CreateDeploymentResponse, err error) {
+	resp = new(types.CreateDeploymentResponse)
+	resp.Err = make([]string, 0)
 	if req.Deployment.Metadata.Namespace == "" {
 		return nil, fmt.Errorf("deployment's namespace cannot be empty")
 	}
@@ -60,7 +63,7 @@ func (l *CreateDeploymentLogic) CreateDeployment(req *types.CreateDeploymentRequ
 	req.Deployment.Status = types.DeploymentStatus{}
 
 	// 创建 container 副本
-	retryTimes := 3 // 创建container副本尝试次数
+	retryTimes := 1 // 创建container副本尝试次数
 
 	createContainerRequest := &types.CreateContainerRequest{
 		Container: types.Container{
@@ -85,21 +88,28 @@ func (l *CreateDeploymentLogic) CreateDeployment(req *types.CreateDeploymentRequ
 	
 	deployment := req.Deployment
 	deployment.Config.CreateTime = time.Now().Unix()
-	resp = new(types.CreateDeploymentResponse)
-	resp.Err = make([]string, 0)
 	logic := NewCreateContainerLogic(l.ctx, l.svcCtx)
 	for i := 1; i <= req.Deployment.Config.Replicas; i++ {
-		createContainerRequest.Container.Metadata.Name =fmt.Sprintf("%s-%s-%d",req.Deployment.Metadata.Name, req.Deployment.Config.Template.Name, i)
+		if req.Deployment.Config.Template.Name == "" {
+			createContainerRequest.Container.Metadata.Name =fmt.Sprintf("%s-%s-%d",req.Deployment.Metadata.Name, req.Deployment.Config.Template.Image, i)
+		} else {
+			createContainerRequest.Container.Metadata.Name =fmt.Sprintf("%s-%s-%d",req.Deployment.Metadata.Name, req.Deployment.Config.Template.Name, i)
+		}
 		var info *types.CreateContainerResponse
 		for j := 1; j <= retryTimes; j++ {
 			info, err = logic.CreateContainer(createContainerRequest)
 			if err == nil {
 				break;
+			} else {
+				if strings.Contains(err.Error(), "repository does not exist") {
+					return nil, err
+				}
 			}
 		}
+		
 
 		if err != nil {
-			resp.Err = append(resp.Err, fmt.Sprintf("creating the '%d th' container replica failed with %d retries. will try to create again later", i, retryTimes))
+			resp.Err = append(resp.Err, fmt.Sprintf("creating the '%d th' container replica failed with %d retries. will try to create again later. error: %s", i, retryTimes, err))
 		} else {
 			deployment.Status.Containers = append(deployment.Status.Containers, types.ContainerInfo{
 				Name: createContainerRequest.Container.Metadata.Name,

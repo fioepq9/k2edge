@@ -48,8 +48,9 @@ func NewClient(baseurl string, opt ...Option) *Client {
 		o(c.opt)
 	}
 	c.req = req.C().
+	DevMode().
 		SetBaseURL(c.opt.HttpBaseURL()).
-		SetCommonRetryCount(2).
+		SetCommonRetryCount(0).
 		SetCommonRetryBackoffInterval(time.Second, 5*time.Second).
 		AddCommonRetryCondition(func(resp *req.Response, err error) bool {
 			return err != nil || resp.StatusCode >= 500

@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"k2edge/etcdutil"
@@ -28,6 +29,8 @@ func NewApplyDeploymentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *A
 }
 
 func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest) (resp *types.ApplyDeploymentResponse , err error) {
+	resp = new(types.ApplyDeploymentResponse)
+	resp.Err = make([]string, 0)
 	// 判断 deployment 是否已经存在
 	key := etcdutil.GenerateKey("deployment", req.Namespace, req.Name)
 	found, err := etcdutil.IsExistKey(l.svcCtx.Etcd, l.ctx, key)
@@ -52,7 +55,7 @@ func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest
 	deployment.Config.CreateTime = time.Now().Unix()
 
 	// 创建 container 副本
-	retryTimes := 3 // 创建container副本尝试次数
+	retryTimes := 1 // 创建container副本尝试次数
 
 	createContainerRequest := &types.CreateContainerRequest{
 		Container: types.Container{
@@ -75,17 +78,23 @@ func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest
 		},
 	}
 	
-	resp = new(types.ApplyDeploymentResponse)
-	resp.Err = make([]string, 0)
 
 	logicC := NewCreateContainerLogic(l.ctx, l.svcCtx)
 	for i := 1; i <= req.Config.Replicas; i++ {
-		createContainerRequest.Container.Metadata.Name =fmt.Sprintf("%s-%s-%d",deployment.Metadata.Name, deployment.Config.Template.Name, i)
+		if req.Config.Template.Name == "" {
+			createContainerRequest.Container.Metadata.Name =fmt.Sprintf("%s-%s-%d",req.Name, req.Config.Template.Image, i)
+		} else {
+			createContainerRequest.Container.Metadata.Name =fmt.Sprintf("%s-%s-%d",req.Name, req.Config.Template.Name, i)
+		}
 		var info *types.CreateContainerResponse
 		for j := 1; j <= retryTimes; j++ {
 			info, err = logicC.CreateContainer(createContainerRequest)
 			if err == nil {
 				break;
+			} else {
+				if strings.Contains(err.Error(), "repository does not exist") {
+					return nil, err
+				}
 			}
 		}
 

@@ -162,7 +162,7 @@ type JobConfig struct {
 type Deployment struct {
 	Metadata Metadata         `json:"metadata" yaml:"metadata"`
 	Config   DeploymentConfig `json:"config" yaml:"config"`
-	Status   DeploymentStatus `json:"status" yaml:"status"`
+	Status   DeploymentStatus `json:"status,optional" yaml:"status"`
 }
 
 type DeploymentConfig struct {
@@ -172,7 +172,7 @@ type DeploymentConfig struct {
 }
 
 type ContainerTemplate struct {
-	Name     string           `json:"name" yaml:"name"`
+	Name     string           `json:"name,optional" yaml:"name"`
 	Image    string           `json:"image" yaml:"image"`
 	NodeName string           `json:"node_name,optional" yaml:"nodeName"`
 	Command  string           `json:"command,optional" yaml:"command"`
@@ -185,7 +185,7 @@ type ContainerTemplate struct {
 
 type DeploymentStatus struct {
 	AvailableReplicas int             `json:"available_replicas" yaml:"availableReplicas"`
-	Containers        []ContainerInfo `json:"containers" yaml:"containers"`
+	Containers        []ContainerInfo `json:"containers,optional" yaml:"containers"`
 }
 
 type ContainerInfo struct {
@@ -352,6 +352,7 @@ type JobSimpleInfo struct {
 	CreateTime  int64  `json:"create_time"`
 	Completions int    `json:"completions"`
 	Succeeded   int    `json:"succeeded"`
+	Schedule    string `json:"schedule"`
 }
 
 type DeleteJobRequest struct {

@@ -13,7 +13,7 @@ type deploymentAPI struct {
 }
 
 func (d deploymentAPI) Create(ctx context.Context, req types.CreateDeploymentRequest) (resp *types.CreateDeploymentResponse, err error) {
-	err = d.req.Post("/deployment/create").SetBodyJsonMarshal(req).Do(ctx).Into(resp)
+	err = d.req.Post("/deployment/create").SetBodyJsonMarshal(req).Do(ctx).Into(&resp)
 	return
 }
 
@@ -39,7 +39,7 @@ func (d deploymentAPI) Delete(ctx context.Context, req types.DeleteDeploymentReq
 }
 
 func (d deploymentAPI) Apply(ctx context.Context, req types.ApplyDeploymentRequest)(resp *types.ApplyDeploymentResponse, err error) {
-	err = d.req.Post("/deployment/apply").SetBodyJsonMarshal(req).Do(ctx).Into(resp)
+	err = d.req.Post("/deployment/apply").SetBodyJsonMarshal(req).Do(ctx).Into(&resp)
 	return
 }
 

@@ -80,6 +80,8 @@ func (l *CreateJobLogic) CreateJob(req *types.CreateJobRequest) error {
 				Args: req.Job.Config.Template.Args,
 				Expose: req.Job.Config.Template.Expose,
 				Env: req.Job.Config.Template.Env,
+				Limit: req.Job.Config.Template.Limit,
+				Request: job.Config.Template.Request,
 			},
 		},
 	}
@@ -88,12 +90,16 @@ func (l *CreateJobLogic) CreateJob(req *types.CreateJobRequest) error {
 	logic := NewCreateContainerLogic(l.ctx, l.svcCtx)
 
 	for i := 1; i <= req.Job.Config.Completions; i++ {
-		createContainerRequest.Container.Metadata.Name = fmt.Sprintf("%s-%s-%d",req.Job.Metadata.Name, req.Job.Config.Template.Name, i)
-		info, err := logic.CreateContainer(createContainerRequest)
+		if req.Job.Config.Template.Name != "" {
+			createContainerRequest.Container.Metadata.Name = fmt.Sprintf("%s-%s-%d",req.Job.Metadata.Name, req.Job.Config.Template.Name, i)
+		} else {
+			createContainerRequest.Container.Metadata.Name = fmt.Sprintf("%s-%s-%d",req.Job.Metadata.Name, req.Job.Config.Template.Image, i)
+		}
+		info, errl := logic.CreateContainer(createContainerRequest)
 		if info != nil {
 			infos = append(infos, *info)
 		}
-		if err != nil {
+		if errl != nil {
 			for _, i := range infos {
 				worker, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, i.ContainerInfo.Node)
 				if err != nil {
@@ -128,7 +134,7 @@ func (l *CreateJobLogic) CreateJob(req *types.CreateJobRequest) error {
 
 				_ = etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container", job.Metadata.Namespace, i.ContainerInfo.Name))
 			}
-			return err
+			return errl
 		}
 	}
 

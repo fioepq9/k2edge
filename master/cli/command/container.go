@@ -236,7 +236,7 @@ func containerGet() cli.Command {
 	return cli.Command{
 		Name:        "get",
 		Usage:       "Use to get container info",
-		Description: "Use 'node get --namespace=<namespace> --name=<name>' to get node",
+		Description: "Use 'container get --namespace=<namespace> --name=<name>' to get container",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "namespace",
@@ -286,6 +286,9 @@ func containerGet() cli.Command {
 			if resp.Container.ContainerConfig.Deployment != "" {
 				info += color.BlueString("deployment:       ") + fmt.Sprintf("%s\n", resp.Container.ContainerConfig.Deployment)
 			}
+			if resp.Container.ContainerConfig.Job != "" {
+				info += color.BlueString("job:       ") + fmt.Sprintf("%s\n", resp.Container.ContainerConfig.Job)
+			}
 			info += color.BlueString("image:            ") + fmt.Sprintf("%s\n", resp.Container.ContainerConfig.Image)
 			if resp.Container.ContainerConfig.NodeName != "" {
 				info += color.BlueString("node name:        ") + fmt.Sprintf("%s\n", resp.Container.ContainerConfig.NodeName)
@@ -326,8 +329,8 @@ func containerList() cli.Command {
 	return cli.Command{
 		Name:        "list",
 		Aliases: 	 []string{"ls"},
-		Usage:       "Use to list container info",
-		Description: "Use 'node list --namespace=<namespace>' to get node",
+		Usage:       "Use to list container",
+		Description: "Use 'container list --namespace=<namespace>' to list container",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "namespace",
@@ -371,7 +374,7 @@ func containerDelete() cli.Command {
 	return cli.Command{
 		Name:        "delete",
 		Usage:       "Use to delete container",
-		Description: "Use 'container delete --namespace=<namespace>' to delete container",
+		Description: "Use 'container delete --namespace=<namespace> --name=<name>' to delete container",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "namespace",

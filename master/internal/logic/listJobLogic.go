@@ -61,6 +61,7 @@ func (l *ListJobLogic) ListJob(req *types.ListJobRequest) (resp *types.ListJobRe
 				CreateTime: job.Config.CreateTime,
 				Completions: job.Config.Completions,
 				Succeeded: job.Succeeded,
+				Schedule: job.Config.Schedule,
 			})
 		}
 	}

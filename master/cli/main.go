@@ -89,6 +89,8 @@ func main() {
 		cmd.Namespace(),
 		cmd.Node(),
 		cmd.Container(),
+		cmd.Deployment(),
+		cmd.Job(),
 	}
 
 	err := app.Run(os.Args)
