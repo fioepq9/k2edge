@@ -78,8 +78,7 @@ func (l *DeleteDeploymentLogic) DeleteDeployment(req *types.DeleteDeploymentRequ
 		})
 
 		if err != nil {
-			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while stopping the container '%s'", c.Name))
-			continue
+			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while stopping the info of container '%s', err: %s", c.Name, err))
 		}
 
 		err = cli.Container.Remove(l.ctx, client.RemoveContainerRequest{
@@ -90,16 +89,30 @@ func (l *DeleteDeploymentLogic) DeleteDeployment(req *types.DeleteDeploymentRequ
 		})
 
 		if err != nil {
-			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while removing the container '%s'", c.Name))
+			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while deleting the info of container '%s', err: %s", c.Name, err))
 			continue
 		}
+
+		container1, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container", req.Namespace, c.Name))
+		if err != nil {
+			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while deleting the info of container '%s', err: %s", c.Name, err))
+			continue
+		}
+		c1 := (*container1)[0]
 
 		err = etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container",req.Namespace, c.Name))
 
 		if err != nil {
+			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while deleting the info of container '%s', err: %s", c.Name, err))
+			continue
+		}
+
+		err = etcdutil.NodeDeleteRequest(l.svcCtx.Etcd, l.ctx, worker.Metadata.Name, c1.ContainerConfig.Request.CPU, c1.ContainerConfig.Request.Memory)
+		if err != nil {
 			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while deleting the info of container '%s'", c.Name))
 			continue
 		}
+
 	}
 
 	// 删除 etcd 中的deployment信息

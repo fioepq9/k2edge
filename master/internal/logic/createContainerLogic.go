@@ -157,7 +157,10 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		return nil, err
 	}
 
-	
-	
-	return resp, err
+	err = etcdutil.NodeAddRequest(l.svcCtx.Etcd, l.ctx, worker.Metadata.Name, c.ContainerConfig.Request.CPU, c.ContainerConfig.Request.Memory)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

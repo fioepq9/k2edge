@@ -132,7 +132,21 @@ func (l *CreateJobLogic) CreateJob(req *types.CreateJobRequest) error {
 					continue
 				}
 
-				_ = etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container", job.Metadata.Namespace, i.ContainerInfo.Name))
+				
+				container1, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container", req.Job.Metadata.Namespace, info.ContainerInfo.Name))
+				if err != nil {
+					continue
+				}
+				c1 := (*container1)[0]
+
+				err = etcdutil.NodeDeleteRequest(l.svcCtx.Etcd, l.ctx, worker.Metadata.Name, c1.ContainerConfig.Request.CPU, c1.ContainerConfig.Request.Memory)
+				if err != nil {
+					continue
+				}
+				err = etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container", job.Metadata.Namespace, i.ContainerInfo.Name))
+				if err != nil {
+					continue
+				}
 			}
 			return errl
 		}

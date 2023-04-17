@@ -94,6 +94,10 @@ func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest
 	if err != nil {
 		return err
 	}
+	err = etcdutil.NodeDeleteRequest(l.svcCtx.Etcd, l.ctx, worker.Metadata.Name, c.ContainerConfig.Request.CPU, c.ContainerConfig.Request.Memory)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

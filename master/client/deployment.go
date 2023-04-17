@@ -34,8 +34,9 @@ func (d deploymentAPI) List(ctx context.Context, req types.ListDeploymentRequest
 	return
 }
 
-func (d deploymentAPI) Delete(ctx context.Context, req types.DeleteDeploymentRequest) error {
-	return d.req.Post("/deployment/delete").SetBodyJsonMarshal(req).Do(ctx).Err
+func (d deploymentAPI) Delete(ctx context.Context, req types.DeleteDeploymentRequest) (resp *types.DeleteDeploymentResponse, err error) {
+	err = d.req.Post("/deployment/delete").SetBodyJsonMarshal(req).Do(ctx).Into(&resp)
+	return
 }
 
 func (d deploymentAPI) Apply(ctx context.Context, req types.ApplyDeploymentRequest)(resp *types.ApplyDeploymentResponse, err error) {

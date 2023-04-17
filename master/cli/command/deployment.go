@@ -431,7 +431,7 @@ func deploymentDelete() cli.Command {
 			force := ctx.Bool("force")
 			timeout := ctx.Int("timeout")
 
-			err := masterCli.Deployment.Delete(context.Background(), types.DeleteDeploymentRequest{
+			resp, err := masterCli.Deployment.Delete(context.Background(), types.DeleteDeploymentRequest{
 				Namespace: namespace,
 				Name: name,
 				RemoveVolumnes: removeVolumnes,
@@ -445,6 +445,9 @@ func deploymentDelete() cli.Command {
 			}
 
 			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgGreen)).Printfln("delete deployment '%s' successfully", name)
+			for _, e := range resp.Err {
+				pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.FgRed)).Printfln("container error occured: %s", e)
+			}
 			return nil
 		},
 	}

@@ -235,6 +235,71 @@ func IsExistNode(cli *clientv3.Client, ctx context.Context, nodeName string) (*N
 	return &elem, true, nil
 }
 
+//修改 node 的request
+func NodeAddRequest(cli *clientv3.Client, ctx context.Context, nodeName string, cpu int64, memory int64) error {
+	key := GenerateKey("node", SystemNamespace, nodeName)
+	
+	gresp, err := cli.KV.Get(ctx, key)
+
+	if err != nil {
+		return err
+	}
+
+	// 找不到结点
+	if gresp.Count == 0 {
+		return nil
+	}
+
+	var elem Node
+	err = json.Unmarshal(gresp.Kvs[0].Value, &elem)
+	if err != nil {
+		return err
+	}
+	
+	elem.Status.Allocatable.CPU += cpu
+	elem.Status.Allocatable.Memory += memory
+
+	err = PutOne(cli, ctx, key, elem)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//修改 node 的request
+func NodeDeleteRequest(cli *clientv3.Client, ctx context.Context, nodeName string, cpu int64, memory int64) error {
+	key := GenerateKey("node", SystemNamespace, nodeName)
+	
+	gresp, err := cli.KV.Get(ctx, key)
+
+	if err != nil {
+		return err
+	}
+
+	// 找不到结点
+	if gresp.Count == 0 {
+		return nil
+	}
+
+	var elem Node
+	err = json.Unmarshal(gresp.Kvs[0].Value, &elem)
+	if err != nil {
+		return err
+	}
+	
+	elem.Status.Allocatable.CPU -= cpu
+	elem.Status.Allocatable.Memory -= memory
+
+	err = PutOne(cli, ctx, key, elem)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+
 type Metadata struct {
 	Namespace string `json:"namespace"`
 	Kind      string `json:"kind"`
