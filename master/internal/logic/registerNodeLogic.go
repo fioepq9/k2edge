@@ -74,6 +74,10 @@ func (l *RegisterNodeLogic) RegisterNode(req *types.RegisterRequest) error {
 		BaseURL:      req.BaseURL,
 		Spec: types.Spec{
 			Unschedulable: false,	
+			Capacity: types.Capacity{
+				CPU: req.Capacity.CPU,
+				Memory: req.Capacity.Memory,
+			},
 		},
 		RegisterTime: time.Now().Unix(),
 		Status:      types.Status{

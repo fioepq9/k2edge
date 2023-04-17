@@ -490,12 +490,12 @@
       "type": "object",
       "properties": {
         "cpu": {
-          "type": "number",
-          "format": "double"
+          "type": "integer",
+          "format": "int64"
         },
         "memory": {
-          "type": "number",
-          "format": "double"
+          "type": "integer",
+          "format": "int64"
         }
       },
       "title": "Allocatable",
@@ -551,12 +551,12 @@
       "type": "object",
       "properties": {
         "cpu": {
-          "type": "number",
-          "format": "double"
+          "type": "integer",
+          "format": "int64"
         },
         "memory": {
-          "type": "number",
-          "format": "double"
+          "type": "integer",
+          "format": "int64"
         }
       },
       "title": "Capacity",
@@ -1056,7 +1056,9 @@
       "title": "Job",
       "required": [
         "metadata",
-        "config"
+        "matadata",
+        "config",
+        "succeeded"
       ]
     },
     "JobConfig": {
@@ -1080,6 +1082,7 @@
       "title": "JobConfig",
       "required": [
         "completions",
+        "schedule",
         "template"
       ]
     },
@@ -1361,11 +1364,15 @@
         "unschedulable": {
           "type": "boolean",
           "format": "boolean"
+        },
+        "capacity": {
+          "$ref": "#/definitions/Capacity"
         }
       },
       "title": "Spec",
       "required": [
-        "unschedulable"
+        "unschedulable",
+        "capacity"
       ]
     },
     "StartContainerRequest": {
@@ -1393,9 +1400,6 @@
           "type": "boolean",
           "format": "boolean"
         },
-        "capacity": {
-          "$ref": "#/definitions/Capacity"
-        },
         "allocatable": {
           "$ref": "#/definitions/Allocatable"
         },
@@ -1406,7 +1410,6 @@
       "title": "Status",
       "required": [
         "working",
-        "capacity",
         "allocatable",
         "condition"
       ]

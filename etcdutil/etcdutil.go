@@ -269,23 +269,23 @@ type NodeURL struct {
 
 type Spec struct {
 	Unschedulable bool `json:"unschedulable"`
+	Capacity    Capacity    `json:"capacity"`
 }
 
 type Status struct {
 	Working     bool        `json:"working"`
-	Capacity    Capacity    `json:"capacity"`
 	Allocatable Allocatable `json:"allocatable"`
 	Condition   Condition   `json:"condition"`
 }
 
 type Capacity struct {
-	CPU    float64 `json:"cpu"`
-	Memory float64 `json:"memory"`
+	CPU    int64 `json:"cpu"`
+	Memory int64 `json:"memory"`
 }
 
 type Allocatable struct {
-	CPU    float64 `json:"cpu"`
-	Memory float64 `json:"memory"`
+	CPU    int64 `json:"cpu"`
+	Memory int64 `json:"memory"`
 }
 
 type Condition struct {

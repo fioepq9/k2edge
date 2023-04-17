@@ -17,6 +17,8 @@ import (
 	"k2edge/worker/internal/types"
 
 	"github.com/samber/lo"
+	"github.com/shirou/gopsutil/v3/cpu"
+	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -115,6 +117,19 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 	}
 
 	// 结点原本没被注册过
+	// CPU
+	cpuCount, err := cpu.CountsWithContext(context.Background(), true)
+	if err != nil {
+		panic(err)
+	}
+	cpuTotal := float64(cpuCount) * 1e9
+	
+	// Memory
+	memStat, err := mem.VirtualMemoryWithContext(context.Background())
+	if err != nil {
+		panic(err)
+	}
+	memoryTotal := memStat.Total
 	n = types.Node{
 		Metadata: types.Metadata{
 			Namespace: registerNamespace,
@@ -128,6 +143,10 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 		},
 		Spec: types.Spec{
 			Unschedulable: false,
+			Capacity: types.Capacity{
+				CPU: int64(cpuTotal),
+				Memory: int64(memoryTotal),
+			},
 		},
 		RegisterTime: time.Now().Unix(),
 		Status: types.Status{

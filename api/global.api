@@ -135,24 +135,24 @@ type NodeURL {
 }
 
 type Spec {
-	Unschedulable bool `json:"unschedulable"`
+	Unschedulable bool     `json:"unschedulable"`
+	Capacity      Capacity `json:"capacity" yaml:"capacity"`
 }
 
 type Status {
 	Working     bool        `json:"working"`
-	Capacity    Capacity    `json:"capacity"`
 	Allocatable Allocatable `json:"allocatable"`
 	Condition   Condition   `json:"condition"`
 }
 
 type Capacity {
-	CPU    float64 `json:"cpu"`
-	Memory float64 `json:"memory"`
+	CPU    int64 `json:"cpu" yaml:"cpu"`
+	Memory int64 `json:"memory" yaml:"memory"`
 }
 
 type Allocatable {
-	CPU    float64 `json:"cpu"`
-	Memory float64 `json:"memory"`
+	CPU    int64 `json:"cpu"`
+	Memory int64 `json:"memory"`
 }
 
 type Condition {

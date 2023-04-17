@@ -114,10 +114,10 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 		c.ContainerConfig.Limit.Memory = 104857600
 	}
 	if c.ContainerConfig.Request.CPU == 0 {
-		c.ContainerConfig.Limit.CPU = 50000000
+		c.ContainerConfig.Request.CPU = 50000000
 	}
 	if c.ContainerConfig.Request.Memory == 0 {
-		c.ContainerConfig.Limit.Memory = 104857600
+		c.ContainerConfig.Request.Memory = 104857600
 	}
 
 	// 访问 worker 结点并创建容器
@@ -151,5 +151,13 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	resp.ContainerInfo.Name = c.Metadata.Name
 	resp.ContainerInfo.ContainerID = res.ID
 	resp.ContainerInfo.Node = worker.Metadata.Name
-	return resp, etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, c)
+
+	err = etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, c)
+	if err != nil {
+		return nil, err
+	}
+
+	
+	
+	return resp, err
 }

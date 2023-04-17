@@ -63,6 +63,14 @@ func nodeCreate() cli.Command {
 				Name:  "workerurl",
 				Usage: "the url of worker",
 			},
+			&cli.Int64Flag{
+				Name:  "cpu",
+				Usage: "the capacity of cpu, the unit is logical core, ",
+			},
+			&cli.Int64Flag{
+				Name:  "memory",
+				Usage: "the capacity of memory, the unit is byte",
+			},
 			&cli.StringFlag{
 				Name:  "f",
 				Usage: "YAML configuration file",
@@ -81,6 +89,12 @@ func nodeCreate() cli.Command {
 				if !ctx.IsSet("roles") {
 					notSetFlags = append(notSetFlags, "roles")
 				}
+				if !ctx.IsSet("cpu") {
+					notSetFlags = append(notSetFlags, "cpu")
+				}
+				if !ctx.IsSet("memory") {
+					notSetFlags = append(notSetFlags, "memory")
+				}
 				if len(notSetFlags) != 0 {
 					return fmt.Errorf("required flags %s not set", strings.Join(notSetFlags, ", "))
 				}
@@ -92,6 +106,8 @@ func nodeCreate() cli.Command {
 			roles := ctx.StringSlice("roles")
 			masterurl := ctx.String("masterurl")
 			workerurl := ctx.String("workerurl")
+			cpu := ctx.Int64("cpu")
+			memory := ctx.Int64("memory")
 
 			args := types.RegisterRequest{
 				Name:  name,
@@ -99,6 +115,10 @@ func nodeCreate() cli.Command {
 				BaseURL: types.NodeURL{
 					MasterURL: masterurl,
 					WorkerURL: workerurl,
+				},
+				Capacity: types.Capacity{
+					CPU: 1e9 * cpu,
+					Memory: memory,
 				},
 			}
 
@@ -109,6 +129,7 @@ func nodeCreate() cli.Command {
 					return err
 				}
 				args = *config
+				args.Capacity.CPU *= 1e9 
 				name = args.Name
 			}
 			err := masterCli.Node.Register(context.Background(), args)

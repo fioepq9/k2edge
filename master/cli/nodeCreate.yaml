@@ -5,3 +5,6 @@ roles:
 baseUrl:
   masterUrl: http://localhost:8080
   workerUrl: http://localhost:8888
+capacity:
+  cpu: 111
+  memory: 111

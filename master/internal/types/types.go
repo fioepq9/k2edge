@@ -147,16 +147,16 @@ type ContainerStatus struct {
 }
 
 type Job struct {
-	Metadata  Metadata  `json:"metadata"`
-	Config    JobConfig `json:"config"`
-	Succeeded int       `json:"succeeded,optional"`
+	Metadata  Metadata  `json:"metadata" yaml:"matadata"`
+	Config    JobConfig `json:"config" yaml:"config"`
+	Succeeded int       `json:"succeeded,optional" yaml:"succeeded"`
 }
 
 type JobConfig struct {
 	CreateTime  int64             `json:"create_time,optional"`
-	Completions int               `json:"completions"`
-	Schedule    string            `json:"schedule,optional"`
-	Template    ContainerTemplate `json:"template"`
+	Completions int               `json:"completions" yaml:"completions"`
+	Schedule    string            `json:"schedule,optional" yaml:"schedule"`
+	Template    ContainerTemplate `json:"template" yaml:"template"`
 }
 
 type Deployment struct {
@@ -167,7 +167,7 @@ type Deployment struct {
 
 type DeploymentConfig struct {
 	CreateTime int64             `json:"create_time,optional"`
-	Replicas   int               `json:"replicas,default=1"`
+	Replicas   int               `json:"replicas,default=1" yaml:"replicas"`
 	Template   ContainerTemplate `json:"container_template" yaml:"containerTemplate"`
 }
 
@@ -223,24 +223,24 @@ type NodeURL struct {
 }
 
 type Spec struct {
-	Unschedulable bool `json:"unschedulable"`
+	Unschedulable bool     `json:"unschedulable"`
+	Capacity      Capacity `json:"capacity" yaml:"capacity"`
 }
 
 type Status struct {
 	Working     bool        `json:"working"`
-	Capacity    Capacity    `json:"capacity"`
 	Allocatable Allocatable `json:"allocatable"`
 	Condition   Condition   `json:"condition"`
 }
 
 type Capacity struct {
-	CPU    float64 `json:"cpu"`
-	Memory float64 `json:"memory"`
+	CPU    int64 `json:"cpu" yaml:"cpu"`
+	Memory int64 `json:"memory" yaml:"memory"`
 }
 
 type Allocatable struct {
-	CPU    float64 `json:"cpu"`
-	Memory float64 `json:"memory"`
+	CPU    int64 `json:"cpu"`
+	Memory int64 `json:"memory"`
 }
 
 type Condition struct {
@@ -310,8 +310,8 @@ type DeleteDeploymentResponse struct {
 }
 
 type ApplyDeploymentRequest struct {
-	Namespace string           `json:"namespace"`
-	Name      string           `json:"name"`
+	Namespace string           `json:"namespace" yaml:"namespace"`
+	Name      string           `json:"name" yaml:"name"`
 	Config    DeploymentConfig `json:"config" yaml:"config"`
 }
 
@@ -326,7 +326,7 @@ type ScaleRequest struct {
 }
 
 type CreateJobRequest struct {
-	Job Job `json:"job"`
+	Job Job `json:"job" yaml:"job"`
 }
 
 type GetJobRequest struct {
@@ -387,9 +387,10 @@ type DeleteNamespaceRequest struct {
 }
 
 type RegisterRequest struct {
-	Name    string   `json:"name" yaml:"name"`
-	Roles   []string `json:"roles" yaml:"roles"`
-	BaseURL NodeURL  `json:"base_url" yaml:"baseUrl"`
+	Name     string   `json:"name" yaml:"name"`
+	Roles    []string `json:"roles" yaml:"roles"`
+	BaseURL  NodeURL  `json:"base_url" yaml:"baseUrl"`
+	Capacity Capacity `json:"capacity" yaml:"capacity"`
 }
 
 type NodeListRequest struct {

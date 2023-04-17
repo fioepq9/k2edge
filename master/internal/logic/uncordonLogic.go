@@ -48,11 +48,13 @@ func (l *UncordonLogic) Uncordon(req *types.UncordonRequest) error {
 		Metadata: types.Metadata(node.Metadata),
 		Roles: node.Roles,
 		BaseURL: types.NodeURL(node.BaseURL),
-		Spec: types.Spec(node.Spec),
+		Spec: types.Spec{
+			Unschedulable: node.Spec.Unschedulable,
+			Capacity: types.Capacity(node.Spec.Capacity),
+		},
 		RegisterTime: node.RegisterTime,
 		Status: types.Status{
 			Working: node.Status.Working,
-			Capacity: types.Capacity(node.Status.Capacity),
 			Allocatable: types.Allocatable(node.Status.Allocatable),
 			Condition: types.Condition{
 				Ready: types.ConditionInfo(node.Status.Condition.Ready),

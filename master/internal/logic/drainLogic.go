@@ -46,7 +46,6 @@ func (l *DrainLogic) Drain(req *types.DrainRequest) error {
 	node.Spec.Unschedulable = true
 
 	/*驱逐所有容器*/
-
 	
 	/**/
 
@@ -54,11 +53,13 @@ func (l *DrainLogic) Drain(req *types.DrainRequest) error {
 		Metadata: types.Metadata(node.Metadata),
 		Roles: node.Roles,
 		BaseURL: types.NodeURL(node.BaseURL),
-		Spec: types.Spec(node.Spec),
+		Spec: types.Spec{
+			Unschedulable: node.Spec.Unschedulable,
+			Capacity: types.Capacity(node.Spec.Capacity),
+		},
 		RegisterTime: node.RegisterTime,
 		Status: types.Status{
 			Working: node.Status.Working,
-			Capacity: types.Capacity(node.Status.Capacity),
 			Allocatable: types.Allocatable(node.Status.Allocatable),
 			Condition: types.Condition{
 				Ready: types.ConditionInfo(node.Status.Condition.Ready),
