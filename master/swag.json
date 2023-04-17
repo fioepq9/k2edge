@@ -180,6 +180,31 @@
         ]
       }
     },
+    "/container/event": {
+      "post": {
+        "operationId": "Event",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventRequest"
+            }
+          }
+        ],
+        "requestBody": {},
+        "tags": [
+          "master-api"
+        ]
+      }
+    },
     "/container/exec": {
       "get": {
         "operationId": "ExecContainer",
@@ -1111,6 +1136,18 @@
     }
   },
   "definitions": {
+    "Actor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "attributes": {
+          "type": "object"
+        }
+      },
+      "title": "Actor"
+    },
     "Allocatable": {
       "type": "object",
       "properties": {
@@ -1920,6 +1957,18 @@
         "todo"
       ]
     },
+    "EventRequest": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "$ref": "#/definitions/Message"
+        }
+      },
+      "title": "EventRequest",
+      "required": [
+        "message"
+      ]
+    },
     "ExecContainerRequest": {
       "type": "object",
       "properties": {
@@ -2373,6 +2422,52 @@
       "required": [
         "namespace",
         "name"
+      ]
+    },
+    "Message": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string",
+          "description": "create、start、die"
+        },
+        "actor": {
+          "$ref": "#/definitions/Actor"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "timeNano": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "Message",
+      "required": [
+        "status",
+        "id",
+        "from",
+        "type",
+        "action",
+        "scope",
+        "time",
+        "timeNano"
       ]
     },
     "Metadata": {

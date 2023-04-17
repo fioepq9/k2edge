@@ -33,6 +33,9 @@ service master-api{
 	// k2e-ctl不调用该接口
 	@handler MigrateContainer
 	post /migrate(MigrateContainerRequest)
+	
+	@handler Event
+	post /event(EventRequest)
 }
 
 type CreateContainerRequest {
@@ -122,4 +125,31 @@ type MigrateContainerRequest {
 	Namespace string `json:"namespace"`
 	Name      string `json:"name"`
 	Node      string `json:"node"`
+}
+
+type EventRequest {
+	Message Message `json:"message"`
+}
+
+type Message {
+	// Deprecated information from JSONMessage.
+	// With data only in container events.
+	Status string `json:"status,omitempty,optional"`
+	ID     string `json:"id,omitempty,optional"`
+	From   string `json:"from,omitempty,optional"`
+
+	Type   string `json:"type"`
+	Action string `json:"action"` //create、start、die
+	Actor  Actor  `json:"actor,optional"`
+	// Engine events are local scope. Cluster events are swarm scope.
+	Scope string `json:"scope,omitempty,optional"`
+
+	Time     int64 `json:"time,omitempty,optional"`
+	TimeNano int64 `json:"timeNano,omitempty,optional"`
+}
+
+type Actor {
+	ID         string      `json:"id,optional"`
+	Attributes interface{} `json:"attributes,optional"`
+	// 正常退出 Attributes[exitCode] = 0
 }

@@ -94,6 +94,27 @@ type MigrateContainerRequest struct {
 	Node      string `json:"node"`
 }
 
+type EventRequest struct {
+	Message Message `json:"message"`
+}
+
+type Message struct {
+	Status   string `json:"status,omitempty,optional"`
+	ID       string `json:"id,omitempty,optional"`
+	From     string `json:"from,omitempty,optional"`
+	Type     string `json:"type"`
+	Action   string `json:"action"` //create、start、die
+	Actor    Actor  `json:"actor,optional"`
+	Scope    string `json:"scope,omitempty,optional"`
+	Time     int64  `json:"time,omitempty,optional"`
+	TimeNano int64  `json:"timeNano,omitempty,optional"`
+}
+
+type Actor struct {
+	ID         string      `json:"id,optional"`
+	Attributes interface{} `json:"attributes,optional"`
+}
+
 type Metadata struct {
 	Namespace string `json:"namespace" yaml:"namespace"`
 	Kind      string `json:"kind" yaml:"kind"`
