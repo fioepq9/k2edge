@@ -51,7 +51,7 @@ func (s *ServiceContext) Worker(container *types.Container) (*types.Node, error)
 		return nil, err
 	}
 
-	*nodes, err = schedule.Schedule(*nodes, container)
+	*nodes, err = schedule.Schedule(*nodes, container, s.Etcd)
 	if err != nil {
 		return nil, err
 	}
@@ -59,6 +59,5 @@ func (s *ServiceContext) Worker(container *types.Container) (*types.Node, error)
 	if len(*nodes) == 0 {
 		return nil, fmt.Errorf("not worker can run")
 	}
-
 	return  &(*nodes)[0], nil
 }

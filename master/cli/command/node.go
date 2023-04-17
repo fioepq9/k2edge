@@ -227,8 +227,10 @@ func nodeTop() cli.Command {
 			}
 
 			info := ""
-			image := strings.Join(resp.Images, "\n")
-			info += color.BlueString("image:\n") + fmt.Sprintf("%s\n", image)
+			info += color.BlueString("image:\n")
+			for _, i := range resp.Images {
+				info += strings.Split(i, " ")[0]
+			}
 			info += color.BlueString("CPU%:             ") + fmt.Sprintf("%f\n", resp.CPUUsedPercent)
 			info += color.BlueString("CPUUsed:          ") + fmt.Sprintf("%f\n", resp.CPUUsed)
 			info += color.BlueString("CPUFree:          ") + fmt.Sprintf("%f\n", resp.CPUFree)

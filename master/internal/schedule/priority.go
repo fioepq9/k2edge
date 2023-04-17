@@ -1,9 +1,14 @@
 package schedule
 
 import (
+	"context"
+	"errors"
+	"k2edge/etcdutil"
+	"k2edge/master/internal/types"
 	"math"
 	"sort"
-	"github.com/samber/lo"
+	"strconv"
+	"strings"
 )
 
 // 打分算法，为过滤出的node进行打分，每个打分算法出来的分数范围在 0 ～ 10
@@ -41,19 +46,43 @@ func (s *Scheduler) SortPriority() *Scheduler {
 //   - 所有node计算完分数之后，选取node的最大值，进行分数调整
 //   - 遍历所有node值 ，计算node的分数为  10✖(最大值-当前node值)/最大值
 func (s *Scheduler) SelectorSpreadPriority() *Scheduler {
-	if s.Err != nil {
+	if s.Err != nil || s.container.ContainerConfig.Deployment == "" {
 		return s
 	}
 
-	//const ratio = 1.0
+	const ratio = 1.0
 
 	// 获取正在调度的容器有关的Deployment
+	nn := strings.Split(s.container.ContainerConfig.Deployment, "/")
+	dnamespace := nn[0]
+	dname := nn[1]
+	deployments, err := etcdutil.GetOne[types.Deployment](s.etcd, context.Background(), etcdutil.GenerateKey("deployment", dnamespace, dname))
+	if err != nil {
+		if errors.Is(err, etcdutil.ErrKeyNotExist) {
+			return s
+		}
+		s.Err = err
+		return s
+	}
 
 	// 从获取的Deployment中，得到Deployment有关的容器和其运行的node，这些node分数+1
+	deployment := (*deployments)[0]
+	set := make(map[string]int)
+	max := 0
+	for _, c := range deployment.Status.Containers {
+		if _, ok := set[c.Node]; ok  {
+			set[c.Node] += 1
+			if max < set[c.Node] {
+				max = set[c.Node]
+			}
+		} else {
+			set[c.Node] = 1
+		}
+	}
 
-	// 获取node分数最大值
-
-	// 调整node的得分,包含该部分的权重
+	for idx, info := range s.nodeInfo {
+		s.nodeInfo[idx].score += (1 - float64(set[info.etcdInfo.Metadata.Name])/float64(max)) * 10 * ratio
+	}
 
 	return s
 }
@@ -72,9 +101,8 @@ func (s *Scheduler) LeastRequestedPriority()  *Scheduler {
 	const ratio = 1.0
 
 	for idx, info := range s.nodeInfo {
-		score := (1 - float64(s.container.ContainerConfig.Request.CPU)/info.info.CPUTotal) * 10
-		score += (1 - float64(s.container.ContainerConfig.Request.Memory)/float64(info.info.MemoryTotal)) * 10
-		score /= 2
+		score := (1 - float64(s.container.ContainerConfig.Request.CPU)/float64(info.etcdInfo.Spec.Capacity.CPU)) * 5
+		score += (1 - float64(s.container.ContainerConfig.Request.Memory)/float64(info.etcdInfo.Spec.Capacity.Memory)) * 5
 
 		//权重调整
 		score *= ratio
@@ -97,8 +125,8 @@ func (s *Scheduler) BalancedResourceAllocation()  *Scheduler {
 	const ratio = 1.0
 
 	for idx, info := range s.nodeInfo {
-		score := 10 - math.Abs((float64(s.container.ContainerConfig.Request.CPU) + info.info.CPUUsed) / info.info.CPUTotal -
-	 				(float64(s.container.ContainerConfig.Request.Memory) + float64(info.info.MemoryUsed)) / float64(info.info.MemoryTotal)) * 10
+		score := 10 - math.Abs((float64(s.container.ContainerConfig.Request.CPU) + float64(info.etcdInfo.Status.Allocatable.CPU)) / float64(info.etcdInfo.Spec.Capacity.CPU) -
+	 				(float64(s.container.ContainerConfig.Request.Memory) + float64(info.etcdInfo.Status.Allocatable.Memory)) / float64(info.etcdInfo.Spec.Capacity.Memory)) * 10
 
 		//权重调整
 		score *= ratio
@@ -125,46 +153,46 @@ func (s *Scheduler) ImageLocalityPriority()  *Scheduler {
 	// 计算包含container镜像的node数量
 	const MB = 1024 * 1024
 	containImageNodeNum := 0
+	imageSize := 0
 	nodeSet := make(map[string]bool) //记录包含image的node名字
 	for _, info := range s.nodeInfo {
-		if lo.Contains(info.info.Images, s.container.ContainerConfig.Image) {
-			containImageNodeNum++
-			nodeSet[info.config.Metadata.Name] = true
+		for _, i := range info.actualInfo.Images {
+			is := strings.Split(i, " ")
+			tag := strings.Split(is[0], ":")[0]
+			size := is[1]
+
+			var err error
+			if tag == s.container.ContainerConfig.Image {
+				containImageNodeNum++
+				nodeSet[info.etcdInfo.Metadata.Name] = true
+				imageSize, err = strconv.Atoi(size)
+				if err != nil {
+					s.Err = err
+					return s
+				}
+			}
 		}
 	}
 
-	// 获取container镜像大小
-	// cli, err := client.NewClientWithOpts(client.FromEnv)
-    // if err != nil {
-    //     s.Err = err
-	// 	return s
-    // }
-	// //???????????????????????????????????????????????????????????????
-    // image, _, err := cli.ImageInspectWithRaw(context.Background(), s.container.ContainerConfig.Image)
-    // if err != nil {
-	// 	if strings.Contains(err.Error(), "Error: No such image") {
-			
-	// 	} else {
-	// 		s.Err = err
-	// 		return s
-	// 	}
-    // }
-	imageSize := 1000
+	if containImageNodeNum == 0 {
+		return s
+	}
 
 	// 计算最终分数
-	sumScore := (float64(containImageNodeNum) / float64(len(s.nodeInfo))) * float64(imageSize)
-	if sumScore < 23 * MB {
-		sumScore = 0 // 0分
-	} else if sumScore > 1000 * MB {
-		sumScore = 977 * MB // 10分
+	var sumScore float64
+	if imageSize >= 1000 * MB {
+		sumScore = (float64(containImageNodeNum) / float64(len(s.nodeInfo))) * 10
+	} else if (imageSize < 23) {
+		sumScore = 0
+	} else {
+		sumScore = (float64(containImageNodeNum) / float64(len(s.nodeInfo))) * float64(imageSize) / (100 * MB)
 	}
-	sumScore /= 977 * MB * 10
 
 	// 调整权重
 	sumScore *= ratio
 
 	for	idx, info := range s.nodeInfo {
-		if _, found := nodeSet[info.config.Metadata.Name]; found {
+		if _, found := nodeSet[info.etcdInfo.Metadata.Name]; found {
 			s.nodeInfo[idx].score += sumScore
 		}
 	}
@@ -181,13 +209,15 @@ func (s *Scheduler) MemoryPressure() *Scheduler {
 	// 权重
 	const ratio = 1.0
 
-	// 调整权重
-	score := 10 * ratio
-
 	for idx, info := range s.nodeInfo {
-		if info.info.MemoryUsedPercent > 0.8 {
-			s.nodeInfo[idx].score += score
-		} 
+		percent := float64(info.etcdInfo.Status.Allocatable.Memory) / float64(info.etcdInfo.Spec.Capacity.Memory)
+		if percent < 0.8 {
+			s.nodeInfo[idx].score += 10 * ratio
+		} else if percent >= 0.9 {
+			s.nodeInfo[idx].score += 0
+		} else {
+			s.nodeInfo[idx].score = (90 - 100 * percent) * ratio
+		}
 	}
 
 	return s
@@ -202,13 +232,15 @@ func (s *Scheduler) CPUPressure() *Scheduler {
 	// 权重
 	const ratio = 1.0
 
-	// 调整权重
-	score := 10 * ratio
-
 	for idx, info := range s.nodeInfo {
-		if info.info.CPUUsedPercent > 0.8 {
-			s.nodeInfo[idx].score += score
-		} 
+		percent := float64(info.etcdInfo.Status.Allocatable.CPU) / float64(info.etcdInfo.Spec.Capacity.CPU)
+		if percent < 0.8 {
+			s.nodeInfo[idx].score += 10 * ratio
+		} else if percent >= 0.9 {
+			s.nodeInfo[idx].score += 0
+		} else {
+			s.nodeInfo[idx].score = (90 - 100 * percent) * ratio
+		}
 	}
 
 	return s

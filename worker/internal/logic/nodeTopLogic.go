@@ -3,13 +3,13 @@ package logic
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"k2edge/worker/internal/svc"
 	"k2edge/worker/internal/types"
 
 	dtypes "github.com/docker/docker/api/types"
-	"github.com/samber/lo"
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/disk"
 	"github.com/shirou/gopsutil/v3/mem"
@@ -38,9 +38,12 @@ func (l *NodeTopLogic) NodeTop() (resp *types.NodeTopResponse, err error) {
 	if err != nil {
 		return nil, err
 	}
-	resp.Images = lo.FlatMap(imagesSumary, func(img dtypes.ImageSummary, _ int) []string {
-		return img.RepoTags
-	})
+
+	for _, i := range imagesSumary {
+		for _, t := range i.RepoTags {
+			resp.Images = append(resp.Images, t + " " + fmt.Sprint(i.Size))
+		}
+	}
 	// CPU
 	cpuCount, err := cpu.CountsWithContext(l.ctx, true)
 	if err != nil {

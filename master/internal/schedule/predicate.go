@@ -21,7 +21,7 @@ func (s *Scheduler) PodFitsHost() *Scheduler {
 
 	if s.container.ContainerConfig.NodeName != "" {
 		s.nodeInfo = lo.Filter(s.nodeInfo , func(item nodeInfo, index int) bool {
-			return item.config.Metadata.Name == s.container.ContainerConfig.NodeName
+			return item.etcdInfo.Metadata.Name == s.container.ContainerConfig.NodeName
 		})
 	}
 	
@@ -34,7 +34,7 @@ func (s *Scheduler)  PodFitHostPorts() *Scheduler {
 		return s
 	}
 
-	//待实现
+	//端口扫描
 	return s
 }
 
@@ -45,8 +45,8 @@ func (s *Scheduler)  PodFitsResource() *Scheduler {
 	}
 
 	s.nodeInfo = lo.Filter(s.nodeInfo, func(item nodeInfo, index int) bool {
-		return (item.info.CPUFree * 0.95) > float64(s.container.ContainerConfig.Request.CPU) && 
-				(float64(item.info.MemoryAvailable) * 0.95) > float64(s.container.ContainerConfig.Request.Memory)
+		return (item.actualInfo.CPUFree * 0.95) > float64(s.container.ContainerConfig.Request.CPU) && 
+				(float64(item.actualInfo.MemoryAvailable) * 0.95) > float64(s.container.ContainerConfig.Request.Memory)
 	})
 	return s
 }

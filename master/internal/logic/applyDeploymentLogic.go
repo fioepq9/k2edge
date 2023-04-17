@@ -65,7 +65,7 @@ func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest
 				Name: deployment.Metadata.Name + "-" + deployment.Config.Template.Name,
 			},
 			ContainerConfig: types.ContainerConfig{
-				Deployment: deployment.Metadata.Name,
+				Deployment: req.Namespace + "/" + req.Name,
 				Image: deployment.Config.Template.Image,
 				NodeName: deployment.Config.Template.NodeName,
 				Command: deployment.Config.Template.Command,
@@ -106,10 +106,13 @@ func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest
 				Node: info.ContainerInfo.Node,
 				ContainerID: info.ContainerInfo.ContainerID,
 			})
+			deployment.Status.AvailableReplicas = req.Config.Replicas - len(resp.Err)
+			err = etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, deployment)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
-
-	deployment.Status.AvailableReplicas = deployment.Config.Replicas - len(resp.Err)
 
 	//删除原本的 container副本
 	logicG := NewGetDeploymentLogic(l.ctx, l.svcCtx)
@@ -176,7 +179,7 @@ func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest
 
 		err = etcdutil.NodeDeleteRequest(l.svcCtx.Etcd, l.ctx, worker.Metadata.Name, c1.ContainerConfig.Request.CPU, c1.ContainerConfig.Request.Memory)
 		if err != nil {
-			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while deleting the info of container '%s'", c.Name))
+			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while deleting the info of container '%s', err:%s", c.Name, err))
 			continue
 		}
 	}

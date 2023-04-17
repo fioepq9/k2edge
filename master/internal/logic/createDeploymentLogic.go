@@ -107,7 +107,6 @@ func (l *CreateDeploymentLogic) CreateDeployment(req *types.CreateDeploymentRequ
 			}
 		}
 		
-
 		if err != nil {
 			resp.Err = append(resp.Err, fmt.Sprintf("creating the '%d th' container replica failed with %d retries. will try to create again later. error: %s", i, retryTimes, err))
 		} else {
@@ -116,9 +115,14 @@ func (l *CreateDeploymentLogic) CreateDeployment(req *types.CreateDeploymentRequ
 				Node: info.ContainerInfo.Node,
 				ContainerID: info.ContainerInfo.ContainerID,
 			})
+			deployment.Status.AvailableReplicas = req.Deployment.Config.Replicas - len(resp.Err)
+			err = etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, deployment)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
-	deployment.Status.AvailableReplicas = req.Deployment.Config.Replicas - len(resp.Err)
+	
 	// 插入 deployment
-	return resp, etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, deployment)
+	return resp, nil
 }
