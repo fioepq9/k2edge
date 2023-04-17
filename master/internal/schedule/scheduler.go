@@ -64,6 +64,14 @@ func (s *Scheduler) GetNodes() ([]types.Node, error) {
 	return nodes, s.Err
 }
 
+func (s *Scheduler) PrintScore(str string) *Scheduler {
+	fmt.Println(str)
+	for _,i := range s.nodeInfo {
+		fmt.Printf("%s %f\n", i.etcdInfo.Metadata.Name, i.score)
+	}
+	return s
+}
+
 // 除去master结点和不可调度结点
 func PreProcessing(nodes []types.Node) ([]types.Node, error) {
 	nodes = lo.Filter(nodes, func(item types.Node, _ int) bool {
@@ -73,11 +81,6 @@ func PreProcessing(nodes []types.Node) ([]types.Node, error) {
 	return nodes, nil
 }
 
-
 func Schedule(nodes []types.Node, container *types.Container, etcd *clientv3.Client) ([]types.Node, error) {
-	s := NewScheduler(nodes, container, etcd).Predicate().Priority()
-	for _,i := range s.nodeInfo {
-		fmt.Printf("%s %f\n", i.etcdInfo.Metadata.Name, i.score)
-	}
-	return s.GetNodes()
+	return NewScheduler(nodes, container, etcd).Predicate().Priority().GetNodes()
 }

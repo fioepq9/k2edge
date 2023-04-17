@@ -10,7 +10,9 @@ func (s *Scheduler) Predicate() *Scheduler {
 		return s
 	}
 
-	return s.PodFitsHost().PodFitHostPorts().PodFitsResource()
+	return s.PodFitsHost().//PrintScore("指定节点").
+			 PodFitHostPorts().//PrintScore("检查端口").
+			 PodFitsResource()//PrintScore("节点压力")
 }
 
 // 检查容器是否指定了某个node

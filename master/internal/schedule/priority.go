@@ -17,13 +17,13 @@ func (s *Scheduler) Priority() *Scheduler {
 		return s
 	}
 
-	return s.SelectorSpreadPriority().
-			LeastRequestedPriority().
-			BalancedResourceAllocation().
-			ImageLocalityPriority().
-			MemoryPressure().
-			CPUPressure().
-			SortPriority()
+	return s.SelectorSpreadPriority().//PrintScore("deployment").
+			LeastRequestedPriority().//PrintScore("最多空闲资源").
+			BalancedResourceAllocation().//PrintScore("资源均衡").
+			ImageLocalityPriority().//PrintScore("镜像大小").
+			MemoryPressure().//PrintScore("内存压力").
+			CPUPressure().//PrintScore("CPU压力").
+			SortPriority()//.PrintScore("排序")
 }
 
 // 将node按nodeInfo中的分数排序
@@ -69,17 +69,19 @@ func (s *Scheduler) SelectorSpreadPriority() *Scheduler {
 	deployment := (*deployments)[0]
 	set := make(map[string]int)
 	max := 0
+
 	for _, c := range deployment.Status.Containers {
-		if _, ok := set[c.Node]; ok  {
-			set[c.Node] += 1
-			if max < set[c.Node] {
-				max = set[c.Node]
-			}
-		} else {
-			set[c.Node] = 1
+		set[c.Node] += 1
+		if max < set[c.Node] {
+			max = set[c.Node]
 		}
 	}
 
+	if max == 0 {
+		return s
+	}
+
+	
 	for idx, info := range s.nodeInfo {
 		s.nodeInfo[idx].score += (1 - float64(set[info.etcdInfo.Metadata.Name])/float64(max)) * 10 * ratio
 	}

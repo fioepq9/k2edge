@@ -48,7 +48,6 @@ func NewClient(baseurl string, opt ...Option) *Client {
 		o(c.opt)
 	}
 	c.req = req.C().
-	DevMode().
 		SetBaseURL(c.opt.HttpBaseURL()).
 		SetCommonRetryCount(0).
 		SetCommonRetryBackoffInterval(time.Second, 5*time.Second).
