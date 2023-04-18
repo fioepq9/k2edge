@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"k2edge/etcdutil"
@@ -46,7 +47,34 @@ func (l *DrainLogic) Drain(req *types.DrainRequest) error {
 	node.Spec.Unschedulable = true
 
 	/*驱逐所有容器*/
-	
+	// 获取所有container
+	keyc := "/container"
+	containers, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, keyc)
+	if err != nil {
+		if errors.Is(err, etcdutil.ErrKeyNotExist) {
+			return nil
+		}
+		return err
+	}
+
+	for _, container := range *containers {
+		if container.ContainerStatus.Node == req.Name {
+			node, err := l.svcCtx.Worker(&container)
+			if err != nil {
+				return err
+			}
+			logic := NewMigrateContainerLogic(l.ctx, l.svcCtx)
+			err = logic.MigrateContainer(&types.MigrateContainerRequest{
+				Namespace: container.Metadata.Namespace,
+				Name: container.Metadata.Name,
+				Node: node.Metadata.Name,
+			})
+			if err != nil {
+				return err
+			}
+		}
+		
+	}
 	/**/
 
 	err = etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, types.Node{
