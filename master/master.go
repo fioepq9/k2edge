@@ -50,7 +50,8 @@ func main() {
 	}
 	defer close()
 	go server.Start()
-	go monitor.Monite(ctx)
+	go monitor.EventMonitor(ctx)
+	go monitor.StatusMonitor(ctx)
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch)
 	for {

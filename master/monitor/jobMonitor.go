@@ -51,3 +51,12 @@ func jobEvent(event types.EventInfo, s *svc.ServiceContext) error {
 	}
 	return nil
 }
+
+// 异常状态处理
+func jobStatus(container types.Container, s *svc.ServiceContext) error {
+	_, err := restart(s, container)
+	if err != nil {
+		return  err
+	}
+	return nil
+}

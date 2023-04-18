@@ -40,7 +40,31 @@ func deploymentEvent(event types.EventInfo, s *svc.ServiceContext) error {
 	}
 	deployment := (*deployments)[0]
 	deployment.Status.Containers = lo.Filter(deployment.Status.Containers, func(item types.ContainerInfo, index int) bool {
-		return item.ContainerID != info.ContainerID
+		return item.ContainerID != container.ContainerStatus.ContainerID
+	})
+	deployment.Status.Containers = append(deployment.Status.Containers, *info)
+
+	return etcdutil.PutOne(s.Etcd, s.Etcd.Ctx(), dkey, deployment)
+}
+
+
+//异常状态处理
+func deploymentStatus(container types.Container, s *svc.ServiceContext) error {
+	info, err := restart(s, container)
+	if err != nil {
+		return err
+	}
+	t := strings.Split(container.ContainerConfig.Deployment, "/")
+	dnamespace := t[0]
+	dname := t[1]
+	dkey := etcdutil.GenerateKey("deployment", dnamespace, dname)
+	deployments, err := etcdutil.GetOne[types.Deployment](s.Etcd, s.Etcd.Ctx(), dkey)
+	if err != nil {
+		return err
+	}
+	deployment := (*deployments)[0]
+	deployment.Status.Containers = lo.Filter(deployment.Status.Containers, func(item types.ContainerInfo, index int) bool {
+		return item.ContainerID != container.ContainerStatus.ContainerID
 	})
 	deployment.Status.Containers = append(deployment.Status.Containers, *info)
 

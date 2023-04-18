@@ -6,13 +6,14 @@ import (
 	"k2edge/etcdutil"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
+	"strings"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-func Monite(svcCtx *svc.ServiceContext) {
-	ticker := time.NewTicker(3 * time.Second)
+func EventMonitor(svcCtx *svc.ServiceContext) {
+	ticker := time.NewTicker(5 * time.Second)
 	for range ticker.C {
 		event, ekey, err := etcdutil.GetOneKV[types.EventInfo](svcCtx.Etcd, svcCtx.Etcd.Ctx(), "/events")
 		if err != nil {
@@ -54,6 +55,35 @@ func Monite(svcCtx *svc.ServiceContext) {
 		}
 		if err != nil {
 			logx.Error(err)
+		}
+	}
+}
+
+func StatusMonitor(svcCtx *svc.ServiceContext) {
+	ticker := time.NewTicker(3 * time.Second)
+	for range ticker.C {
+		containers, err := etcdutil.GetOne[types.Container](svcCtx.Etcd, svcCtx.Etcd.Ctx(), "/container")
+		if err != nil {
+			if !errors.Is(err, etcdutil.ErrKeyNotExist) {
+				logx.Error(err)
+			}
+			continue
+		}
+
+		for _, container := range *containers {
+			if strings.HasPrefix(container.ContainerStatus.Status, "exit(") && container.ContainerStatus.Status != "exit(0)" {
+				fmt.Println(container)
+				if container.ContainerConfig.Deployment != "" {
+					err = deploymentStatus(container, svcCtx)
+				} else if container.ContainerConfig.Job != "" {
+					err = jobStatus(container, svcCtx)
+				} else {
+					err = containerStatus(container, svcCtx)
+				}
+				if err != nil {
+					logx.Error(err)
+				}
+			}
 		}
 	}
 }
