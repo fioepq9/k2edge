@@ -1,9 +1,9 @@
-Name: Worker-dev
+Name: worker-dev-3
 Host: 0.0.0.0
 Port: 8888
 Timeout: 0
 Mode: dev
-
+Secret: D19DD0CC-70EB-49A6-98FA-82BA2404ED01
 Etcd:
   Endpoints:
     - outlg.xyz:2379

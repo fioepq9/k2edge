@@ -42,7 +42,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 	return &ServiceContext{
 		Config:         c,
-		AuthMiddleware: middleware.NewAuthMiddleware().Handle,
+		AuthMiddleware: middleware.NewAuthMiddleware(c, e).Handle,
 		Docker:         d,
 		Etcd:           e,
 		Websocket:      u,

@@ -4,7 +4,8 @@ import "github.com/zeromicro/go-zero/rest"
 
 type Config struct {
 	rest.RestConf
-	Etcd EtcdConf
+	Etcd   EtcdConf
+	Secret string
 }
 
 type EtcdConf struct {

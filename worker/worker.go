@@ -99,6 +99,7 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 	var n types.Node
 	if node != nil {
 		n := (*node)[0]
+		n.Secret = ctx.Config.Secret
 		if n.Status.Working {
 			// 结点原本被注册为 worker
 			if lo.Contains(n.Roles, "worker") {
@@ -123,7 +124,7 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 		panic(err)
 	}
 	cpuTotal := float64(cpuCount) * 1e9
-	
+
 	// Memory
 	memStat, err := mem.VirtualMemoryWithContext(context.Background())
 	if err != nil {
@@ -141,10 +142,11 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 			WorkerURL: fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port),
 			MasterURL: "",
 		},
+		Secret: ctx.Config.Secret,
 		Spec: types.Spec{
 			Unschedulable: false,
 			Capacity: types.Capacity{
-				CPU: int64(cpuTotal),
+				CPU:    int64(cpuTotal),
 				Memory: int64(memoryTotal),
 			},
 		},

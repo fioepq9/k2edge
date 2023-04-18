@@ -223,6 +223,7 @@ type Node struct {
 	Roles        []string `json:"roles"`
 	BaseURL      NodeURL  `json:"base_url"`
 	Spec         Spec     `json:"spec"`
+	Secret       string   `json:"secret"`
 	RegisterTime int64    `json:"register_time"`
 	Status       Status   `json:"status"`
 }
@@ -239,6 +240,7 @@ type Spec struct {
 
 type Status struct {
 	Working     bool        `json:"working"`
+	Token       []string    `json:"token"`
 	Allocatable Allocatable `json:"allocatable"`
 	Condition   Condition   `json:"condition"`
 }

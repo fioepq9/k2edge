@@ -20,6 +20,7 @@ worker-api:
 	goctl api format --dir ./api
 	goctl api go -api ./api/worker.api -dir ./worker -style goZero --home ./template
 	sed s/"package types"/"package client"/g worker/internal/types/types.go > worker/client/types.go
+	sed s/"package types"/"package auth"/g worker/internal/types/types.go > auth/types.go
 
 worker-swagger-update: worker-api
 	goctl api plugin -plugin goctl-swagger='swagger -filename swag.json --host 127.0.0.1:$(worker-api-port)' -api ./api/worker.api -dir ./worker

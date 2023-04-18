@@ -2458,6 +2458,9 @@
         "spec": {
           "$ref": "#/definitions/Spec"
         },
+        "secret": {
+          "type": "string"
+        },
         "register_time": {
           "type": "integer",
           "format": "int64"
@@ -2472,6 +2475,7 @@
         "roles",
         "base_url",
         "spec",
+        "secret",
         "register_time",
         "status"
       ]
@@ -2771,6 +2775,12 @@
           "type": "boolean",
           "format": "boolean"
         },
+        "token": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "allocatable": {
           "$ref": "#/definitions/Allocatable"
         },
@@ -2781,6 +2791,7 @@
       "title": "Status",
       "required": [
         "working",
+        "token",
         "allocatable",
         "condition"
       ]
