@@ -94,25 +94,20 @@ type MigrateContainerRequest struct {
 	Node      string `json:"node"`
 }
 
-type EventRequest struct {
-	Message Message `json:"message"`
+type EventInfo struct {
+	Action    string         `json:"action"`
+	Time      int64          `json:"time"`
+	ExitCode  string         `json:"exit_code"`
+	Container EventContainer `json:"container"`
 }
 
-type Message struct {
-	Status   string `json:"status,omitempty,optional"`
-	ID       string `json:"id,omitempty,optional"`
-	From     string `json:"from,omitempty,optional"`
-	Type     string `json:"type"`
-	Action   string `json:"action"` //create、start、die
-	Actor    Actor  `json:"actor,optional"`
-	Scope    string `json:"scope,omitempty,optional"`
-	Time     int64  `json:"time,omitempty,optional"`
-	TimeNano int64  `json:"timeNano,omitempty,optional"`
-}
-
-type Actor struct {
-	ID         string      `json:"id,optional"`
-	Attributes interface{} `json:"attributes,optional"`
+type EventContainer struct {
+	Namespace  string `json:"namespace"`
+	Name       string `json:"name"`
+	Id         string `json:"id"`
+	Node       string `json:"node"`
+	Deployment string `json:"deployment"`
+	Job        string `json:"job"`
 }
 
 type Metadata struct {
@@ -282,6 +277,27 @@ type Namespace struct {
 	Name       string `json:"name"`
 	Status     string `json:"status"`
 	CreateTime int64  `json:"create_time"`
+}
+
+type EventRequest struct {
+	Message Message `json:"message"`
+}
+
+type Message struct {
+	Status   string `json:"status,omitempty,optional"`
+	ID       string `json:"id,omitempty,optional"`
+	From     string `json:"from,omitempty,optional"`
+	Type     string `json:"type"`
+	Action   string `json:"action"` //create、start、die
+	Actor    Actor  `json:"actor,optional"`
+	Scope    string `json:"scope,omitempty,optional"`
+	Time     int64  `json:"time,omitempty,optional"`
+	TimeNano int64  `json:"timeNano,omitempty,optional"`
+}
+
+type Actor struct {
+	ID         string   `json:"id,optional"`
+	Attributes []string `json:"attributes,optional"`
 }
 
 type CreateDeploymentRequest struct {

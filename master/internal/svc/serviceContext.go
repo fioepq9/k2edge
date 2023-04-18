@@ -18,7 +18,6 @@ type ServiceContext struct {
 	Config    config.Config
 	Etcd      *clientv3.Client
 	Websocket websocket.Upgrader
-	Event     chan types.Message
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -26,8 +25,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Endpoints:   c.Etcd.Endpoints,
 		DialTimeout: time.Duration(c.Etcd.DialTimeout) * time.Second,
 	}
-
-	event := 
 
 	etcd, err := clientv3.New(config)
 	if err != nil {

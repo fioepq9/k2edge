@@ -486,6 +486,21 @@
     }
   },
   "definitions": {
+    "Actor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "Actor"
+    },
     "Allocatable": {
       "type": "object",
       "properties": {
@@ -947,6 +962,18 @@
         "todo"
       ]
     },
+    "EventRequest": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "$ref": "#/definitions/Message"
+        }
+      },
+      "title": "EventRequest",
+      "required": [
+        "message"
+      ]
+    },
     "ExecRequest": {
       "type": "object",
       "properties": {
@@ -1157,6 +1184,52 @@
       "title": "LogsRequest",
       "required": [
         "container"
+      ]
+    },
+    "Message": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string",
+          "description": "create、start、die"
+        },
+        "actor": {
+          "$ref": "#/definitions/Actor"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "timeNano": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "Message",
+      "required": [
+        "status",
+        "id",
+        "from",
+        "type",
+        "action",
+        "scope",
+        "time",
+        "timeNano"
       ]
     },
     "Metadata": {

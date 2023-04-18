@@ -153,6 +153,10 @@ func (c containerAPI) Logs(ctx context.Context, req LogsRequest) (io.ReadCloser,
 	}, nil
 }
 
+func (c containerAPI) Event(ctx context.Context, req EventRequest) error {
+	return c.req.Post("/container/event").SetBodyJsonMarshal(req).Do(ctx).Err
+}
+
 type websocketSession struct {
 	ws *websocket.Conn
 }
