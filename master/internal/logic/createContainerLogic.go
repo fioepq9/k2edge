@@ -82,18 +82,6 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 	}
 
 	// 从 etcd 中获取需要创建容器的 worker 结点，根据在线调度算法自动获取
-	if req.Container.ContainerConfig.Limit.CPU == 0 {
-		req.Container.ContainerConfig.Limit.CPU = 50000000
-	}
-	if req.Container.ContainerConfig.Limit.Memory == 0 {
-		req.Container.ContainerConfig.Limit.Memory = 104857600
-	}
-	if req.Container.ContainerConfig.Request.CPU == 0 {
-		req.Container.ContainerConfig.Request.CPU = 50000000
-	}
-	if req.Container.ContainerConfig.Request.Memory == 0 {
-		req.Container.ContainerConfig.Request.Memory = 104857600
-	}
 	worker, err = l.svcCtx.Worker(&req.Container)
 	if err != nil {
 		return nil, err
@@ -117,19 +105,6 @@ func (l *CreateContainerLogic) CreateContainer(req *types.CreateContainerRequest
 			Protocol: e.Protocol,
 			HostPort: e.HostPort,
 		})
-	}
-
-	if c.ContainerConfig.Limit.CPU == 0 {
-		c.ContainerConfig.Limit.CPU = 50000000
-	}
-	if c.ContainerConfig.Limit.Memory == 0 {
-		c.ContainerConfig.Limit.Memory = 104857600
-	}
-	if c.ContainerConfig.Request.CPU == 0 {
-		c.ContainerConfig.Request.CPU = 50000000
-	}
-	if c.ContainerConfig.Request.Memory == 0 {
-		c.ContainerConfig.Request.Memory = 104857600
 	}
 
 	// 访问 worker 结点并创建容器

@@ -61,8 +61,9 @@ func (l *CreateJobLogic) CreateJob(req *types.CreateJobRequest) error {
 	req.Job.Config.CreateTime = time.Now().Unix()
 	job := req.Job
 
-	if job.Config.Schedule != "" {
-		return etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, job)
+	err = etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, job)
+	if err != nil {
+		return err
 	}
 
 	createContainerRequest := &types.CreateContainerRequest{
@@ -148,9 +149,10 @@ func (l *CreateJobLogic) CreateJob(req *types.CreateJobRequest) error {
 					continue
 				}
 			}
+			etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, key)
 			return errl
 		}
 	}
 
-	return etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, job)
+	return nil
 }

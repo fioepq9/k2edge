@@ -131,6 +131,7 @@ type EventInfo {
 	Action    string         `json:"action"`
 	Time      int64          `json:"time"`
 	ExitCode  string         `json:"exit_code"`
+	Times     int64          `json:"times"`
 	Container EventContainer `json:"container"`
 }
 

@@ -98,6 +98,7 @@ type EventInfo struct {
 	Action    string         `json:"action"`
 	Time      int64          `json:"time"`
 	ExitCode  string         `json:"exit_code"`
+	Times     int64          `json:"times"`
 	Container EventContainer `json:"container"`
 }
 
@@ -140,13 +141,13 @@ type ContainerConfig struct {
 }
 
 type ContainerLimit struct {
-	CPU    int64 `json:"cpu,default=50000000" yaml:"cpu"`
-	Memory int64 `json:"memory,default=104857600" yaml:"memory"`
+	CPU    int64 `json:"cpu,optional" yaml:"cpu,omitempty"`
+	Memory int64 `json:"memory,optional" yaml:"memory,omitempty"`
 }
 
 type ContainerRequest struct {
-	CPU    int64 `json:"cpu,default=50000000" yaml:"cpu"`
-	Memory int64 `json:"memory,default=104857600" yaml:"memory"`
+	CPU    int64 `json:"cpu,optional" yaml:"cpu,omitempty"`
+	Memory int64 `json:"memory,optional" yaml:"memory,omitempty"`
 }
 
 type ExposedPort struct {

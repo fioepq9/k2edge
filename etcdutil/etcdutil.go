@@ -44,6 +44,26 @@ func GetOne[T any](cli *clientv3.Client, ctx context.Context, key string) (resul
 	return ret, nil
 }
 
+func GetOneKV[T any](cli *clientv3.Client, ctx context.Context, key string) (result *T, resultKey string,err error) {
+	gresp, err := cli.KV.Get(ctx, key, clientv3.WithPrefix())
+
+	if err != nil {
+		return nil, "", err
+	}
+
+	if gresp.Count == 0 {
+		return nil, "", ErrKeyNotExist
+	}
+
+	var elem T
+	err = json.Unmarshal(gresp.Kvs[0].Value, &elem)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return &elem, string(gresp.Kvs[0].Key), nil
+}
+
 // 获取对应 key 的值, 且内容为 value[],将得到的 Json 解析并返回, T 类型为 value
 func GetArray[T any](cli *clientv3.Client, ctx context.Context, key string) (result *[]T, err error) {
 	gresp, err := cli.KV.Get(ctx, key)

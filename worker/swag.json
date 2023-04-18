@@ -722,13 +722,11 @@
       "properties": {
         "cpu": {
           "type": "integer",
-          "format": "int64",
-          "default": "50000000"
+          "format": "int64"
         },
         "memory": {
           "type": "integer",
-          "format": "int64",
-          "default": "104857600"
+          "format": "int64"
         }
       },
       "title": "ContainerLimit",
@@ -742,13 +740,11 @@
       "properties": {
         "cpu": {
           "type": "integer",
-          "format": "int64",
-          "default": "50000000"
+          "format": "int64"
         },
         "memory": {
           "type": "integer",
-          "format": "int64",
-          "default": "104857600"
+          "format": "int64"
         }
       },
       "title": "ContainerRequest",

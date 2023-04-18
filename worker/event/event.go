@@ -55,22 +55,22 @@ func (s *EventSubcriber) SendMessage(msg events.Message) error {
 	cli := client.NewClient(server)
 	attribute := []string{}
 	for key, value := range msg.Actor.Attributes {
-		attribute = append(attribute, key + "::" + value)
+		attribute = append(attribute, key+"::"+value)
 	}
 
 	err = cli.Container.Event(s.svcCtx.Etcd.Ctx(), client.EventRequest{
 		Message: client.Message{
 			Status: msg.Status,
-			ID:		msg.ID,
-			From:	msg.From,
+			ID:     msg.ID,
+			From:   msg.From,
 			Type:   msg.Type,
 			Action: msg.Action,
-			Actor:	client.Actor{
-				ID: msg.Actor.ID,
+			Actor: client.Actor{
+				ID:         msg.Actor.ID,
 				Attributes: attribute,
 			},
-			Scope:  msg.Scope,    
-			Time:	msg.Time,
+			Scope:    msg.Scope,
+			Time:     msg.Time,
 			TimeNano: msg.TimeNano,
 		},
 	})
@@ -93,7 +93,7 @@ func getServer(endPoint string) (server string, err error) {
 		return "", err
 	}
 	// 获取node信息
-	nodes, err := etcdutil.GetOne[client.Node](etcd, context.Background(), "/node/" + etcdutil.SystemNamespace)
+	nodes, err := etcdutil.GetOne[client.Node](etcd, context.Background(), "/node/"+etcdutil.SystemNamespace)
 
 	if err != nil {
 		return "", err
@@ -104,5 +104,5 @@ func getServer(endPoint string) (server string, err error) {
 			return node.BaseURL.MasterURL, nil
 		}
 	}
-	return "", errors.New("")
+	return "", errors.New("can not find master")
 }

@@ -12,10 +12,12 @@ import (
 	"k2edge/etcdutil"
 	"k2edge/master/internal/config"
 	"k2edge/master/internal/handler"
-	"github.com/shirou/gopsutil/v3/cpu"
-	"github.com/shirou/gopsutil/v3/mem"
 	"k2edge/master/internal/svc"
 	"k2edge/master/internal/types"
+	"k2edge/master/monitor"
+
+	"github.com/shirou/gopsutil/v3/cpu"
+	"github.com/shirou/gopsutil/v3/mem"
 
 	"github.com/samber/lo"
 	"github.com/zeromicro/go-zero/core/conf"
@@ -48,6 +50,7 @@ func main() {
 	}
 	defer close()
 	go server.Start()
+	go monitor.Monite(ctx)
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch)
 	for {
@@ -128,23 +131,23 @@ func doRegisterMaster(ctx *svc.ServiceContext) error {
 			Kind:      "node",
 			Name:      ctx.Config.Name,
 		},
-		Roles:        []string{"master"},
-		BaseURL:      types.NodeURL{
-			WorkerURL:	"",
-			MasterURL: 	fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port),
+		Roles: []string{"master"},
+		BaseURL: types.NodeURL{
+			WorkerURL: "",
+			MasterURL: fmt.Sprintf("http://%s:%d", ctx.Config.Host, ctx.Config.Port),
 		},
 		Spec: types.Spec{
-			Unschedulable: false,	
+			Unschedulable: false,
 			Capacity: types.Capacity{
-				CPU: int64(cpuTotal),
+				CPU:    int64(cpuTotal),
 				Memory: int64(memoryTotal),
 			},
 		},
 		RegisterTime: time.Now().Unix(),
-		Status:      types.Status{
+		Status: types.Status{
 			Working: true,
 		},
 	}
-	etcdutil.PutOne(ctx.Etcd, c, "/node/" + etcdutil.SystemNamespace + "/" + n.Metadata.Name, n)
+	etcdutil.PutOne(ctx.Etcd, c, "/node/"+etcdutil.SystemNamespace+"/"+n.Metadata.Name, n)
 	return nil
 }

@@ -29,6 +29,7 @@ func NewEventLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EventLogic 
 }
 
 func (l *EventLogic) Event(req *types.EventRequest) error {
+	fmt.Printf("%#v\n",req)
 	event := types.EventInfo{}
 	//判断事件是否又必要存入到etcd中
 	msg := req.Message
@@ -40,10 +41,6 @@ func (l *EventLogic) Event(req *types.EventRequest) error {
 		attributes[s[0]] = s[1]
 	}
 	event.ExitCode = attributes["exitCode"]
-	if event.ExitCode == "0" {
-		return nil
-	}
-	
 
 	// 获取所有container
 	keyc := "/container"
@@ -75,6 +72,7 @@ func (l *EventLogic) Event(req *types.EventRequest) error {
 	}
 
 	// event信息赋值
+	event.Times = 0
 	event.Action = msg.Action
 	event.Time = msg.Time
 	if event.Time == 0 {
