@@ -17,15 +17,14 @@ import (
 )
 
 func main() {
-	var filePath string = "../etc/master-api.yaml"
 	cli.HelpPrinterCustom = func(out io.Writer, templ string, data interface{}, customFuncs map[string]interface{}) {
 		funcMap := template.FuncMap{
 			"sprint": fmt.Sprint,
 			"join":   strings.Join,
 			"blue":   color.HiBlueString,
 			"cyan":   color.HiCyanString,
-			"cyanFlag": func (flag cli.Flag) (string) {
-				str := strings.SplitN(flag.String(), "\t", 2) 
+			"cyanFlag": func(flag cli.Flag) string {
+				str := strings.SplitN(flag.String(), "\t", 2)
 				if len(str) == 1 {
 					return color.HiCyanString(str[0])
 				}
@@ -58,8 +57,15 @@ func main() {
 	app.Version = "v1.0.1"
 	app.Usage = "a control panel of k2edge"
 	app.Description = "Use for managing K2edge's resource"
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:  "config",
+			Usage: "the configuration of k2edge",
+			Value: "/etc/master-api.yaml",
+		},
+	}
 	app.Before = func(ctx *cli.Context) error {
-		data, err := os.ReadFile(filePath)
+		data, err := os.ReadFile(ctx.String("config"))
 		if err != nil {
 			return fmt.Errorf("k2e get configuration failed")
 		}
@@ -108,8 +114,7 @@ type Etcd struct {
 	DialTimeout int      `yaml:"DialTimeout"`
 }
 
-var AppHelpTemplate = 
-`{{blue "NAME:"}}
+var AppHelpTemplate = `{{blue "NAME:"}}
    {{.Name}}{{if .Usage}} - {{.Usage}}{{end}}
 {{blue "USAGE:"}}
    {{if .Description}}{{.Description}}{{else}}{{.HelpName}} {{if .VisibleFlags}}[global options]{{end}}{{if .Commands}} command [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}{{if len .Authors}}
@@ -133,8 +138,7 @@ var AppHelpTemplate =
 
 `
 
-var SubcommandHelpTemplate = 
-`{{blue "NAME:"}}
+var SubcommandHelpTemplate = `{{blue "NAME:"}}
    {{.HelpName}} - {{.Usage}}
 {{blue "USAGE:"}}
    {{if .Description}}{{.Description}}{{else}}{{.HelpName}}{{if .VisibleFlags}} [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}
@@ -150,8 +154,7 @@ var SubcommandHelpTemplate =
    {{end}}{{end}}
 `
 
-var CommandHelpTemplate = 
-`{{blue "NAME:"}}
+var CommandHelpTemplate = `{{blue "NAME:"}}
    {{.HelpName}} - {{.Usage}}
 {{blue "USAGE:"}}
    {{if .Description}}{{.Description}}{{else}}{{.HelpName}}{{if .VisibleFlags}} [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}{{if .Category}}
