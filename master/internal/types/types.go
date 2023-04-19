@@ -2,7 +2,7 @@
 package types
 
 type ClusterInfoResponse struct {
-	Todo string `json:"todo"`
+	ClusterInfo string `json:"culster_info"`
 }
 
 type CreateContainerRequest struct {

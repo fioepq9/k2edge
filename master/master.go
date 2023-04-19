@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 	"time"
 
 	"k2edge/etcdutil"
@@ -53,6 +54,7 @@ func main() {
 	go monitor.EventMonitor(ctx)
 	go monitor.StatusMonitor(ctx)
 	go monitor.CornjobMonitor(ctx)
+	go monitor.NodeMonitor(ctx)
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch)
 	for {
@@ -149,6 +151,9 @@ func doRegisterMaster(ctx *svc.ServiceContext) error {
 		Status: types.Status{
 			Working: true,
 		},
+	}
+	if (lo.Contains(n.Roles, "master") && !strings.HasPrefix(n.BaseURL.MasterURL, "http://")) {
+		return fmt.Errorf("the format of url '%s' is wrong", n.BaseURL.MasterURL)
 	}
 	etcdutil.PutOne(ctx.Etcd, c, "/node/"+etcdutil.SystemNamespace+"/"+n.Metadata.Name, n)
 	return nil

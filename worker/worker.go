@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 	"time"
 
 	"k2edge/etcdutil"
@@ -152,6 +153,9 @@ func doRegisterWorker(ctx *svc.ServiceContext) error {
 		Status: types.Status{
 			Working: true,
 		},
+	}
+	if (lo.Contains(n.Roles, "worker") && !strings.HasPrefix(n.BaseURL.WorkerURL, "http://")) {
+		return fmt.Errorf("the format of url '%s' is wrong", n.BaseURL.WorkerURL)
 	}
 	etcdutil.PutOne(ctx.Etcd, c, "/node/"+registerNamespace+"/"+n.Metadata.Name, n)
 	return nil

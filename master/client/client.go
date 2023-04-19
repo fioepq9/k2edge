@@ -19,6 +19,7 @@ type Client struct {
 	Container containerAPI
 	Deployment deploymentAPI
 	Job jobAPI
+	Cluster clusterAPI
 }
 
 type ClientOption struct {
@@ -102,6 +103,11 @@ func NewClient(baseurl string, opt ...Option) *Client {
 	}
 
 	c.Job = jobAPI{
+		req: c.req,
+		opt: c.opt,
+	}
+
+	c.Cluster = clusterAPI{
 		req: c.req,
 		opt: c.opt,
 	}

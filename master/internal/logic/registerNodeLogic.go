@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"k2edge/etcdutil"
@@ -58,9 +59,15 @@ func (l *RegisterNodeLogic) RegisterNode(req *types.RegisterRequest) error {
 	if (lo.Contains(req.Roles, "master") && req.BaseURL.MasterURL == "") {
 		return fmt.Errorf("master's url have not been set")
 	}
+	if (lo.Contains(req.Roles, "master") && !strings.HasPrefix(req.BaseURL.MasterURL, "http://")) {
+		return fmt.Errorf("the format of url '%s' is wrong", req.BaseURL.MasterURL)
+	}
 
 	if (lo.Contains(req.Roles, "worker") && req.BaseURL.WorkerURL == "") {
 		return fmt.Errorf("worker's url have not been set")
+	}
+	if (lo.Contains(req.Roles, "worker") && !strings.HasPrefix(req.BaseURL.WorkerURL, "http://")) {
+		return fmt.Errorf("the format of url '%s' is wrong", req.BaseURL.WorkerURL)
 	}
 
 	// 插入 node

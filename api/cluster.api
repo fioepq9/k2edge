@@ -7,5 +7,5 @@ service master-api{
 }
 
 type ClusterInfoResponse {
-	Todo string `json:"todo"`
+	ClusterInfo string `json:"culster_info"`
 }

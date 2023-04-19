@@ -24,7 +24,7 @@ func NewClusterInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Clust
 }
 
 func (l *ClusterInfoLogic) ClusterInfo() (resp *types.ClusterInfoResponse, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	resp = new(types.ClusterInfoResponse)
+	resp.ClusterInfo = "K2edge v0.0.1\nauthor: fioepq9、tino"
+	return resp, nil
 }

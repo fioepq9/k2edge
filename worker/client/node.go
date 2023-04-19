@@ -20,7 +20,7 @@ func (n nodeAPI) Top(ctx context.Context) (resp *types.NodeTopResponse, err erro
 }
 func (n nodeAPI) Version(ctx context.Context) (resp *types.VersionResponse, err error) {
 	err = n.req.
-		Get("/node/version").
+		Get("/version").
 		Do(ctx).Into(&resp)
 	return
 }

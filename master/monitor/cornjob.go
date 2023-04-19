@@ -19,7 +19,6 @@ func cornJob(job types.Job, s *svc.ServiceContext) error {
 	schedule := job.Config.Schedule
 
 	hour, minute, _ := time.Now().Clock()
-	fmt.Printf("%d %d", hour, minute)
 	if schedule == fmt.Sprintf("%d:%02d", hour, minute) {
 		createContainerRequest := &types.CreateContainerRequest{
 			Container: types.Container{

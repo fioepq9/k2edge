@@ -6,8 +6,8 @@ import (
 	"k2edge/master/internal/types"
 )
 
-func nodeStatus(node types.Node, s *svc.ServiceContext) error {
+func nodeStatus(node types.Node, s *svc.ServiceContext, working bool) error {
 	key := etcdutil.GenerateKey("node", etcdutil.SystemNamespace, node.Metadata.Name)
-	node.Status.Working = false
-	return etcdutil.DeleteOne(s.Etcd, s.Etcd.Ctx(), key)
+	node.Status.Working = working
+	return etcdutil.PutOne(s.Etcd, s.Etcd.Ctx(), key, node)
 }

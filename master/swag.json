@@ -1300,13 +1300,13 @@
     "ClusterInfoResponse": {
       "type": "object",
       "properties": {
-        "todo": {
+        "culster_info": {
           "type": "string"
         }
       },
       "title": "ClusterInfoResponse",
       "required": [
-        "todo"
+        "culster_info"
       ]
     },
     "Command": {
