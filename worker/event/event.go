@@ -43,7 +43,7 @@ func (s *EventSubcriber) Subcribe() error {
 }
 
 func (s *EventSubcriber) SendMessage(msg events.Message) error {
-	if msg.Action != "die" {
+	if msg.Action != "die" && msg.Action != "start" {
 		return nil
 	}
 

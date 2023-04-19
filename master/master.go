@@ -52,6 +52,7 @@ func main() {
 	go server.Start()
 	go monitor.EventMonitor(ctx)
 	go monitor.StatusMonitor(ctx)
+	go monitor.CornjobMonitor(ctx)
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch)
 	for {

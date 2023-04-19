@@ -29,7 +29,6 @@ func NewEventLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EventLogic 
 }
 
 func (l *EventLogic) Event(req *types.EventRequest) error {
-	fmt.Printf("%#v\n",req)
 	event := types.EventInfo{}
 	//判断事件是否又必要存入到etcd中
 	msg := req.Message

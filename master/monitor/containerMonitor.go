@@ -14,6 +14,15 @@ func contianerEvent(event types.EventInfo, s *svc.ServiceContext) error {
 	}
 
 	container := (*containers)[0]
+	if event.Action == "start" {
+		container.ContainerStatus.Status = "running"
+		err = etcdutil.PutOne(s.Etcd, s.Etcd.Ctx(), key, container)
+		if err != nil {
+			return  err
+		}
+		return nil
+	}
+
 	if event.ExitCode == "0" {
 		container.ContainerStatus.Status = "exit(0)"
 		err = etcdutil.PutOne(s.Etcd, s.Etcd.Ctx(), key, container)

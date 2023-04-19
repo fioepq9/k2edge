@@ -65,6 +65,9 @@ func (l *CreateJobLogic) CreateJob(req *types.CreateJobRequest) error {
 	if err != nil {
 		return err
 	}
+	if req.Job.Config.Schedule != "" {
+		return nil
+	}
 
 	createContainerRequest := &types.CreateContainerRequest{
 		Container: types.Container{
@@ -74,14 +77,14 @@ func (l *CreateJobLogic) CreateJob(req *types.CreateJobRequest) error {
 				Name: req.Job.Metadata.Name + "-" + req.Job.Config.Template.Name,
 			},
 			ContainerConfig: types.ContainerConfig{
-				Job: req.Job.Metadata.Namespace + "/" + req.Job.Metadata.Name,
-				Image: req.Job.Config.Template.Image,
-				NodeName: req.Job.Config.Template.NodeName,
-				Command: req.Job.Config.Template.Command,
-				Args: req.Job.Config.Template.Args,
-				Expose: req.Job.Config.Template.Expose,
-				Env: req.Job.Config.Template.Env,
-				Limit: req.Job.Config.Template.Limit,
+				Job: job.Metadata.Namespace + "/" + req.Job.Metadata.Name,
+				Image: job.Config.Template.Image,
+				NodeName: job.Config.Template.NodeName,
+				Command: job.Config.Template.Command,
+				Args: job.Config.Template.Args,
+				Expose: job.Config.Template.Expose,
+				Env: job.Config.Template.Env,
+				Limit: job.Config.Template.Limit,
 				Request: job.Config.Template.Request,
 			},
 		},
