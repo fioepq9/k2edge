@@ -39,6 +39,7 @@ func Container() cli.Command {
 			containerAttach(),
 			containerExec(),
 			containerLogs(),
+			ContainerMigrate(),
 		},
 	}
 }
