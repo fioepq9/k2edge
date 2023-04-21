@@ -371,7 +371,7 @@ func jobList() cli.Command {
 			}
 
 			for _, i := range resp.Info {
-				tableData = append(tableData, []string{i.Name, i.Namespace, time.Since(time.Unix(i.CreateTime, 0)).Round(time.Second).String(), fmt.Sprintf("%d/%d", i.Succeeded, i.Completions), })
+				tableData = append(tableData, []string{i.Name, i.Namespace, time.Since(time.Unix(i.CreateTime, 0)).Round(time.Second).String(), fmt.Sprintf("%d/%d", i.Succeeded, i.Completions), i.Schedule})
 			}
 
 			pterm.DefaultTable.WithHasHeader().WithData(tableData).Render()
