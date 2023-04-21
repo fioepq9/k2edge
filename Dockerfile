@@ -7,4 +7,4 @@ ENV GOPROXY https://goproxy.cn,direct
 WORKDIR /app
 COPY . .
 
-CMD ['make', 'bin']
+CMD make bin
