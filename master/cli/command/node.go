@@ -229,7 +229,7 @@ func nodeTop() cli.Command {
 			info := ""
 			info += color.BlueString("image:\n")
 			for _, i := range resp.Images {
-				if strings.Split(i, " ")[0] != "<none>" {
+				if strings.Split(i, " ")[0] != "<none>:<none>" {
 					info += strings.Split(i, " ")[0] + "\n"
 				}
 			}
