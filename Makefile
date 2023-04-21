@@ -1,4 +1,4 @@
-.PHONY: all clean
+.PHONY: all clean bin
 all: api swagger-update clean
 
 api: worker-api master-api
