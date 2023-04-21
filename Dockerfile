@@ -1,7 +1,7 @@
 From golang:1.19.5
 ENV GOOS=linux 
 ENV GOARCH=arm64
-ENV GOARM=8
+ENV GOARM=7
 ENV CGO_ENABLED 0
 ENV GOPROXY https://goproxy.cn,direct
 WORKDIR /app
