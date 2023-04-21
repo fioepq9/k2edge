@@ -51,16 +51,16 @@ func containerCreate() cli.Command {
 		Description: "Use 'container create --namespace=<namespace> --name=<name> [args...]' to create container",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:     "namespace",
-				Usage:    "the namespace of container",
+				Name:  "namespace",
+				Usage: "the namespace of container",
 			},
 			&cli.StringFlag{
 				Name:  "name",
 				Usage: "the name of container. If not set, the name of the contianer is random",
 			},
 			&cli.StringFlag{
-				Name:     "image",
-				Usage:    "the image of container",
+				Name:  "image",
+				Usage: "the image of container",
 			},
 			&cli.StringFlag{
 				Name:  "nodeName",
@@ -209,7 +209,7 @@ func containerCreate() cli.Command {
 
 			if ctx.IsSet("f") {
 				file := ctx.String("f")
-				config, err :=  yaml2args[types.Container](file)
+				config, err := yaml2args[types.Container](file)
 				if err != nil {
 					return err
 				}
@@ -247,7 +247,7 @@ func containerGet() cli.Command {
 				Usage: "the name of container",
 			},
 			&cli.BoolFlag{
-				Name: "detail",
+				Name:  "detail",
 				Usage: "for more detail",
 			},
 		},
@@ -281,7 +281,7 @@ func containerGet() cli.Command {
 			info += color.BlueString("status:           ") + fmt.Sprintf("%s\n", resp.Container.ContainerStatus.Status)
 			info += color.BlueString("located node:     ") + fmt.Sprintf("%s\n", resp.Container.ContainerStatus.Node)
 			info += color.BlueString("container id:     ") + fmt.Sprintf("%s\n", resp.Container.ContainerStatus.ContainerID)
-			
+
 			info += color.CyanString("spec:\n")
 			if resp.Container.ContainerConfig.Deployment != "" {
 				info += color.BlueString("deployment:       ") + fmt.Sprintf("%s\n", resp.Container.ContainerConfig.Deployment)
@@ -328,7 +328,7 @@ func containerGet() cli.Command {
 func containerList() cli.Command {
 	return cli.Command{
 		Name:        "list",
-		Aliases: 	 []string{"ls"},
+		Aliases:     []string{"ls"},
 		Usage:       "Use to list container",
 		Description: "Use 'container list --namespace=<namespace>' to list container",
 		Flags: []cli.Flag{
@@ -377,26 +377,26 @@ func containerDelete() cli.Command {
 		Description: "Use 'container delete --namespace=<namespace> --name=<name>' to delete container",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "namespace",
-				Usage: "the namespace of container",
+				Name:     "namespace",
+				Usage:    "the namespace of container",
 				Required: true,
 			},
 			&cli.StringFlag{
-				Name:  "name",
-				Usage: "the name of container",
+				Name:     "name",
+				Usage:    "the name of container",
 				Required: true,
 			},
 			&cli.BoolFlag{
 				Name:  "removeVolumnes",
 				Usage: "whether to remove volumnes",
-			},&cli.BoolFlag{
+			}, &cli.BoolFlag{
 				Name:  "removeLinks",
 				Usage: "whether to remove links",
 			},
 			&cli.BoolFlag{
 				Name:  "force",
 				Usage: "whether to force delete",
-			},&cli.IntFlag{
+			}, &cli.IntFlag{
 				Name:  "timeout",
 				Usage: "how many seconds to set the timeout",
 			},
@@ -417,12 +417,12 @@ func containerDelete() cli.Command {
 			timeout := ctx.Int("timeout")
 
 			err := masterCli.Container.Delete(context.Background(), types.DeleteContainerRequest{
-				Namespace: namespace,
-				Name: name,
+				Namespace:      namespace,
+				Name:           name,
 				RemoveVolumnes: removeVolumnes,
-				RemoveLinks:  removeLinks,
-				Force: force,
-				Timeout: timeout,
+				RemoveLinks:    removeLinks,
+				Force:          force,
+				Timeout:        timeout,
 			})
 
 			if err != nil {
@@ -443,16 +443,16 @@ func containerApply() cli.Command {
 		Description: "Use 'container apply --namespace=<namespace> --name=<name> [args...]' to apply container's configuration",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:     "namespace",
-				Usage:    "the namespace of container",
+				Name:  "namespace",
+				Usage: "the namespace of container",
 			},
 			&cli.StringFlag{
 				Name:  "name",
 				Usage: "the name of container",
 			},
 			&cli.StringFlag{
-				Name:     "image",
-				Usage:    "the image of container",
+				Name:  "image",
+				Usage: "the image of container",
 			},
 			&cli.StringFlag{
 				Name:  "nodeName",
@@ -604,7 +604,7 @@ func containerApply() cli.Command {
 
 			if ctx.IsSet("f") {
 				file := ctx.String("f")
-				config, err :=  yaml2args[types.Container](file)
+				config, err := yaml2args[types.Container](file)
 				if err != nil {
 					return err
 				}
@@ -641,13 +641,13 @@ func containerAttach() cli.Command {
 				Required: true,
 			},
 			&cli.StringFlag{
-				Name:  "name",
-				Usage: "the name of container",
+				Name:     "name",
+				Usage:    "the name of container",
 				Required: true,
 			},
 			&cli.BoolFlag{
-				Name:     "stream",
-				Usage:    "Get the stream of the container",
+				Name:  "stream",
+				Usage: "Get the stream of the container",
 			},
 			&cli.BoolFlag{
 				Name:  "stdin",
@@ -662,7 +662,7 @@ func containerAttach() cli.Command {
 				Usage: "get the standard error of the container",
 			},
 			&cli.StringFlag{
-				Name:  "detachKeys",
+				Name: "detachKeys",
 			},
 			&cli.BoolFlag{
 				Name:  "logs",
@@ -687,20 +687,19 @@ func containerAttach() cli.Command {
 			logs := ctx.Bool("logs")
 
 			rw, err := masterCli.Container.Attach(context.Background(), types.AttachContainerRequest{
-				Namespace: namespace,
-				Name: name,
-				Stream: stream,
-				Stdin: stdin,
-				Stdout: stdout,
-				Stderr: stderr,
+				Namespace:  namespace,
+				Name:       name,
+				Stream:     stream,
+				Stdin:      stdin,
+				Stdout:     stdout,
+				Stderr:     stderr,
 				DetachKeys: detachKeys,
-				Logs: logs,
+				Logs:       logs,
 			})
 
 			if err != nil {
 				return err
 			}
-
 
 			pterm.DefaultBasicText.WithStyle(pterm.NewStyle(pterm.BgGreen, pterm.FgBlack)).Println("container input/output...")
 			defer rw.Close()
@@ -753,18 +752,18 @@ func containerExec() cli.Command {
 				Required: true,
 			},
 			&cli.StringFlag{
-				Name:  "name",
-				Usage: "the name of container",
+				Name:     "name",
+				Usage:    "the name of container",
 				Required: true,
 			},
 			&cli.StringFlag{
-				Name:  "user",
+				Name: "user",
 			},
 			&cli.BoolFlag{
-				Name:  "privileged",
+				Name: "privileged",
 			},
 			&cli.BoolFlag{
-				Name:  "tty",
+				Name: "tty",
 			},
 			&cli.BoolFlag{
 				Name:  "stdin",
@@ -782,7 +781,7 @@ func containerExec() cli.Command {
 				Name: "detach",
 			},
 			&cli.StringFlag{
-				Name:  "detachKeys",
+				Name: "detachKeys",
 			},
 			&cli.StringSliceFlag{
 				Name: "env",
@@ -791,7 +790,7 @@ func containerExec() cli.Command {
 				Name: "workingDir",
 			},
 			&cli.StringSliceFlag{
-				Name: "cmd",
+				Name:     "cmd",
 				Required: true,
 			},
 		},
@@ -818,22 +817,22 @@ func containerExec() cli.Command {
 			cmd := ctx.StringSlice("cmd")
 			cmdArray := []string{}
 			for _, c := range cmd {
-				cmdArray = append(cmdArray, `"\"` + c +`\""`)
+				cmdArray = append(cmdArray, `"\"`+c+`\""`)
 			}
 			rw, err := masterCli.Container.Exec(context.Background(), types.ExecContainerRequest{
-				Namespace: namespace,
-				Name: name,
-				User: user,
-				Privileged: privileged,
-				Tty: tty,
-				AttachStdin: stdin,
+				Namespace:    namespace,
+				Name:         name,
+				User:         user,
+				Privileged:   privileged,
+				Tty:          tty,
+				AttachStdin:  stdin,
 				AttachStderr: stderr,
 				AttachStdout: stdout,
-				Detach: detach,
-				DetachKeys: detachKeys,
-				Env: env,
-				WorkingDir: workingDir,
-				Cmd: cmdArray,
+				Detach:       detach,
+				DetachKeys:   detachKeys,
+				Env:          env,
+				WorkingDir:   workingDir,
+				Cmd:          cmdArray,
 			})
 
 			if err != nil {
@@ -891,28 +890,28 @@ func containerLogs() cli.Command {
 				Required: true,
 			},
 			&cli.StringFlag{
-				Name:  "name",
-				Usage: "the name of container",
+				Name:     "name",
+				Usage:    "the name of container",
 				Required: true,
 			},
 			&cli.StringFlag{
-				Name:  "since",
+				Name: "since",
 			},
 			&cli.StringFlag{
-				Name:  "until",
+				Name: "until",
 			},
 			&cli.BoolFlag{
-				Name:  "timestamps",
+				Name: "timestamps",
 			},
 			&cli.BoolFlag{
 				Name:  "follow",
 				Usage: "follow the stream",
 			},
 			&cli.StringFlag{
-				Name:  "tail",
+				Name: "tail",
 			},
 			&cli.BoolFlag{
-				Name:  "details",
+				Name: "details",
 			},
 		},
 		OnUsageError: func(c *cli.Context, err error, isSubcommand bool) error {
@@ -933,14 +932,14 @@ func containerLogs() cli.Command {
 			details := ctx.Bool("details")
 
 			rw, err := masterCli.Container.Logs(context.Background(), types.LogsContainerRequest{
-				Namespace: namespace,
-				Name: name,
-				Since: since,
-				Until: until,
+				Namespace:  namespace,
+				Name:       name,
+				Since:      since,
+				Until:      until,
 				Timestamps: timestamps,
-				Follow: follow,
-				Tail: tail,
-				Details: details,
+				Follow:     follow,
+				Tail:       tail,
+				Details:    details,
 			})
 
 			if err != nil {
@@ -966,6 +965,44 @@ func containerLogs() cli.Command {
 			<-ctxx.Done()
 			time.Sleep(time.Second)
 			return nil
+		},
+	}
+}
+
+func ContainerMigrate() cli.Command {
+	return cli.Command{
+		Name:  "migrate",
+		Usage: "migrate container to a node",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "namespace",
+				Usage:    "the namespace of container",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name:     "name",
+				Usage:    "the name of container",
+				Required: true,
+			},
+			&cli.StringFlag{
+				Name:     "node",
+				Usage:    "the node",
+				Required: true,
+			},
+		},
+		Action: func(ctx *cli.Context) error {
+			server := ctx.App.Metadata["config-server"].(string)
+			masterCli := client.NewClient(server)
+
+			namespace := ctx.String("namespace")
+			name := ctx.String("name")
+			node := ctx.String("node")
+
+			return masterCli.Container.Migrate(context.Background(), types.MigrateContainerRequest{
+				Namespace: namespace,
+				Name:      name,
+				Node:      node,
+			})
 		},
 	}
 }
