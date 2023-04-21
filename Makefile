@@ -15,6 +15,11 @@ master-swagger-port=8084
 
 mkfile_path := $(shell pwd)
 
+bin:
+	CGO_ENABLED=0 GOPROXY=https://goproxy.cn,direct go build -ldflags="-s -w" -o ./bin/master ./master
+	CGO_ENABLED=0 GOPROXY=https://goproxy.cn,direct go build -ldflags="-s -w" -o ./bin/worker ./worker
+	CGO_ENABLED=0 GOPROXY=https://goproxy.cn,direct go build -ldflags="-s -w" -o ./bin/k2ectl ./master/cli
+
 #>>>>>>>>>>>>>>>>>>>>>>>> Worker Command <<<<<<<<<<<<<<<<<<<<<< 
 worker-api:
 	goctl api format --dir ./api
