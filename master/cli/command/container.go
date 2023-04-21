@@ -998,11 +998,18 @@ func ContainerMigrate() cli.Command {
 			name := ctx.String("name")
 			node := ctx.String("node")
 
-			return masterCli.Container.Migrate(context.Background(), types.MigrateContainerRequest{
+			err := masterCli.Container.Migrate(context.Background(), types.MigrateContainerRequest{
 				Namespace: namespace,
 				Name:      name,
 				Node:      node,
 			})
+			if err != nil {
+				return err
+			}
+			pterm.DefaultBasicText.WithStyle(
+				pterm.NewStyle(pterm.BgGreen, pterm.FgBlack),
+			).Println("ok")
+			return nil
 		},
 	}
 }
