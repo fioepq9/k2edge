@@ -73,7 +73,7 @@ func namespaceCreate() cli.Command {
 func namespaceGet() cli.Command {
 	return cli.Command {
 		Name: "get",
-		Usage: "Use for get namespace info",
+		Usage: "Use for getting namespace info",
 		Description: "Use 'namespace get --name=<name>' to get namespace",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
@@ -115,7 +115,7 @@ func namespaceList() cli.Command {
 	return cli.Command {
 		Name: "list",
 		Aliases: []string{"ls"},
-		Usage: "Use for list namespace info",
+		Usage: "Use for listing namespace info",
 		Description: "Use 'namespace list [--usable]' to list namespace",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
