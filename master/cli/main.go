@@ -55,12 +55,12 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "k2e-ctl"
 	app.Version = "v1.0.1"
-	app.Usage = "a control panel of k2edge"
-	app.Description = "Use for managing K2edge's resource"
+	app.Usage = "a control panel of k4edge"
+	app.Description = "Use for managing K4edge's resource"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "config",
-			Usage: "the configuration of k2edge",
+			Usage: "the configuration of k4edge",
 			Value: "/etc/master-api.yaml",
 		},
 	}

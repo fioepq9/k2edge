@@ -1,14 +1,12 @@
 metadata:
   namespace: "namespace1"
   kind: "container"
-  name: "logs-container"
-containerConfig:
-  image: "ubuntu"
-  command: "sh"
-  args:
-    - -c
-    - while true; do echo $(date); sleep 1; done
-  request:
-    cpu: 100000000
-    memory: 100000000
+  name: "container1"
+config:
+  replicas: 3
+  containerTemplate:
+    image: "busybox"
+    request: 
+      cpu: 1000000000
+      memory: 100000000
   
