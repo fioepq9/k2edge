@@ -53,7 +53,7 @@ func main() {
 	cli.SubcommandHelpTemplate = SubcommandHelpTemplate
 
 	app := cli.NewApp()
-	app.Name = "k2e-ctl"
+	app.Name = "k4e-ctl"
 	app.Version = "v1.0.1"
 	app.Usage = "a control panel of k4edge"
 	app.Description = "Use for managing K4edge's resource"
@@ -67,17 +67,17 @@ func main() {
 	app.Before = func(ctx *cli.Context) error {
 		data, err := os.ReadFile(ctx.String("config"))
 		if err != nil {
-			return fmt.Errorf("k2e get configuration failed")
+			return fmt.Errorf("k4e get configuration failed")
 		}
 
 		config := new(config)
 		err = yaml.Unmarshal(data, &config)
 		if err != nil {
-			return fmt.Errorf("k2e get configuration failed")
+			return fmt.Errorf("k4e get configuration failed")
 		}
 
 		if len(config.Etcd.Endpoints) == 0 {
-			panic("k2e initial: cannot found etcd")
+			panic("k4e initial: cannot found etcd")
 		}
 
 		ctx.App.Metadata = map[string]interface{}{

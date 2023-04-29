@@ -30,7 +30,7 @@ service master-api{
 	@handler LogsContainer
 	get /logs(LogsContainerRequest)
 	
-	// k2e-ctl不调用该接口
+	// k4e-ctl不调用该接口
 	@handler MigrateContainer
 	post /migrate(MigrateContainerRequest)
 	

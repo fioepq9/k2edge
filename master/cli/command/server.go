@@ -20,7 +20,7 @@ func getServer(endPoint string) string {
 
 	etcd, err := clientv3.New(config)
 	if err != nil {
-		panic(fmt.Errorf("k2e initial: %s", err))
+		panic(fmt.Errorf("k4e initial: %s", err))
 	}
 	// 获取node信息
 	nodes, err := etcdutil.GetOne[types.Node](etcd, context.Background(), "/node/" + etcdutil.SystemNamespace)
@@ -34,5 +34,5 @@ func getServer(endPoint string) string {
 			return node.BaseURL.MasterURL
 		}
 	}
-	panic("k2e initial: cannot found master node")
+	panic("k4e initial: cannot found master node")
 }

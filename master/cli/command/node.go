@@ -44,7 +44,7 @@ func Node() cli.Command {
 func nodeCreate() cli.Command {
 	return cli.Command{
 		Name:        "create",
-		Usage:       "Use for adding node to k2edge",
+		Usage:       "Use for adding node to k4edge",
 		Description: "Use 'node create --name=<name> [args...]' to create node",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
