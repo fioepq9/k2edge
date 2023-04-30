@@ -54,6 +54,16 @@ func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest
 	deployment.Config = req.Config
 	deployment.Config.CreateTime = time.Now().Unix()
 
+	logicG := NewGetDeploymentLogic(l.ctx, l.svcCtx)
+	gresp, err := logicG.GetDeployment(&types.GetDeploymentRequest{
+		Namespace: req.Namespace,
+		Name: req.Name,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+
 	// 创建 container 副本
 	retryTimes := 1 // 创建container副本尝试次数
 
@@ -78,7 +88,6 @@ func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest
 		},
 	}
 	
-
 	logicC := NewCreateContainerLogic(l.ctx, l.svcCtx)
 	for i := 1; i <= req.Config.Replicas; i++ {
 		if req.Config.Template.Name == "" {
@@ -115,18 +124,10 @@ func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest
 	}
 
 	//删除原本的 container副本
-	logicG := NewGetDeploymentLogic(l.ctx, l.svcCtx)
-	gresp, err := logicG.GetDeployment(&types.GetDeploymentRequest{
-		Namespace: req.Namespace,
-		Name: req.Name,
-	})
-	if err != nil {
-		return nil, err
-	}
-
 	containers := gresp.Deployment.Status.Containers
 	// 删除所有容器
 	for _, c := range containers {
+		fmt.Println(c)
 		worker, found, err := etcdutil.IsExistNode(l.svcCtx.Etcd, l.ctx, c.Node)
 		if err != nil {
 			resp.Err = append(resp.Err, err.Error())
@@ -144,6 +145,15 @@ func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest
 		}
 
 		// 向特定的 worker 结点发送获取conatiner信息的请求
+		container1, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container", req.Namespace, c.Name))
+		if err != nil {
+			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while deleting the info of container '%s', err: %s", c.Name, err))
+			continue
+		}
+		c1 := (*container1)[0]
+		c1.ContainerStatus.Status = "exit(0)"
+		etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container", req.Namespace, c.Name), c1)
+
 		cli := client.NewClient(worker.BaseURL.WorkerURL)
 		err = cli.Container.Stop(l.ctx, client.StopContainerRequest{
 			ID:      c.ContainerID,
@@ -163,13 +173,6 @@ func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest
 			continue
 		}
 
-		container1, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container", req.Namespace, c.Name))
-		if err != nil {
-			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while deleting the info of container '%s', err: %s", c.Name, err))
-			continue
-		}
-		c1 := (*container1)[0]
-
 		err = etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container",req.Namespace, c.Name))
 
 		if err != nil {
@@ -184,10 +187,5 @@ func (l *ApplyDeploymentLogic) ApplyDeployment(req *types.ApplyDeploymentRequest
 		}
 	}
 
-	err = etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, deployment)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
+	return nil,nil
 }

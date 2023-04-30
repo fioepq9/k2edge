@@ -3,8 +3,8 @@ roles:
   - master
   - worker
 baseUrl:
-  masterUrl: http://localhost:8080
-  workerUrl: http://localhost:8888
+  masterUrl: http://0.0.0.0:8080
+  workerUrl: http://0.0.0.0:8888
 capacity:
-  cpu: 111
-  memory: 111
+  cpu: 16000000000
+  memory: 16000000000

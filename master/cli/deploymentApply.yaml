@@ -1,0 +1,10 @@
+metadata:
+  namespace: "namespace1"
+  kind: "deployment"
+  name: "deployment1"
+
+config:
+  replicas: 2
+  containerTemplate:
+    Name: "apply1"
+    image: "hello-world"

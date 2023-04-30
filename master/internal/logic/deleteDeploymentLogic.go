@@ -72,6 +72,11 @@ func (l *DeleteDeploymentLogic) DeleteDeployment(req *types.DeleteDeploymentRequ
 
 		// 向特定的 worker 结点发送获取conatiner信息的请求
 		cli := client.NewClient(worker.BaseURL.WorkerURL)
+		container1, _ := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container", req.Namespace, c.Name))
+		c1 := (*container1)[0]
+		c1.ContainerStatus.Status = "exit(0)"
+		etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container", req.Namespace, c.Name), c1)
+
 		err = cli.Container.Stop(l.ctx, client.StopContainerRequest{
 			ID:      c.ContainerID,
 			Timeout: req.Timeout * int(time.Second),
@@ -93,12 +98,11 @@ func (l *DeleteDeploymentLogic) DeleteDeployment(req *types.DeleteDeploymentRequ
 			continue
 		}
 
-		container1, err := etcdutil.GetOne[types.Container](l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container", req.Namespace, c.Name))
 		if err != nil {
 			resp.Err = append(resp.Err, fmt.Sprintf("an error occurred while deleting the info of container '%s', err: %s", c.Name, err))
 			continue
 		}
-		c1 := (*container1)[0]
+		
 
 		err = etcdutil.DeleteOne(l.svcCtx.Etcd, l.ctx, etcdutil.GenerateKey("container",req.Namespace, c.Name))
 

@@ -2,11 +2,10 @@ metadata:
   namespace: "namespace1"
   kind: "container"
   name: "container1"
-config:
-  replicas: 3
-  containerTemplate:
-    image: "busybox"
-    request: 
-      cpu: 1000000000
-      memory: 100000000
-  
+containerConfig:
+  image: "ubuntu"
+  nodeName: "Worker-dev"
+  command: "sh"
+  args: 
+    - "-c"
+    - "while true; do sleep 10; done"

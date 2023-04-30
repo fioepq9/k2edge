@@ -1,0 +1,10 @@
+metadata:
+  namespace: "namespace1"
+  kind: "deployment"
+  name: "deployment1"
+
+config:
+  replicas: 3
+  containerTemplate:
+    Name: "create1"
+    image: "nginx"

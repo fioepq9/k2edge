@@ -1,0 +1,14 @@
+metadata:
+  namespace: "namespace1"
+  kind: "job"
+  name: "job1"
+
+config:
+  completions: 2
+  template:
+    name: ""
+    image: "busybox"
+    command: "sh"
+    args: 
+      - "-c"
+      - "sleep 3;"

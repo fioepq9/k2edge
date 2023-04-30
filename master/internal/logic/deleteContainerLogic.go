@@ -69,6 +69,14 @@ func (l *DeleteContainerLogic) DeleteContainer(req *types.DeleteContainerRequest
 
 	// 向特定的 worker 结点发送获取conatiner信息的请求
 	cli := client.NewClient(worker.BaseURL.WorkerURL)
+	if c.ContainerStatus.Status != "exit(0)" {
+		c.ContainerStatus.Status = "exit(0)"
+		err = etcdutil.PutOne(l.svcCtx.Etcd, l.ctx, key, c)
+		if err != nil {
+			return err
+		}
+	}
+	
 	err = cli.Container.Stop(l.ctx, client.StopContainerRequest{
 		ID:      c.ContainerStatus.ContainerID,
 		Timeout: req.Timeout * int(time.Second),

@@ -164,7 +164,7 @@ type ContainerStatus struct {
 }
 
 type Job struct {
-	Metadata  Metadata  `json:"metadata" yaml:"matadata"`
+	Metadata  Metadata  `json:"metadata" yaml:"metadata"`
 	Config    JobConfig `json:"config" yaml:"config"`
 	Succeeded int       `json:"succeeded,optional" yaml:"succeeded"`
 }

@@ -2283,7 +2283,6 @@
       "title": "Job",
       "required": [
         "metadata",
-        "matadata",
         "config",
         "succeeded"
       ]

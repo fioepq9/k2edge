@@ -57,7 +57,7 @@ type ContainerStatus {
 
 //>>>>>>>>>>>>>>>>>>>>>>>>>>> Job <<<<<<<<<<<<<<<<<<<<<<<<<<
 type Job {
-	Metadata  Metadata  `json:"metadata" yaml:"matadata"`
+	Metadata  Metadata  `json:"metadata" yaml:"metadata"`
 	Config    JobConfig `json:"config" yaml:"config"`
 	Succeeded int       `json:"succeeded,optional" yaml:"succeeded"`
 }
