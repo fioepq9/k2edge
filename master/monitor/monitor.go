@@ -16,7 +16,7 @@ import (
 )
 
 func EventMonitor(svcCtx *svc.ServiceContext) {
-	ticker := time.NewTicker(6 * time.Second)
+	ticker := time.NewTicker(3 * time.Second)
 	for range ticker.C {
 		event, ekey, err := etcdutil.GetOneKV[types.EventInfo](svcCtx.Etcd, svcCtx.Etcd.Ctx(), "/events")
 		if err != nil {
